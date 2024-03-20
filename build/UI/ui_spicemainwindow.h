@@ -33,6 +33,7 @@ public:
     QAction *actionPaste_to_guest;
     QAction *actionFullscreen;
     QAction *actionToolBar;
+    QAction *actionStatusBar;
     QWidget *centralwidget;
     QWidget *verticalLayoutWidget;
     QVBoxLayout *layout;
@@ -43,7 +44,7 @@ public:
     QMenu *menuInput;
     QMenu *menuOptions;
     QMenu *menuHelp;
-    QStatusBar *statusbar;
+    QStatusBar *statusBar;
     QToolBar *toolBar;
 
     void setupUi(QMainWindow *SpiceMainWindow)
@@ -65,8 +66,13 @@ public:
         actionPaste_to_guest->setObjectName(QString::fromUtf8("actionPaste_to_guest"));
         actionFullscreen = new QAction(SpiceMainWindow);
         actionFullscreen->setObjectName(QString::fromUtf8("actionFullscreen"));
+        actionFullscreen->setCheckable(true);
         actionToolBar = new QAction(SpiceMainWindow);
         actionToolBar->setObjectName(QString::fromUtf8("actionToolBar"));
+        actionToolBar->setCheckable(true);
+        actionStatusBar = new QAction(SpiceMainWindow);
+        actionStatusBar->setObjectName(QString::fromUtf8("actionStatusBar"));
+        actionStatusBar->setCheckable(true);
         centralwidget = new QWidget(SpiceMainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayoutWidget = new QWidget(centralwidget);
@@ -92,9 +98,9 @@ public:
         menuHelp = new QMenu(menubar);
         menuHelp->setObjectName(QString::fromUtf8("menuHelp"));
         SpiceMainWindow->setMenuBar(menubar);
-        statusbar = new QStatusBar(SpiceMainWindow);
-        statusbar->setObjectName(QString::fromUtf8("statusbar"));
-        SpiceMainWindow->setStatusBar(statusbar);
+        statusBar = new QStatusBar(SpiceMainWindow);
+        statusBar->setObjectName(QString::fromUtf8("statusBar"));
+        SpiceMainWindow->setStatusBar(statusBar);
         toolBar = new QToolBar(SpiceMainWindow);
         toolBar->setObjectName(QString::fromUtf8("toolBar"));
         SpiceMainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
@@ -113,6 +119,7 @@ public:
         menuedit->addAction(actionPaste_to_guest);
         menuView->addAction(actionFullscreen);
         menuView->addAction(actionToolBar);
+        menuView->addAction(actionStatusBar);
 
         retranslateUi(SpiceMainWindow);
 
@@ -130,6 +137,7 @@ public:
         actionPaste_to_guest->setText(QApplication::translate("SpiceMainWindow", "Paste to guest", nullptr));
         actionFullscreen->setText(QApplication::translate("SpiceMainWindow", "Fullscreen", nullptr));
         actionToolBar->setText(QApplication::translate("SpiceMainWindow", "ToolBar", nullptr));
+        actionStatusBar->setText(QApplication::translate("SpiceMainWindow", "StatusBar", nullptr));
         menu->setTitle(QApplication::translate("SpiceMainWindow", "File", nullptr));
         menuedit->setTitle(QApplication::translate("SpiceMainWindow", "Edit", nullptr));
         menuView->setTitle(QApplication::translate("SpiceMainWindow", "View", nullptr));

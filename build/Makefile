@@ -1989,30 +1989,13 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmainwindow.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtabwidget.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qicon.h \
-		ui_spicemainwindow.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QVariant \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QAction \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qaction.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qactiongroup.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QApplication \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qapplication.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreapplication.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qeventloop.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qguiapplication.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qinputmethod.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMenu \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmenu.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMenuBar \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmenubar.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QStatusBar \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qstatusbar.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
+		UI/ui_spicemainwindow.h \
 		../headers/spiceqt.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstracteventdispatcher.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractitemmodel.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractproxymodel.h \
@@ -2038,6 +2021,7 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcollator.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcommandlineoption.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcommandlineparser.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreapplication.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcryptographichash.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qdeadlinetimer.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qelapsedtimer.h \
@@ -2158,6 +2142,8 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qgenericmatrix.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qgenericplugin.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qgenericpluginfactory.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qguiapplication.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qinputmethod.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qiconengine.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qiconengineplugin.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qimageiohandler.h \
@@ -2226,6 +2212,7 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtexttable.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qvalidator.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtguiversion.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QPushButton \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qpushbutton.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractbutton.h \

@@ -57,6 +57,7 @@
     </property>
     <addaction name="actionFullscreen"/>
     <addaction name="actionToolBar"/>
+    <addaction name="actionStatusBar"/>
    </widget>
    <widget class="QMenu" name="menuInput">
     <property name="title">
@@ -80,7 +81,7 @@
    <addaction name="menuOptions"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
@@ -123,13 +124,27 @@
    </property>
   </action>
   <action name="actionFullscreen">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Fullscreen</string>
    </property>
   </action>
   <action name="actionToolBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>ToolBar</string>
+   </property>
+  </action>
+  <action name="actionStatusBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>StatusBar</string>
    </property>
   </action>
  </widget>

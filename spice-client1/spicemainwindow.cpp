@@ -10,16 +10,95 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
     ui(new Ui::SpiceMainWindow)
 {
     ui->setupUi(this);
+
+    //设置instance的嵌入和布局
+    QHBoxLayout *layout = new QHBoxLayout();
+    spicewindow = new SpiceQt();
     QWidget *central = new QWidget();
     setCentralWidget(central);
-    QHBoxLayout *layout = new QHBoxLayout(central);
-    spicewindow = new SpiceQt();
-
     spicewindow = SpiceQt::getSpice();
-    spicewindow->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    layout->addWidget(spicewindow, 1);
+
+    central->setLayout(layout);
+
+//    spicewindow->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    ui->actionToolBar->setChecked(true);
+    ui->actionStatusBar->setChecked(true);
+
+    //设置窗口的全屏和非全屏的切换
+    this->addAction(ui->actionFullscreen);
+    connect(ui->actionFullscreen, &QAction::triggered, [&]() {
+
+        auto full = ui->actionFullscreen->isChecked();
+        menuBar()->setVisible(!full);
+        ui->actionFullscreen->setShortcut(  full ? QKeySequence("Esc") : QKeySequence("Ctrl+F"));
+
+        static bool maximized = false;// 记录当前状态
+        if ( full )
+        {
+            maximized = isMaximized();
+        }
+        else if ( maximized && isMaximized() )
+        {
+            return;
+        }
+
+        if ( full && !isMaximized() || !full && isMaximized() )
+        {
+            if (isMaximized())
+            {
+                showNormal();
+            }
+            else
+                showMaximized();
+        }
+    });
+
+    //设置状态栏获取鼠标指向位置
+    auto acts = ui->menubar->actions();
+    for (auto i : acts)
+    {
+        auto menu = i->menu();
+
+        QList<QAction *> actions;
+
+        // 当没有菜单时
+        if (!menu)
+        {
+            actions.push_back(i);
+        }
+        else
+        {
+            actions = menu->actions();
+        }
+        for (auto a : actions)
+        {
+            QWidget *w;
+            if (a->isSeparator())
+            {
+                //qDebug() << a->text();
+
+                auto line = new QWidget();
+                line->setFixedWidth(1);
+                line->setStyleSheet("background:rgb(177,177,177)");
+                w = line;
+            }
+            else
+            {
+                //QWidget::addAction(a);
+                //this->addAction(a)
+
+                a->setToolTip(a->text());
+                a->setStatusTip(a->text());
+
+            }
+        }
+    }
+
+
 //    spicewindow->resize(2000, 2400);
 //    ui->layout->addWidget(widget1);
-    layout->addWidget(spicewindow);
+
 
 //    setCentralWidget();
 //    ui->layout->setContentsMargins(0, 0, 0, 0);
@@ -43,6 +122,18 @@ void SpiceMainWindow::showspice(QString ip, QString port)
     int spicewidth = spicewindow->width();
 //    qDebug() << height << " , " << width << endl;
     qDebug() << spiceheight << " , " << spicewidth << endl;
-//  spicewindow->show();
+    spicewindow->show();
     spicewindow->connectToGuest(ip, port);
+}
+
+//设置工具栏显示
+void SpiceMainWindow::on_actionToolBar_toggled(bool arg1)
+{
+    ui->toolBar->setVisible(ui->actionToolBar->isChecked());
+}
+
+//设置状态栏显示
+void SpiceMainWindow::on_actionStatusBar_toggled(bool arg1)
+{
+    ui->statusBar->setVisible(ui->actionStatusBar->isChecked());
 }

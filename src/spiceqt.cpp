@@ -90,6 +90,7 @@ SpiceQt::SpiceQt(QWidget *parent)
 //    QHBoxLayout *spicelayout = new QHBoxLayout(this);
 //    spicelayout->addWidget(instance);
 //    setLayout(spicelayout);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     display = NULL;
     SGsession = NULL;
     audio = NULL;
@@ -209,6 +210,20 @@ void SpiceQt::settingsChanged(int w, int h, int bpp)
     if (w != width() || h != height())
         setFixedSize(w, h);
     //imageSize(w, h);
+//    // 计算缩放因子
+//    double scaleX = double(width()) / double(w);
+//    double scaleY = double(height()) / double(h);
+//    double scaleFactor = qMin(scaleX, scaleY); // 取较小的缩放因子
+
+//    // 缩放图片
+//    QImage scaledImage = img.scaled(w * scaleFactor, h * scaleFactor, Qt::KeepAspectRatio);
+
+//    // 更新成员变量
+//    img = scaledImage;
+
+//    // 重新绘制窗口
+//    update();
+
     Q_EMIT imageSize(w, h);
 }
 

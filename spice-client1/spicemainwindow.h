@@ -24,6 +24,11 @@ public:
     ~SpiceMainWindow();
     void showspice(QString ip, QString port);
 
+private Q_SLOTS:
+    void on_actionToolBar_toggled(bool arg1);
+
+    void on_actionStatusBar_toggled(bool arg1);
+
 private:
     Ui::SpiceMainWindow *ui;
     SpiceQt *spicewindow;
