@@ -1,0 +1,4 @@
+#ifndef CHANNEL_INPUTS_H
+#define CHANNEL_INPUTS_H
+
+#endif // CHANNEL_INPUTS_H

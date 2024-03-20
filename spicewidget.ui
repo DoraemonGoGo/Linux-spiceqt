@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SpiceWidget</class>
+ <widget class="QMainWindow" name="SpiceWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SpiceConnection</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="maximumSize">
+    <size>
+     <width>16777215</width>
+     <height>16777215</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>600</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="geometry">
+     <rect>
+      <x>417</x>
+      <y>156</y>
+      <width>300</width>
+      <height>150</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionConnect"/>
+    <addaction name="actionRcent_Connect"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose"/>
+   </widget>
+   <widget class="QMenu" name="menu_2">
+    <property name="geometry">
+     <rect>
+      <x>456</x>
+      <y>156</y>
+      <width>300</width>
+      <height>150</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionCopy_From"/>
+    <addaction name="actionPaste_from_guest"/>
+   </widget>
+   <widget class="QMenu" name="menu_3">
+    <property name="geometry">
+     <rect>
+      <x>497</x>
+      <y>156</y>
+      <width>300</width>
+      <height>150</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionFullscreen"/>
+    <addaction name="actionResize_to"/>
+    <addaction name="actionToolBar"/>
+    <addaction name="actionAtatusBar"/>
+   </widget>
+   <widget class="QMenu" name="menu_4">
+    <property name="geometry">
+     <rect>
+      <x>545</x>
+      <y>156</y>
+      <width>300</width>
+      <height>150</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Input</string>
+    </property>
+    <addaction name="actionInsert_Smartcard"/>
+    <addaction name="actionRemove_Smartcard"/>
+   </widget>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Options</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="geometry">
+     <rect>
+      <x>665</x>
+      <y>156</y>
+      <width>300</width>
+      <height>150</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menu_2"/>
+   <addaction name="menu_3"/>
+   <addaction name="menu_4"/>
+   <addaction name="menuOptions"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionConnect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Connect</string>
+   </property>
+  </action>
+  <action name="actionRcent_Connect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Rcent Connect</string>
+   </property>
+  </action>
+  <action name="actionClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionCopy_From">
+   <property name="text">
+    <string>Copy from guest</string>
+   </property>
+  </action>
+  <action name="actionPaste_from_guest">
+   <property name="text">
+    <string>Paste from guest</string>
+   </property>
+  </action>
+  <action name="actionFullscreen">
+   <property name="text">
+    <string>Fullscreen</string>
+   </property>
+  </action>
+  <action name="actionResize_to">
+   <property name="text">
+    <string>Resize to</string>
+   </property>
+  </action>
+  <action name="actionToolBar">
+   <property name="text">
+    <string>ToolBar</string>
+   </property>
+  </action>
+  <action name="actionAtatusBar">
+   <property name="text">
+    <string>StatusBar</string>
+   </property>
+  </action>
+  <action name="actionInsert_Smartcard">
+   <property name="text">
+    <string>Insert Smartcard</string>
+   </property>
+  </action>
+  <action name="actionRemove_Smartcard">
+   <property name="text">
+    <string>Remove Smartcard</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About...</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
