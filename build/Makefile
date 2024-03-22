@@ -54,11 +54,13 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../spice-client1/main.cpp \
 		../spice-client1/widget.cpp \
-		../spice-client1/spicemainwindow.cpp moc_widget.cpp \
+		../spice-client1/spicemainwindow.cpp qrc_res.cpp \
+		moc_widget.cpp \
 		moc_spicemainwindow.cpp
 OBJECTS       = main.o \
 		widget.o \
 		spicemainwindow.o \
+		qrc_res.o \
 		moc_widget.o \
 		moc_spicemainwindow.o
 DIST          = /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/spec_pre.prf \
@@ -453,6 +455,7 @@ Makefile: ../spice-client1/spice-client1.pro /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs
 		/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/yacc.prf \
 		/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/lex.prf \
 		../spice-client1/spice-client1.pro \
+		../spice-client1/res.qrc \
 		/opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Widgets.prl \
 		/opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Gui.prl \
 		/opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Core.prl
@@ -646,6 +649,7 @@ Makefile: ../spice-client1/spice-client1.pro /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs
 /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/yacc.prf:
 /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/lex.prf:
 ../spice-client1/spice-client1.pro:
+../spice-client1/res.qrc:
 /opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Widgets.prl:
 /opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Gui.prl:
 /opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Core.prl:
@@ -663,6 +667,7 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
+	$(COPY_FILE) --parents ../spice-client1/res.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../spice-client1/widget.h ../spice-client1/spicemainwindow.h $(DISTDIR)/
 	$(COPY_FILE) --parents ../spice-client1/main.cpp ../spice-client1/widget.cpp ../spice-client1/spicemainwindow.cpp $(DISTDIR)/
@@ -689,8 +694,17 @@ check: first
 
 benchmark: first
 
-compiler_rcc_make_all:
+compiler_rcc_make_all: qrc_res.cpp
 compiler_rcc_clean:
+	-$(DEL_FILE) qrc_res.cpp
+qrc_res.cpp: ../spice-client1/res.qrc \
+		/opt/Qt5.12.2/5.12.2/gcc_64/bin/rcc \
+		../spice-client1/icon/????.png \
+		../spice-client1/icon/??.png \
+		../spice-client1/icon/??.png \
+		../spice-client1/icon/fullscreen.png
+	/opt/Qt5.12.2/5.12.2/gcc_64/bin/rcc -name res ../spice-client1/res.qrc -o qrc_res.cpp
+
 compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
@@ -1169,7 +1183,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
+compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
 
 ####### Compile
 
@@ -1990,12 +2004,32 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtabwidget.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qicon.h \
 		UI/ui_spicemainwindow.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QVariant \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QAction \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qaction.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qactiongroup.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QApplication \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qapplication.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreapplication.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qeventloop.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qguiapplication.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qinputmethod.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMenu \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmenu.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMenuBar \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmenubar.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QStatusBar \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qstatusbar.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QToolBar \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtoolbar.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QVBoxLayout \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
 		../headers/spiceqt.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstracteventdispatcher.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractitemmodel.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractproxymodel.h \
@@ -2021,7 +2055,6 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcollator.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcommandlineoption.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcommandlineparser.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreapplication.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcryptographichash.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qdeadlinetimer.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qelapsedtimer.h \
@@ -2142,8 +2175,6 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qgenericmatrix.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qgenericplugin.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qgenericpluginfactory.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qguiapplication.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qinputmethod.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qiconengine.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qiconengineplugin.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qimageiohandler.h \
@@ -2212,7 +2243,6 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtexttable.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qvalidator.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtguiversion.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QPushButton \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qpushbutton.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractbutton.h \
@@ -2228,6 +2258,9 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		../headers/spice-gtk-session.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QTimer
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o spicemainwindow.o ../spice-client1/spicemainwindow.cpp
+
+qrc_res.o: qrc_res.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_res.o qrc_res.cpp
 
 moc_widget.o: moc_widget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_widget.o moc_widget.cpp

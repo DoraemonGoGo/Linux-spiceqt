@@ -92,6 +92,14 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actiontoolclose"/>
+   <addaction name="separator"/>
+   <addaction name="actiontoolcopy"/>
+   <addaction name="actiontoolpaste"/>
+   <addaction name="separator"/>
+   <addaction name="actiontoolfullscreen"/>
+   <addaction name="separator"/>
+   <addaction name="actionResize_to"/>
   </widget>
   <action name="action">
    <property name="text">
@@ -109,6 +117,10 @@
    </property>
   </action>
   <action name="actionclose">
+   <property name="icon">
+    <iconset theme="close" resource="res.qrc">
+     <normaloff>:/icon/警示红叉.png</normaloff>:/icon/警示红叉.png</iconset>
+   </property>
    <property name="text">
     <string>close</string>
    </property>
@@ -126,6 +138,10 @@
   <action name="actionFullscreen">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="fullscreen" resource="res.qrc">
+     <normaloff>:/icon/fullscreen.png</normaloff>:/icon/fullscreen.png</iconset>
    </property>
    <property name="text">
     <string>Fullscreen</string>
@@ -147,7 +163,50 @@
     <string>StatusBar</string>
    </property>
   </action>
+  <action name="actiontoolclose">
+   <property name="icon">
+    <iconset theme="close" resource="res.qrc">
+     <normaloff>:/icon/警示红叉.png</normaloff>:/icon/警示红叉.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolclose</string>
+   </property>
+  </action>
+  <action name="actiontoolcopy">
+   <property name="icon">
+    <iconset theme="copy" resource="res.qrc">
+     <normaloff>:/icon/复制.png</normaloff>:/icon/复制.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolcopy</string>
+   </property>
+  </action>
+  <action name="actiontoolpaste">
+   <property name="icon">
+    <iconset theme="paste" resource="res.qrc">
+     <normaloff>:/icon/粘贴.png</normaloff>:/icon/粘贴.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolpaste</string>
+   </property>
+  </action>
+  <action name="actiontoolfullscreen">
+   <property name="icon">
+    <iconset theme="fullscreen" resource="res.qrc">
+     <normaloff>:/icon/fullscreen.png</normaloff>:/icon/fullscreen.png</iconset>
+   </property>
+   <property name="text">
+    <string>toolfullscreen</string>
+   </property>
+  </action>
+  <action name="actionResize_to">
+   <property name="text">
+    <string>Resize to</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

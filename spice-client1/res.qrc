@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icon/复制.png</file>
+        <file>icon/警示红叉.png</file>
+        <file>icon/粘贴.png</file>
+        <file>icon/fullscreen.png</file>
+    </qresource>
+</RCC>

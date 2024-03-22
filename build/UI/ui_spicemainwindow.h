@@ -34,6 +34,11 @@ public:
     QAction *actionFullscreen;
     QAction *actionToolBar;
     QAction *actionStatusBar;
+    QAction *actiontoolclose;
+    QAction *actiontoolcopy;
+    QAction *actiontoolpaste;
+    QAction *actiontoolfullscreen;
+    QAction *actionResize_to;
     QWidget *centralwidget;
     QWidget *verticalLayoutWidget;
     QVBoxLayout *layout;
@@ -60,6 +65,14 @@ public:
         action_3->setObjectName(QString::fromUtf8("action_3"));
         actionclose = new QAction(SpiceMainWindow);
         actionclose->setObjectName(QString::fromUtf8("actionclose"));
+        QIcon icon;
+        QString iconThemeName = QString::fromUtf8("close");
+        if (QIcon::hasThemeIcon(iconThemeName)) {
+            icon = QIcon::fromTheme(iconThemeName);
+        } else {
+            icon.addFile(QString::fromUtf8(":/icon/\350\255\246\347\244\272\347\272\242\345\217\211.png"), QSize(), QIcon::Normal, QIcon::Off);
+        }
+        actionclose->setIcon(icon);
         actionCopy_to_guest = new QAction(SpiceMainWindow);
         actionCopy_to_guest->setObjectName(QString::fromUtf8("actionCopy_to_guest"));
         actionPaste_to_guest = new QAction(SpiceMainWindow);
@@ -67,12 +80,48 @@ public:
         actionFullscreen = new QAction(SpiceMainWindow);
         actionFullscreen->setObjectName(QString::fromUtf8("actionFullscreen"));
         actionFullscreen->setCheckable(true);
+        QIcon icon1;
+        iconThemeName = QString::fromUtf8("fullscreen");
+        if (QIcon::hasThemeIcon(iconThemeName)) {
+            icon1 = QIcon::fromTheme(iconThemeName);
+        } else {
+            icon1.addFile(QString::fromUtf8(":/icon/fullscreen.png"), QSize(), QIcon::Normal, QIcon::Off);
+        }
+        actionFullscreen->setIcon(icon1);
         actionToolBar = new QAction(SpiceMainWindow);
         actionToolBar->setObjectName(QString::fromUtf8("actionToolBar"));
         actionToolBar->setCheckable(true);
         actionStatusBar = new QAction(SpiceMainWindow);
         actionStatusBar->setObjectName(QString::fromUtf8("actionStatusBar"));
         actionStatusBar->setCheckable(true);
+        actiontoolclose = new QAction(SpiceMainWindow);
+        actiontoolclose->setObjectName(QString::fromUtf8("actiontoolclose"));
+        actiontoolclose->setIcon(icon);
+        actiontoolcopy = new QAction(SpiceMainWindow);
+        actiontoolcopy->setObjectName(QString::fromUtf8("actiontoolcopy"));
+        QIcon icon2;
+        iconThemeName = QString::fromUtf8("copy");
+        if (QIcon::hasThemeIcon(iconThemeName)) {
+            icon2 = QIcon::fromTheme(iconThemeName);
+        } else {
+            icon2.addFile(QString::fromUtf8(":/icon/\345\244\215\345\210\266.png"), QSize(), QIcon::Normal, QIcon::Off);
+        }
+        actiontoolcopy->setIcon(icon2);
+        actiontoolpaste = new QAction(SpiceMainWindow);
+        actiontoolpaste->setObjectName(QString::fromUtf8("actiontoolpaste"));
+        QIcon icon3;
+        iconThemeName = QString::fromUtf8("paste");
+        if (QIcon::hasThemeIcon(iconThemeName)) {
+            icon3 = QIcon::fromTheme(iconThemeName);
+        } else {
+            icon3.addFile(QString::fromUtf8(":/icon/\347\262\230\350\264\264.png"), QSize(), QIcon::Normal, QIcon::Off);
+        }
+        actiontoolpaste->setIcon(icon3);
+        actiontoolfullscreen = new QAction(SpiceMainWindow);
+        actiontoolfullscreen->setObjectName(QString::fromUtf8("actiontoolfullscreen"));
+        actiontoolfullscreen->setIcon(icon1);
+        actionResize_to = new QAction(SpiceMainWindow);
+        actionResize_to->setObjectName(QString::fromUtf8("actionResize_to"));
         centralwidget = new QWidget(SpiceMainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         verticalLayoutWidget = new QWidget(centralwidget);
@@ -120,6 +169,14 @@ public:
         menuView->addAction(actionFullscreen);
         menuView->addAction(actionToolBar);
         menuView->addAction(actionStatusBar);
+        toolBar->addAction(actiontoolclose);
+        toolBar->addSeparator();
+        toolBar->addAction(actiontoolcopy);
+        toolBar->addAction(actiontoolpaste);
+        toolBar->addSeparator();
+        toolBar->addAction(actiontoolfullscreen);
+        toolBar->addSeparator();
+        toolBar->addAction(actionResize_to);
 
         retranslateUi(SpiceMainWindow);
 
@@ -138,6 +195,11 @@ public:
         actionFullscreen->setText(QApplication::translate("SpiceMainWindow", "Fullscreen", nullptr));
         actionToolBar->setText(QApplication::translate("SpiceMainWindow", "ToolBar", nullptr));
         actionStatusBar->setText(QApplication::translate("SpiceMainWindow", "StatusBar", nullptr));
+        actiontoolclose->setText(QApplication::translate("SpiceMainWindow", "toolclose", nullptr));
+        actiontoolcopy->setText(QApplication::translate("SpiceMainWindow", "toolcopy", nullptr));
+        actiontoolpaste->setText(QApplication::translate("SpiceMainWindow", "toolpaste", nullptr));
+        actiontoolfullscreen->setText(QApplication::translate("SpiceMainWindow", "toolfullscreen", nullptr));
+        actionResize_to->setText(QApplication::translate("SpiceMainWindow", "Resize to", nullptr));
         menu->setTitle(QApplication::translate("SpiceMainWindow", "File", nullptr));
         menuedit->setTitle(QApplication::translate("SpiceMainWindow", "Edit", nullptr));
         menuView->setTitle(QApplication::translate("SpiceMainWindow", "View", nullptr));
