@@ -38,15 +38,24 @@ LIBS += -lgobject-2.0 -lglib-2.0
 SOURCES += \
         main.cpp \
         widget.cpp \
-    spicemainwindow.cpp
+    spicemainwindow.cpp \
+    resizeto.cpp \
+    resdialog.cpp \
+    spicetest.cpp
 
 HEADERS += \
         widget.h \
-    spicemainwindow.h
+    spicemainwindow.h \
+    resizeto.h \
+    resdialog.h \
+    spicetest.h
 
 FORMS += \
         widget.ui \
-    spicemainwindow.ui
+    spicemainwindow.ui \
+    resizeto.ui \
+    resdialog.ui \
+    spicetest.ui
 
 CONFIG += no_keywords
 

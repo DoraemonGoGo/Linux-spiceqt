@@ -18,42 +18,14 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
     setCentralWidget(central);
     spicewindow = SpiceQt::getSpice();
     layout->addWidget(spicewindow, 1);
-
+    spicewindow->spiceResize(1000, 1000);
     central->setLayout(layout);
 
-//    spicewindow->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    spicewindow->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     ui->actionToolBar->setChecked(true);
     ui->actionStatusBar->setChecked(true);
 
-    //设置窗口的全屏和非全屏的切换
-    this->addAction(ui->actionFullscreen);
-    connect(ui->actionFullscreen, &QAction::triggered, [&]() {
-
-        auto full = ui->actionFullscreen->isChecked();
-        menuBar()->setVisible(!full);
-        ui->actionFullscreen->setShortcut(  full ? QKeySequence("Esc") : QKeySequence("Ctrl+F"));
-
-        static bool maximized = false;// 记录当前状态
-        if ( full )
-        {
-            maximized = isMaximized();
-        }
-        else if ( maximized && isMaximized() )
-        {
-            return;
-        }
-
-        if ( full && !isMaximized() || !full && isMaximized() )
-        {
-            if (isMaximized())
-            {
-                showNormal();
-            }
-            else
-                showMaximized();
-        }
-    });
-
+//    connect(ui->actiontoolclose, &QAction::trigger, this, &SpiceMainWindow::close);
     //设置状态栏获取鼠标指向位置
     auto acts = ui->menubar->actions();
     for (auto i : acts)
@@ -76,7 +48,6 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
             QWidget *w;
             if (a->isSeparator())
             {
-                //qDebug() << a->text();
 
                 auto line = new QWidget();
                 line->setFixedWidth(1);
@@ -126,6 +97,18 @@ void SpiceMainWindow::showspice(QString ip, QString port)
     spicewindow->connectToGuest(ip, port);
 }
 
+//主窗口键盘事件重写，全屏后识别退出
+void SpiceMainWindow::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Escape && isFullScreen())
+    {
+        ui->toolBar->setVisible(true);
+        ui->statusBar->setVisible(true);
+        ui->menubar->setVisible(true);
+        showNormal();
+    }
+}
+
 //设置工具栏显示
 void SpiceMainWindow::on_actionToolBar_toggled(bool arg1)
 {
@@ -136,4 +119,71 @@ void SpiceMainWindow::on_actionToolBar_toggled(bool arg1)
 void SpiceMainWindow::on_actionStatusBar_toggled(bool arg1)
 {
     ui->statusBar->setVisible(ui->actionStatusBar->isChecked());
+}
+
+//菜单中虚拟机全屏显示
+void SpiceMainWindow::fullscreen(bool full)
+{
+;
+    ui->toolBar->setVisible(!full);
+    ui->statusBar->setVisible(!full);
+    ui->menubar->setVisible(!full);
+    ui->actionFullscreen->setShortcut(  full ? QKeySequence("Esc") : QKeySequence("Ctrl+F"));
+
+    static bool maximized = false;// 记录当前状态
+    if ( full )
+    {
+        maximized = isFullScreen();
+    }
+    else if ( maximized && isFullScreen() )
+    {
+        return;
+    }
+
+    if ( full && !isFullScreen() || !full && isFullScreen() )
+    {
+        if (isFullScreen())
+        {
+            showNormal();
+        }
+        else
+            showFullScreen();
+    }
+}
+
+void SpiceMainWindow::on_actionFullscreen_triggered(bool checked)
+{
+    this->addAction(ui->actionFullscreen);
+    fullscreen(checked);
+}
+
+//工具栏中全屏操作
+void SpiceMainWindow::on_actiontoolfullscreen_triggered()
+{
+   auto full = isFullScreen();
+   ui->toolBar->setVisible(full);
+   ui->statusBar->setVisible(full);
+   ui->menubar->setVisible(full);
+
+   if(full)
+   {
+       showNormal();
+   }
+   else {
+       showFullScreen();
+    }
+}
+
+//工具栏Resize to按钮设置窗口大小
+void SpiceMainWindow::on_actionResize_to_triggered()
+{
+    qDebug() << "hhhhhh" <<endl;
+    resdia = new ResDialog(this);
+    resdia->show();
+}
+
+//工具栏close按钮关闭主窗口
+void SpiceMainWindow::on_actiontoolclose_triggered()
+{
+    this->close();
 }

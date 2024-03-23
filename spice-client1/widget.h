@@ -28,11 +28,15 @@ public:
 private Q_SLOTS:
     void on_connbtn_clicked();
 
+protected:
+    void keyPress(QKeyEvent *event);
+
 private:
     SpiceQt *_spiceWidget;
     QLineEdit *ipedit;
     QLineEdit *portedit;
     SpiceMainWindow *smw;
+
 private:
     Ui::Widget *ui;
     //Ui::SpiceMainWindow spiceui;

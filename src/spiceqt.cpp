@@ -87,9 +87,6 @@ QMap<int, int> * SpiceQt::keymap = NULL;
 SpiceQt::SpiceQt(QWidget *parent)
     : QWidget(parent), agentConnected(false)
 {
-//    QHBoxLayout *spicelayout = new QHBoxLayout(this);
-//    spicelayout->addWidget(instance);
-//    setLayout(spicelayout);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     display = NULL;
     SGsession = NULL;
@@ -100,11 +97,10 @@ SpiceQt::SpiceQt(QWidget *parent)
     setAutoFillBackground(true);
     setMouseTracking(true);
 //    grabMouse();
-    grabKeyboard();
+//    grabKeyboard();与主窗口键盘事件冲突
     timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(printSize()));
     timer->start(10000);
-//    installEventFilter(this);
 }
 
 SpiceQt * SpiceQt::getSpice(QWidget *parent)
@@ -314,6 +310,7 @@ void SpiceQt::wheelEvent(QWheelEvent *event)
 
 void SpiceQt::mousePressEvent(QMouseEvent *event)
 {
+    grabKeyboard();//防止键盘事件与主窗口冲突
     if (!display)
         return;
     SpiceDisplayPrivate *d = SPICE_DISPLAY_GET_PRIVATE(display);

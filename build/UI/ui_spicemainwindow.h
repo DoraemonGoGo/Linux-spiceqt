@@ -40,7 +40,7 @@ public:
     QAction *actiontoolfullscreen;
     QAction *actionResize_to;
     QWidget *centralwidget;
-    QWidget *verticalLayoutWidget;
+    QVBoxLayout *verticalLayout;
     QVBoxLayout *layout;
     QMenuBar *menubar;
     QMenu *menu;
@@ -56,7 +56,7 @@ public:
     {
         if (SpiceMainWindow->objectName().isEmpty())
             SpiceMainWindow->setObjectName(QString::fromUtf8("SpiceMainWindow"));
-        SpiceMainWindow->resize(701, 625);
+        SpiceMainWindow->resize(608, 597);
         action = new QAction(SpiceMainWindow);
         action->setObjectName(QString::fromUtf8("action"));
         action_2 = new QAction(SpiceMainWindow);
@@ -124,16 +124,17 @@ public:
         actionResize_to->setObjectName(QString::fromUtf8("actionResize_to"));
         centralwidget = new QWidget(SpiceMainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        verticalLayoutWidget = new QWidget(centralwidget);
-        verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
-        verticalLayoutWidget->setGeometry(QRect(0, 0, 701, 561));
-        layout = new QVBoxLayout(verticalLayoutWidget);
+        verticalLayout = new QVBoxLayout(centralwidget);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        layout = new QVBoxLayout();
         layout->setObjectName(QString::fromUtf8("layout"));
-        layout->setContentsMargins(0, 0, 0, 0);
+
+        verticalLayout->addLayout(layout);
+
         SpiceMainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(SpiceMainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 701, 28));
+        menubar->setGeometry(QRect(0, 0, 608, 28));
         menu = new QMenu(menubar);
         menu->setObjectName(QString::fromUtf8("menu"));
         menuedit = new QMenu(menubar);
