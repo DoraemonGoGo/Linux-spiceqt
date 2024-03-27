@@ -68,6 +68,14 @@
     <property name="title">
      <string>Options</string>
     </property>
+    <addaction name="actionGrab_keyboard_when_active_and_focused"/>
+    <addaction name="actionGrab_mouse"/>
+    <addaction name="actiontoggle_mouse_mode"/>
+    <addaction name="actionResize"/>
+    <addaction name="actionScale_display"/>
+    <addaction name="actionDisable_input"/>
+    <addaction name="actionsync_modifiers"/>
+    <addaction name="actionAutomatic_clipboard_bewteen_host_and_guest"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -202,6 +210,70 @@
   <action name="actionResize_to">
    <property name="text">
     <string>Resize to</string>
+   </property>
+  </action>
+  <action name="actionGrab_keyboard_when_active_and_focused">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Grab keyboard when active and focused</string>
+   </property>
+  </action>
+  <action name="actionGrab_mouse">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Grab mouse in server mode(no tablet/vdagent)</string>
+   </property>
+  </action>
+  <action name="actiontoggle_mouse_mode">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Toggle mouse mode</string>
+   </property>
+  </action>
+  <action name="actionResize">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Resize guest to match window size</string>
+   </property>
+  </action>
+  <action name="actionScale_display">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Scale display</string>
+   </property>
+  </action>
+  <action name="actionDisable_input">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disable input</string>
+   </property>
+  </action>
+  <action name="actionsync_modifiers">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>sync modifiers</string>
+   </property>
+  </action>
+  <action name="actionAutomatic_clipboard_bewteen_host_and_guest">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Automatic clipboard sharing between host and guest</string>
    </property>
   </action>
  </widget>

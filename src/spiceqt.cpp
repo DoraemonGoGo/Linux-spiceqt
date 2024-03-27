@@ -185,8 +185,13 @@ quint32 SpiceQt::getKeyboardLockModifiers()
 void SpiceQt::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);
+
     if (!img.isNull())
-        p.drawImage(0, 0, img);
+    {
+
+       QImage img1 = img.scaledToWidth(2000);
+        p.drawImage(0, 0, img1);
+    }
 }
 
 void SpiceQt::spiceResize(int w, int h)
@@ -207,6 +212,7 @@ void SpiceQt::settingsChanged(int w, int h, int bpp)
         setFixedSize(w, h);
     //imageSize(w, h);
 //    // 计算缩放因子
+//     img = img.scaledToWidth(3000);
 //    double scaleX = double(width()) / double(w);
 //    double scaleY = double(height()) / double(h);
 //    double scaleFactor = qMin(scaleX, scaleY); // 取较小的缩放因子

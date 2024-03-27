@@ -12,20 +12,20 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //设置instance的嵌入和布局
-    QHBoxLayout *layout = new QHBoxLayout();
-    spicewindow = new SpiceQt();
-    QWidget *central = new QWidget();
-    setCentralWidget(central);
+//    QHBoxLayout *layout = new QHBoxLayout();
+//    spicewindow = new SpiceQt();
+//    QWidget *central = new QWidget();
+//    setCentralWidget(central);
     spicewindow = SpiceQt::getSpice();
-    layout->addWidget(spicewindow, 1);
-    spicewindow->spiceResize(1000, 1000);
-    central->setLayout(layout);
+
+//    spicewindow->spiceResize(200, 1000);
+    ui->layout->addWidget(spicewindow);
+//    central->setLayout(layout);
 
     spicewindow->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     ui->actionToolBar->setChecked(true);
     ui->actionStatusBar->setChecked(true);
 
-//    connect(ui->actiontoolclose, &QAction::trigger, this, &SpiceMainWindow::close);
     //设置状态栏获取鼠标指向位置
     auto acts = ui->menubar->actions();
     for (auto i : acts)
@@ -92,9 +92,9 @@ void SpiceMainWindow::showspice(QString ip, QString port)
     int spiceheight = spicewindow->height();
     int spicewidth = spicewindow->width();
 //    qDebug() << height << " , " << width << endl;
-    qDebug() << spiceheight << " , " << spicewidth << endl;
-    spicewindow->show();
-    spicewindow->connectToGuest(ip, port);
+//    qDebug() << spiceheight << " , " << spicewidth << endl;
+//    spicewindow->show();
+//    spicewindow->connectToGuest(ip, port);
 }
 
 //主窗口键盘事件重写，全屏后识别退出
@@ -107,6 +107,16 @@ void SpiceMainWindow::keyPressEvent(QKeyEvent *event)
         ui->menubar->setVisible(true);
         showNormal();
     }
+}
+
+void SpiceMainWindow::resizeEvent(QResizeEvent *event)
+{
+        int scalew=event->size().width()/event->oldSize().width();
+        int scaleh=event->size().height()/event->oldSize().height();
+        ui->centralwidget->resize(ui->centralwidget->width()*scalew,ui->centralwidget->height()*scaleh);
+        spicewindow->resize(event->size());
+        qDebug()<<event->oldSize()<<" "<<event->size();
+        qDebug()<<ui->centralwidget->width()<<" "<<ui->centralwidget->height();
 }
 
 //设置工具栏显示

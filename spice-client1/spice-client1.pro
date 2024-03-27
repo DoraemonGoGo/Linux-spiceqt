@@ -39,23 +39,17 @@ SOURCES += \
         main.cpp \
         widget.cpp \
     spicemainwindow.cpp \
-    resizeto.cpp \
-    resdialog.cpp \
-    spicetest.cpp
+    resdialog.cpp
 
 HEADERS += \
         widget.h \
     spicemainwindow.h \
-    resizeto.h \
-    resdialog.h \
-    spicetest.h
+    resdialog.h
 
 FORMS += \
         widget.ui \
     spicemainwindow.ui \
-    resizeto.ui \
-    resdialog.ui \
-    spicetest.ui
+    resdialog.ui
 
 CONFIG += no_keywords
 

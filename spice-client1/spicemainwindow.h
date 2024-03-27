@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QKeyEvent>
 #include <QDebug>
-#include "resizeto.h"
 #include <resdialog.h>
 
 namespace Ui {
@@ -28,6 +27,7 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
 private Q_SLOTS:
     void on_actionToolBar_toggled(bool arg1);

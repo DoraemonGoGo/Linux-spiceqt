@@ -55,21 +55,17 @@ OBJECTS_DIR   = ./
 SOURCES       = ../spice-client1/main.cpp \
 		../spice-client1/widget.cpp \
 		../spice-client1/spicemainwindow.cpp \
-		../spice-client1/resizeto.cpp \
 		../spice-client1/resdialog.cpp qrc_res.cpp \
 		moc_widget.cpp \
 		moc_spicemainwindow.cpp \
-		moc_resizeto.cpp \
 		moc_resdialog.cpp
 OBJECTS       = main.o \
 		widget.o \
 		spicemainwindow.o \
-		resizeto.o \
 		resdialog.o \
 		qrc_res.o \
 		moc_widget.o \
 		moc_spicemainwindow.o \
-		moc_resizeto.o \
 		moc_resdialog.o
 DIST          = /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/common/unix.conf \
@@ -261,11 +257,9 @@ DIST          = /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/lex.prf \
 		../spice-client1/spice-client1.pro ../spice-client1/widget.h \
 		../spice-client1/spicemainwindow.h \
-		../spice-client1/resizeto.h \
 		../spice-client1/resdialog.h ../spice-client1/main.cpp \
 		../spice-client1/widget.cpp \
 		../spice-client1/spicemainwindow.cpp \
-		../spice-client1/resizeto.cpp \
 		../spice-client1/resdialog.cpp
 QMAKE_TARGET  = spice-client1
 DESTDIR       = 
@@ -275,7 +269,7 @@ TARGET        = spice-client1
 first: all
 ####### Build rules
 
-spice-client1: UI/ui_widget.h UI/ui_spicemainwindow.h UI/ui_resizeto.h UI/ui_resdialog.h $(OBJECTS)  
+spice-client1: UI/ui_widget.h UI/ui_spicemainwindow.h UI/ui_resdialog.h $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: ../spice-client1/spice-client1.pro /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/linux-g++/qmake.conf /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/spec_pre.prf \
@@ -681,9 +675,9 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../spice-client1/res.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../spice-client1/widget.h ../spice-client1/spicemainwindow.h ../spice-client1/resizeto.h ../spice-client1/resdialog.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../spice-client1/main.cpp ../spice-client1/widget.cpp ../spice-client1/spicemainwindow.cpp ../spice-client1/resizeto.cpp ../spice-client1/resdialog.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../spice-client1/widget.ui ../spice-client1/spicemainwindow.ui ../spice-client1/resizeto.ui ../spice-client1/resdialog.ui $(DISTDIR)/
+	$(COPY_FILE) --parents ../spice-client1/widget.h ../spice-client1/spicemainwindow.h ../spice-client1/resdialog.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../spice-client1/main.cpp ../spice-client1/widget.cpp ../spice-client1/spicemainwindow.cpp ../spice-client1/resdialog.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../spice-client1/widget.ui ../spice-client1/spicemainwindow.ui ../spice-client1/resdialog.ui $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -723,9 +717,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++11 -Wall -W -dM -E -o moc_predefs.h /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_widget.cpp moc_spicemainwindow.cpp moc_resizeto.cpp moc_resdialog.cpp
+compiler_moc_header_make_all: moc_widget.cpp moc_spicemainwindow.cpp moc_resdialog.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_widget.cpp moc_spicemainwindow.cpp moc_resizeto.cpp moc_resdialog.cpp
+	-$(DEL_FILE) moc_widget.cpp moc_spicemainwindow.cpp moc_resdialog.cpp
 moc_widget.cpp: ../spice-client1/widget.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qwidget.h \
@@ -1061,7 +1055,6 @@ moc_widget.cpp: ../spice-client1/widget.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtabwidget.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/QKeyEvent \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QDebug \
-		../spice-client1/resizeto.h \
 		../spice-client1/resdialog.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QDialog \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdialog.h \
@@ -1178,122 +1171,12 @@ moc_spicemainwindow.cpp: ../spice-client1/spicemainwindow.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qicon.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/QKeyEvent \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QDebug \
-		../spice-client1/resizeto.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
 		../spice-client1/resdialog.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QDialog \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdialog.h \
 		moc_predefs.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc
 	/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc $(DEFINES) --include /home/doraemon/Downloads/spice-qt/build/moc_predefs.h -I/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/linux-g++ -I/home/doraemon/Downloads/spice-qt/spice-client1 -I/usr/include/glib-2.0 -I/usr/include/glib-2.0/gobject -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/spice-client-glib-2.0 -I/usr/include/pixman-1 -I/usr/include/spice-1 -I/home/doraemon/Downloads/spice-qt/common -I/home/doraemon/Downloads/spice-qt/headers -I/opt/Qt5.12.2/5.12.2/gcc_64/include -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore -I. -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../spice-client1/spicemainwindow.h -o moc_spicemainwindow.cpp
-
-moc_resizeto.cpp: ../spice-client1/resizeto.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qwidget.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtguiglobal.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qglobal.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qconfig-bootstrapped.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qconfig.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qtcore-config.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qsystemdetection.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qprocessordetection.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcompilerdetection.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qtypeinfo.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qsysinfo.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qlogging.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qflags.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qatomic.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qbasicatomic.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qatomic_bootstrap.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qgenericatomic.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qatomic_cxx11.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qatomic_msvc.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qglobalstatic.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qmutex.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qnumeric.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qversiontagging.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtgui-config.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtwidgets-config.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qwindowdefs.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qobjectdefs.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qnamespace.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qobjectdefs_impl.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qwindowdefs_win.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qobject.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstring.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qchar.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qbytearray.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qrefcount.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qarraydata.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstringliteral.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstringalgorithms.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstringview.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstringbuilder.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qlist.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qalgorithms.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qiterator.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qhashfunctions.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qpair.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qbytearraylist.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstringlist.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qregexp.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstringmatcher.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreevent.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qscopedpointer.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qmetatype.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qvarlengtharray.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcontainerfwd.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qobject_impl.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qmargins.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpaintdevice.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qrect.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qsize.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qpoint.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpalette.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qcolor.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qrgb.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qrgba64.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qbrush.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qvector.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qmatrix.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpolygon.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qregion.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qdatastream.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qline.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtransform.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpainterpath.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qimage.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpixelformat.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpixmap.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qfont.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qfontmetrics.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qfontinfo.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qsizepolicy.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qcursor.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qkeysequence.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qevent.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qvariant.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qlocale.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qset.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcontiguouscache.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qurl.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qurlquery.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qfile.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qfiledevice.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qvector2d.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtouchdevice.h \
-		moc_predefs.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc
-	/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc $(DEFINES) --include /home/doraemon/Downloads/spice-qt/build/moc_predefs.h -I/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/linux-g++ -I/home/doraemon/Downloads/spice-qt/spice-client1 -I/usr/include/glib-2.0 -I/usr/include/glib-2.0/gobject -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/spice-client-glib-2.0 -I/usr/include/pixman-1 -I/usr/include/spice-1 -I/home/doraemon/Downloads/spice-qt/common -I/home/doraemon/Downloads/spice-qt/headers -I/opt/Qt5.12.2/5.12.2/gcc_64/include -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore -I. -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../spice-client1/resizeto.h -o moc_resizeto.cpp
 
 moc_resdialog.cpp: ../spice-client1/resdialog.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QDialog \
@@ -1408,9 +1291,9 @@ compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
-compiler_uic_make_all: UI/ui_widget.h UI/ui_spicemainwindow.h UI/ui_resizeto.h UI/ui_resdialog.h
+compiler_uic_make_all: UI/ui_widget.h UI/ui_spicemainwindow.h UI/ui_resdialog.h
 compiler_uic_clean:
-	-$(DEL_FILE) UI/ui_widget.h UI/ui_spicemainwindow.h UI/ui_resizeto.h UI/ui_resdialog.h
+	-$(DEL_FILE) UI/ui_widget.h UI/ui_spicemainwindow.h UI/ui_resdialog.h
 UI/ui_widget.h: ../spice-client1/widget.ui \
 		/opt/Qt5.12.2/5.12.2/gcc_64/bin/uic
 	/opt/Qt5.12.2/5.12.2/gcc_64/bin/uic ../spice-client1/widget.ui -o UI/ui_widget.h
@@ -1418,10 +1301,6 @@ UI/ui_widget.h: ../spice-client1/widget.ui \
 UI/ui_spicemainwindow.h: ../spice-client1/spicemainwindow.ui \
 		/opt/Qt5.12.2/5.12.2/gcc_64/bin/uic
 	/opt/Qt5.12.2/5.12.2/gcc_64/bin/uic ../spice-client1/spicemainwindow.ui -o UI/ui_spicemainwindow.h
-
-UI/ui_resizeto.h: ../spice-client1/resizeto.ui \
-		/opt/Qt5.12.2/5.12.2/gcc_64/bin/uic
-	/opt/Qt5.12.2/5.12.2/gcc_64/bin/uic ../spice-client1/resizeto.ui -o UI/ui_resizeto.h
 
 UI/ui_resdialog.h: ../spice-client1/resdialog.ui \
 		/opt/Qt5.12.2/5.12.2/gcc_64/bin/uic
@@ -1772,7 +1651,6 @@ main.o: ../spice-client1/main.cpp ../spice-client1/widget.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtabwidget.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/QKeyEvent \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QDebug \
-		../spice-client1/resizeto.h \
 		../spice-client1/resdialog.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QDialog \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdialog.h \
@@ -2116,7 +1994,6 @@ widget.o: ../spice-client1/widget.cpp ../spice-client1/widget.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtabwidget.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/QKeyEvent \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QDebug \
-		../spice-client1/resizeto.h \
 		../spice-client1/resdialog.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QDialog \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdialog.h \
@@ -2267,37 +2144,16 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qicon.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/QKeyEvent \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QDebug \
-		../spice-client1/resizeto.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
 		../spice-client1/resdialog.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QDialog \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdialog.h \
 		UI/ui_spicemainwindow.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QVariant \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QAction \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qaction.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qactiongroup.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QApplication \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qapplication.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreapplication.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qeventloop.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qguiapplication.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qinputmethod.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMenu \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmenu.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMenuBar \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmenubar.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QStatusBar \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qstatusbar.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QToolBar \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtoolbar.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QVBoxLayout \
 		../headers/spiceqt.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstracteventdispatcher.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractitemmodel.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractproxymodel.h \
@@ -2323,6 +2179,7 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcollator.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcommandlineoption.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcommandlineparser.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreapplication.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcryptographichash.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qdeadlinetimer.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qelapsedtimer.h \
@@ -2443,6 +2300,8 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qgenericmatrix.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qgenericplugin.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qgenericpluginfactory.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qguiapplication.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qinputmethod.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qiconengine.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qiconengineplugin.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qimageiohandler.h \
@@ -2511,6 +2370,7 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtexttable.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qvalidator.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtguiversion.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QPushButton \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qpushbutton.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractbutton.h \
@@ -2526,139 +2386,6 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		../headers/spice-gtk-session.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QTimer
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o spicemainwindow.o ../spice-client1/spicemainwindow.cpp
-
-resizeto.o: ../spice-client1/resizeto.cpp ../spice-client1/resizeto.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qwidget.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtwidgetsglobal.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtguiglobal.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qglobal.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qconfig-bootstrapped.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qconfig.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qtcore-config.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qsystemdetection.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qprocessordetection.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcompilerdetection.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qtypeinfo.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qsysinfo.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qlogging.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qflags.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qatomic.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qbasicatomic.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qatomic_bootstrap.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qgenericatomic.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qatomic_cxx11.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qatomic_msvc.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qglobalstatic.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qmutex.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qnumeric.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qversiontagging.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtgui-config.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtwidgets-config.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qwindowdefs.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qobjectdefs.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qnamespace.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qobjectdefs_impl.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qwindowdefs_win.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qobject.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstring.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qchar.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qbytearray.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qrefcount.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qarraydata.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstringliteral.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstringalgorithms.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstringview.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstringbuilder.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qlist.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qalgorithms.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qiterator.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qhashfunctions.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qpair.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qbytearraylist.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstringlist.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qregexp.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qstringmatcher.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreevent.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qscopedpointer.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qmetatype.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qvarlengtharray.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcontainerfwd.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qobject_impl.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qmargins.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpaintdevice.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qrect.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qsize.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qpoint.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpalette.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qcolor.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qrgb.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qrgba64.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qbrush.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qvector.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qmatrix.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpolygon.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qregion.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qdatastream.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qline.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtransform.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpainterpath.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qimage.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpixelformat.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpixmap.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qfont.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qfontmetrics.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qfontinfo.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qsizepolicy.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qcursor.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qkeysequence.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qevent.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qvariant.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qmap.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qdebug.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qtextstream.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qlocale.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qset.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcontiguouscache.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qurl.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qurlquery.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qfile.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qfiledevice.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qvector2d.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtouchdevice.h \
-		UI/ui_resizeto.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QVariant \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QApplication \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qapplication.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreapplication.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qeventloop.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdesktopwidget.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qguiapplication.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qinputmethod.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QHBoxLayout \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qboxlayout.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qlayout.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qlayoutitem.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qgridlayout.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QLabel \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qlabel.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qframe.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QLineEdit \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qlineedit.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtextcursor.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtextformat.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpen.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtextoption.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QPushButton \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qpushbutton.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractbutton.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qicon.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o resizeto.o ../spice-client1/resizeto.cpp
 
 resdialog.o: ../spice-client1/resdialog.cpp ../spice-client1/resdialog.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QDialog \
@@ -2776,9 +2503,6 @@ moc_widget.o: moc_widget.cpp
 
 moc_spicemainwindow.o: moc_spicemainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_spicemainwindow.o moc_spicemainwindow.cpp
-
-moc_resizeto.o: moc_resizeto.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_resizeto.o moc_resizeto.cpp
 
 moc_resdialog.o: moc_resdialog.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_resdialog.o moc_resdialog.cpp
