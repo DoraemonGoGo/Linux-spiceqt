@@ -18,7 +18,6 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
 //    setCentralWidget(central);
     spicewindow = SpiceQt::getSpice();
 
-//    spicewindow->spiceResize(200, 1000);
     ui->layout->addWidget(spicewindow);
 //    central->setLayout(layout);
 
@@ -93,8 +92,8 @@ void SpiceMainWindow::showspice(QString ip, QString port)
     int spicewidth = spicewindow->width();
 //    qDebug() << height << " , " << width << endl;
 //    qDebug() << spiceheight << " , " << spicewidth << endl;
-//    spicewindow->show();
-//    spicewindow->connectToGuest(ip, port);
+    spicewindow->show();
+    spicewindow->connectToGuest(ip, port);
 }
 
 //主窗口键盘事件重写，全屏后识别退出
@@ -113,8 +112,8 @@ void SpiceMainWindow::resizeEvent(QResizeEvent *event)
 {
         int scalew=event->size().width()/event->oldSize().width();
         int scaleh=event->size().height()/event->oldSize().height();
-        ui->centralwidget->resize(ui->centralwidget->width()*scalew,ui->centralwidget->height()*scaleh);
-        spicewindow->resize(event->size());
+//        ui->centralwidget->resize(ui->centralwidget->width()*scalew,ui->centralwidget->height()*scaleh);
+        spicewindow->spiceResize(event->size().width(), event->size().height());
         qDebug()<<event->oldSize()<<" "<<event->size();
         qDebug()<<ui->centralwidget->width()<<" "<<ui->centralwidget->height();
 }

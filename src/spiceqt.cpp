@@ -188,9 +188,9 @@ void SpiceQt::paintEvent(QPaintEvent *event)
 
     if (!img.isNull())
     {
-
-       QImage img1 = img.scaledToWidth(2000);
-        p.drawImage(0, 0, img1);
+        QImage scaledImg = img.scaled(this->size(), Qt::KeepAspectRatio);
+//       QImage img1 = img.scaledToWidth(2000);
+        p.drawImage(0, 0, scaledImg);
     }
 }
 
@@ -209,7 +209,7 @@ void SpiceQt::settingsChanged(int w, int h, int bpp)
     rate = double(height()) / double(dataHeight);
     img = QImage(w, h, QImage::Format_RGB32);
     if (w != width() || h != height())
-        setFixedSize(w, h);
+        spiceResize(width(), height());
     //imageSize(w, h);
 //    // 计算缩放因子
 //     img = img.scaledToWidth(3000);
