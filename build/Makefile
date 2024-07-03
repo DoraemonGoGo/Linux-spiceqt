@@ -14,10 +14,10 @@ EQ            = =
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_NO_KEYWORDS -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_NO_KEYWORDS -DQT_WIDGETS_LIB -DQT_MULTIMEDIA_LIB -DQT_GUI_LIB -DQT_NETWORK_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../spice-client1 -I. -isystem /usr/include/glib-2.0 -isystem /usr/include/glib-2.0/gobject -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -isystem /usr/include/spice-client-glib-2.0 -isystem /usr/include/pixman-1 -isystem /usr/include/spice-1 -I../common -I../headers -I/opt/Qt5.12.2/5.12.2/gcc_64/include -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -IUI -I/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/linux-g++
+INCPATH       = -I../spice-client1 -I. -isystem /usr/include/glib-2.0 -isystem /usr/include/glib-2.0/gobject -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -isystem /usr/include/spice-client-glib-2.0 -isystem /usr/include/libusb-1.0 -isystem /usr/include/pixman-1 -isystem /usr/include/spice-1 -I../common -I../headers -I/opt/Qt5.12.2/5.12.2/gcc_64/include -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtNetwork -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore -I. -isystem /usr/include/libdrm -IUI -I/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/linux-g++
 QMAKE         = /opt/Qt5.12.2/5.12.2/gcc_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -40,7 +40,7 @@ DISTNAME      = spice-client11.0.0
 DISTDIR = /home/doraemon/Downloads/spice-qt/build/.tmp/spice-client11.0.0
 LINK          = g++
 LFLAGS        = -L../ -Wl,-rpath,/opt/Qt5.12.2/5.12.2/gcc_64/lib
-LIBS          = $(SUBLIBS) -L/home/doraemon/Downloads/spice-qt/build -lspice-qt -lgobject-2.0 -lglib-2.0 -L/opt/Qt5.12.2/5.12.2/gcc_64/lib -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread   
+LIBS          = $(SUBLIBS) `pkg-config --libs glib-2.0 spice-client-glib-2.0` -lusb-1.0 -L/home/doraemon/Downloads/spice-qt/build -lspice-qt -lgobject-2.0 -lglib-2.0 -L/opt/Qt5.12.2/5.12.2/gcc_64/lib -lQt5Widgets -lQt5Multimedia -lQt5Gui -lQt5Network -lQt5Core -lGL -lpthread   
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -463,7 +463,9 @@ Makefile: ../spice-client1/spice-client1.pro /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs
 		../spice-client1/spice-client1.pro \
 		../spice-client1/res.qrc \
 		/opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Widgets.prl \
+		/opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Multimedia.prl \
 		/opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Gui.prl \
+		/opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Network.prl \
 		/opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Core.prl
 	$(QMAKE) -o Makefile ../spice-client1/spice-client1.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
 /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/features/spec_pre.prf:
@@ -657,7 +659,9 @@ Makefile: ../spice-client1/spice-client1.pro /opt/Qt5.12.2/5.12.2/gcc_64/mkspecs
 ../spice-client1/spice-client1.pro:
 ../spice-client1/res.qrc:
 /opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Widgets.prl:
+/opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Multimedia.prl:
 /opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Gui.prl:
+/opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Network.prl:
 /opt/Qt5.12.2/5.12.2/gcc_64/lib/libQt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -o Makefile ../spice-client1/spice-client1.pro -spec linux-g++ CONFIG+=debug CONFIG+=qml_debug
@@ -705,6 +709,7 @@ compiler_rcc_clean:
 	-$(DEL_FILE) qrc_res.cpp
 qrc_res.cpp: ../spice-client1/res.qrc \
 		/opt/Qt5.12.2/5.12.2/gcc_64/bin/rcc \
+		../spice-client1/icon/Photo_UKey_Line.png \
 		../spice-client1/icon/????.png \
 		../spice-client1/icon/??.png \
 		../spice-client1/icon/??.png \
@@ -1060,7 +1065,7 @@ moc_widget.cpp: ../spice-client1/widget.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdialog.h \
 		moc_predefs.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc
-	/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc $(DEFINES) --include /home/doraemon/Downloads/spice-qt/build/moc_predefs.h -I/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/linux-g++ -I/home/doraemon/Downloads/spice-qt/spice-client1 -I/usr/include/glib-2.0 -I/usr/include/glib-2.0/gobject -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/spice-client-glib-2.0 -I/usr/include/pixman-1 -I/usr/include/spice-1 -I/home/doraemon/Downloads/spice-qt/common -I/home/doraemon/Downloads/spice-qt/headers -I/opt/Qt5.12.2/5.12.2/gcc_64/include -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore -I. -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../spice-client1/widget.h -o moc_widget.cpp
+	/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc $(DEFINES) --include /home/doraemon/Downloads/spice-qt/build/moc_predefs.h -I/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/linux-g++ -I/home/doraemon/Downloads/spice-qt/spice-client1 -I/usr/include/glib-2.0 -I/usr/include/glib-2.0/gobject -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/spice-client-glib-2.0 -I/usr/include/libusb-1.0 -I/usr/include/pixman-1 -I/usr/include/spice-1 -I/home/doraemon/Downloads/spice-qt/common -I/home/doraemon/Downloads/spice-qt/headers -I/opt/Qt5.12.2/5.12.2/gcc_64/include -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtNetwork -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore -I. -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../spice-client1/widget.h -o moc_widget.cpp
 
 moc_spicemainwindow.cpp: ../spice-client1/spicemainwindow.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMainWindow \
@@ -1176,7 +1181,7 @@ moc_spicemainwindow.cpp: ../spice-client1/spicemainwindow.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdialog.h \
 		moc_predefs.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc
-	/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc $(DEFINES) --include /home/doraemon/Downloads/spice-qt/build/moc_predefs.h -I/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/linux-g++ -I/home/doraemon/Downloads/spice-qt/spice-client1 -I/usr/include/glib-2.0 -I/usr/include/glib-2.0/gobject -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/spice-client-glib-2.0 -I/usr/include/pixman-1 -I/usr/include/spice-1 -I/home/doraemon/Downloads/spice-qt/common -I/home/doraemon/Downloads/spice-qt/headers -I/opt/Qt5.12.2/5.12.2/gcc_64/include -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore -I. -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../spice-client1/spicemainwindow.h -o moc_spicemainwindow.cpp
+	/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc $(DEFINES) --include /home/doraemon/Downloads/spice-qt/build/moc_predefs.h -I/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/linux-g++ -I/home/doraemon/Downloads/spice-qt/spice-client1 -I/usr/include/glib-2.0 -I/usr/include/glib-2.0/gobject -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/spice-client-glib-2.0 -I/usr/include/libusb-1.0 -I/usr/include/pixman-1 -I/usr/include/spice-1 -I/home/doraemon/Downloads/spice-qt/common -I/home/doraemon/Downloads/spice-qt/headers -I/opt/Qt5.12.2/5.12.2/gcc_64/include -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtNetwork -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore -I. -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../spice-client1/spicemainwindow.h -o moc_spicemainwindow.cpp
 
 moc_resdialog.cpp: ../spice-client1/resdialog.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QDialog \
@@ -1285,7 +1290,7 @@ moc_resdialog.cpp: ../spice-client1/resdialog.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtouchdevice.h \
 		moc_predefs.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc
-	/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc $(DEFINES) --include /home/doraemon/Downloads/spice-qt/build/moc_predefs.h -I/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/linux-g++ -I/home/doraemon/Downloads/spice-qt/spice-client1 -I/usr/include/glib-2.0 -I/usr/include/glib-2.0/gobject -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/spice-client-glib-2.0 -I/usr/include/pixman-1 -I/usr/include/spice-1 -I/home/doraemon/Downloads/spice-qt/common -I/home/doraemon/Downloads/spice-qt/headers -I/opt/Qt5.12.2/5.12.2/gcc_64/include -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore -I. -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../spice-client1/resdialog.h -o moc_resdialog.cpp
+	/opt/Qt5.12.2/5.12.2/gcc_64/bin/moc $(DEFINES) --include /home/doraemon/Downloads/spice-qt/build/moc_predefs.h -I/opt/Qt5.12.2/5.12.2/gcc_64/mkspecs/linux-g++ -I/home/doraemon/Downloads/spice-qt/spice-client1 -I/usr/include/glib-2.0 -I/usr/include/glib-2.0/gobject -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/spice-client-glib-2.0 -I/usr/include/libusb-1.0 -I/usr/include/pixman-1 -I/usr/include/spice-1 -I/home/doraemon/Downloads/spice-qt/common -I/home/doraemon/Downloads/spice-qt/headers -I/opt/Qt5.12.2/5.12.2/gcc_64/include -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtNetwork -I/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore -I. -I/usr/include/c++/9 -I/usr/include/x86_64-linux-gnu/c++/9 -I/usr/include/c++/9/backward -I/usr/lib/gcc/x86_64-linux-gnu/9/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../spice-client1/resdialog.h -o moc_resdialog.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -2012,6 +2017,17 @@ widget.o: ../spice-client1/widget.cpp ../spice-client1/widget.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtextedit.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractscrollarea.h \
 		../headers/spiceqt.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/QAudioOutput \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qaudiooutput.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qtmultimediaglobal.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qtmultimedia-config.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qmultimedia.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qaudio.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qaudioformat.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qaudiodeviceinfo.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/QAudioInput \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qaudioinput.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QBuffer \
 		../headers/spice-widget.h \
 		../headers/spice-client.h \
 		../headers/spice-session.h \
@@ -2137,24 +2153,52 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qvector2d.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtouchdevice.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/QMouseEvent \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QPushButton \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qpushbutton.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractbutton.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qicon.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QListWidget \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qlistwidget.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qlistview.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractitemview.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractscrollarea.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qframe.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractitemmodel.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qitemselectionmodel.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractitemdelegate.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qstyleoption.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractspinbox.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qvalidator.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qregularexpression.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qslider.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractslider.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qstyle.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtabbar.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtabwidget.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qrubberband.h \
 		../spice-client1/spicemainwindow.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMainWindow \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmainwindow.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtabwidget.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qicon.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/QKeyEvent \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QDebug \
 		../spice-client1/resdialog.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QDialog \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdialog.h \
 		UI/ui_spicemainwindow.h \
+		../headers/spice-client.h \
+		../headers/spice-session.h \
+		../headers/spice-util.h \
+		../headers/spice-channel.h \
+		../headers/channel-main.h \
+		../headers/channel-display.h \
+		../headers/channel-inputs.h \
+		../headers/spice-audio.h \
 		../headers/spiceqt.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QtCore \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstracteventdispatcher.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qeventloop.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractitemmodel.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractstate.h \
@@ -2171,7 +2215,6 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcborvalue.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qdatetime.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcborcommon.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qregularexpression.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/quuid.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcbormap.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcborstream.h \
@@ -2205,7 +2248,6 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qhistorystate.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qidentityproxymodel.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qisenum.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qitemselectionmodel.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qjsonarray.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qjsonvalue.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qjsondocument.h \
@@ -2368,22 +2410,28 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtextdocumentwriter.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtextlist.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtexttable.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qvalidator.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtguiversion.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QPushButton \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qpushbutton.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractbutton.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/QAudioOutput \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qaudiooutput.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qtmultimediaglobal.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qtmultimedia-config.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qmultimedia.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qaudio.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qaudioformat.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qaudiodeviceinfo.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/QAudioInput \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qaudioinput.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QBuffer \
 		../headers/spice-widget.h \
-		../headers/spice-client.h \
-		../headers/spice-session.h \
-		../headers/spice-util.h \
-		../headers/spice-channel.h \
-		../headers/channel-main.h \
-		../headers/channel-display.h \
-		../headers/channel-inputs.h \
-		../headers/spice-audio.h \
 		../headers/spice-gtk-session.h \
+		../headers/spice-widget-priv.h \
+		../headers/spice-common.h \
+		../common/mem.h \
+		../common/messages.h \
+		../common/draw.h \
+		../common/marshaller.h \
+		../headers/spice-grabsequence.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QTimer
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o spicemainwindow.o ../spice-client1/spicemainwindow.cpp
 

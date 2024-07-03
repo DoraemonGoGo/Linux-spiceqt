@@ -32,9 +32,11 @@ void Widget::on_connbtn_clicked()
     QString port = ui->portedit->text();
     smw = new SpiceMainWindow();
     smw->setWindowTitle("SpiceConnection");
+    qDebug()<<"______________________________";
     smw->showspice(ip, port);
     smw->show();
 
+    spiceWindows.append(smw);  // 将新创建的实例添加到列表中
 }
 
 Widget::~Widget()

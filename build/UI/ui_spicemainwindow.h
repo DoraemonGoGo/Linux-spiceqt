@@ -47,6 +47,7 @@ public:
     QAction *actionDisable_input;
     QAction *actionsync_modifiers;
     QAction *actionAutomatic_clipboard_bewteen_host_and_guest;
+    QAction *action_usbredir;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QVBoxLayout *layout;
@@ -154,6 +155,16 @@ public:
         actionAutomatic_clipboard_bewteen_host_and_guest = new QAction(SpiceMainWindow);
         actionAutomatic_clipboard_bewteen_host_and_guest->setObjectName(QString::fromUtf8("actionAutomatic_clipboard_bewteen_host_and_guest"));
         actionAutomatic_clipboard_bewteen_host_and_guest->setCheckable(true);
+        action_usbredir = new QAction(SpiceMainWindow);
+        action_usbredir->setObjectName(QString::fromUtf8("action_usbredir"));
+        QIcon icon4;
+        iconThemeName = QString::fromUtf8("usbredir");
+        if (QIcon::hasThemeIcon(iconThemeName)) {
+            icon4 = QIcon::fromTheme(iconThemeName);
+        } else {
+            icon4.addFile(QString::fromUtf8(":/icon/Photo_UKey_Line.png"), QSize(), QIcon::Normal, QIcon::Off);
+        }
+        action_usbredir->setIcon(icon4);
         centralwidget = new QWidget(SpiceMainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -164,6 +175,7 @@ public:
         verticalLayout = new QVBoxLayout(centralwidget);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         layout = new QVBoxLayout();
+        layout->setSpacing(0);
         layout->setObjectName(QString::fromUtf8("layout"));
 
         verticalLayout->addLayout(layout);
@@ -221,6 +233,7 @@ public:
         toolBar->addAction(actiontoolpaste);
         toolBar->addSeparator();
         toolBar->addAction(actiontoolfullscreen);
+        toolBar->addAction(action_usbredir);
         toolBar->addSeparator();
         toolBar->addAction(actionResize_to);
 
@@ -254,6 +267,10 @@ public:
         actionDisable_input->setText(QApplication::translate("SpiceMainWindow", "Disable input", nullptr));
         actionsync_modifiers->setText(QApplication::translate("SpiceMainWindow", "sync modifiers", nullptr));
         actionAutomatic_clipboard_bewteen_host_and_guest->setText(QApplication::translate("SpiceMainWindow", "Automatic clipboard sharing between host and guest", nullptr));
+        action_usbredir->setText(QApplication::translate("SpiceMainWindow", "usbredir", nullptr));
+#ifndef QT_NO_TOOLTIP
+        action_usbredir->setToolTip(QApplication::translate("SpiceMainWindow", "usb_redir", nullptr));
+#endif // QT_NO_TOOLTIP
         menu->setTitle(QApplication::translate("SpiceMainWindow", "File", nullptr));
         menuedit->setTitle(QApplication::translate("SpiceMainWindow", "Edit", nullptr));
         menuView->setTitle(QApplication::translate("SpiceMainWindow", "View", nullptr));

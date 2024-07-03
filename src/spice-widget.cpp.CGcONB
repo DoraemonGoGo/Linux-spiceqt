@@ -2,7 +2,6 @@ extern "C"
 {
 #include "spice-widget.h"
 #include "spice-widget-priv.h"
-#include <channel-display.h>
 }
 
 #include "spiceqt.h"
@@ -19,51 +18,19 @@ static void disconnect_display(SpiceDisplay *display);
 static void channel_new(SpiceSession *s, SpiceChannel *channel, gpointer data);
 static void channel_destroy(SpiceSession *s, SpiceChannel *channel, gpointer data);
 static void callbackInvalidate(SpiceDisplayPrivate *d, gint x, gint y, gint w, gint h);
-static void callbackSettingsChanged(SpiceDisplay *display, gint width, gint height, gint bpp);
+static void callbackSettingsChanged(gint instance, gint width, gint height, gint bpp);
 static void sync_keyboard_lock_modifiers(SpiceDisplay *display, guint32 modifiers);
 
 /* ---------------------------------------------------------------- */
-
 static void callbackInvalidate(SpiceDisplayPrivate *d, gint x, gint y, gint w, gint h)
 {
-//    qDebug() << "callbackInvalidate: Checking if cursor is initialized...";
-    if (!d->cursor_init_done) {
-        qDebug() << "Error: Cursor not initialized!";
-        return;
-    }
-
     uchar *img = static_cast<uchar*>(d->data);
     SpiceQt::getSpice()->updateImage(img, x, y, w, h);
-    //d->spiceQtInstance->updateImage(img, x, y, w, h);
 }
 
-// OpenGL 绘图函数
-static void draw_gl(SpiceDisplay *display) {
-    SpiceDisplayChannel *channel = SPICE_DISPLAY_CHANNEL(display);
-    const SpiceGlScanout *scanout = spice_display_channel_get_gl_scanout(channel);
-    if (scanout) {
-        GLuint texture_id = scanout->texture_id;  // 假设 id 是正确的成员变量名
-        glBindTexture(GL_TEXTURE_2D, texture_id);
-        
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
-        glEnd();
-        
-        spice_display_gl_draw_done(channel);
-    }
-}
-
-static void callbackSettingsChanged(SpiceDisplay *display, gint width, gint height, gint bpp)
+static void callbackSettingsChanged(gint instance, gint width, gint height, gint bpp)
 {
     SpiceQt::getSpice()->settingsChanged(width, height, bpp);
-
-//    SpiceDisplayPrivate *d = SPICE_DISPLAY_GET_PRIVATE(display);
-//    if (d->spiceQtInstance) {
-//        d->spiceQtInstance->settingsChanged(width, height, bpp);
-//    }
 }
 
 static void spice_display_dispose(GObject *obj)
@@ -103,6 +70,38 @@ static void spice_display_dispose(GObject *obj)
 */
 }
 
+static void clipboard_grab(SpiceMainChannel *channel, guint selection, guint32 *types, int ntypes, gpointer data) {
+    QClipboard *clipboard = QApplication::clipboard();
+    QString clipboardText = clipboard->text();
+
+    // 共享剪贴板内容到远程
+    GByteArray *byte_array = g_byte_array_new_take((guint8 *)clipboardText.toUtf8().data(), clipboardText.toUtf8().size());
+    spice_main_clipboard_selection_grab(channel, selection, types, ntypes);
+    g_byte_array_free(byte_array, TRUE);
+}
+
+static void clipboard_release(SpiceMainChannel *channel, guint selection, gpointer data) {
+    // 释放剪贴板内容
+    spice_main_clipboard_selection_release(channel, selection);
+}
+
+static void clipboard_request(SpiceMainChannel *channel, guint selection, guint32 type, gpointer data) {
+    QClipboard *clipboard = QApplication::clipboard();
+    QString clipboardText = clipboard->text();
+
+    // 将剪贴板内容传输到远程
+    GByteArray *byte_array = g_byte_array_new_take((guint8 *)clipboardText.toUtf8().data(), clipboardText.toUtf8().size());
+    spice_main_clipboard_selection_notify(channel, selection, type, byte_array->data, byte_array->len);
+    g_byte_array_free(byte_array, TRUE);
+}
+
+static void clipboard_notify(SpiceMainChannel *channel, guint selection, guint32 type, const guchar *data, gsize size, gpointer user_data) {
+    QClipboard *clipboard = QApplication::clipboard();
+    QByteArray byteArray(reinterpret_cast<const char*>(data), size);
+    clipboard->setText(QString::fromUtf8(byteArray));
+}
+
+
 
 static void spice_display_finalize(GObject *obj)
 {
@@ -116,6 +115,7 @@ static void spice_display_class_init(SpiceDisplayClass *klass)
     g_type_class_add_private(klass, sizeof(SpiceDisplayPrivate));
 }
 
+
 static void spice_display_init(SpiceDisplay *display)
 {
     //global_display = display;
@@ -126,17 +126,6 @@ static void spice_display_init(SpiceDisplay *display)
     d->have_mitshm = TRUE;
     d->mouse_last_x = -1;
     d->mouse_last_y = -1;
-
-    d->cursor_init_done = FALSE;  // 初始化 cursor_init_done
-    d->cursor_width = 0;          // 初始化 cursor_width
-    d->cursor_height = 0;         // 初始化 cursor_height
-    d->cursor_hot_x = 0;          // 初始化 cursor_hot_x
-    d->cursor_hot_y = 0;          // 初始化 cursor_hot_y
-    d->cursor_x = 0;              // 初始化 cursor_x
-    d->cursor_y = 0;              // 初始化 cursor_y
-    d->cursor_visible = FALSE;    // 初始化 cursor_visible
-    d->cursor_data = NULL;        // 初始化 cursor_data
-    SpiceQt::getSpice()->initializeCursor(d);
 }
 
 
@@ -165,81 +154,6 @@ static void update_mouse_mode(SpiceChannel *channel, gpointer data)
 }
 
 /* ---------------------------------------------------------------- */
-
-static void clipboardSelection(SpiceMainChannel *channel, guint selection, guint type, gpointer data, guint size, gpointer user_data)
-{
-    SpiceQt *client = static_cast<SpiceQt *>(user_data);
-    client->handleClipboardSelection(selection, type, data, size);
-}
-
-static gboolean clipboardSelectionGrab(SpiceMainChannel *channel, guint selection, gpointer types, guint ntypes, gpointer user_data)
-{
-    SpiceQt *client = static_cast<SpiceQt *>(user_data);
-    return client->handleClipboardSelectionGrab(channel, selection, types, ntypes);
-}
-
-static void clipboardSelectionRelease(SpiceMainChannel *channel, guint selection, gpointer user_data)
-{
-    SpiceQt *client = static_cast<SpiceQt *>(user_data);
-    client->handleClipboardSelectionRelease(selection);
-}
-
-static gboolean clipboardSelectionRequest(SpiceMainChannel *channel, guint selection, guint type, gpointer user_data)
-{
-    SpiceQt *client = static_cast<SpiceQt *>(user_data);
-    return client->handleClipboardSelectionRequest(channel, selection, type);
-}
-
-void SpiceQt::handleClipboardSelection(guint selection, guint type, gpointer data, guint size)
-{
-    qDebug() << "Clipboard data from guest";
-    QByteArray clipboardData(reinterpret_cast<const char*>(data), static_cast<int>(size));
-    QString clipboardText = QString::fromUtf8(clipboardData);
-    qDebug() << "Clipboard text received: " << clipboardText;
-
-    QClipboard *clipboard = QApplication::clipboard();
-    clipboard->setText(clipboardText, QClipboard::Clipboard);
-}
-
-gboolean SpiceQt::handleClipboardSelectionGrab(SpiceMainChannel *channel, guint selection, gpointer types, guint ntypes)
-{
-    qDebug() << "Clipboard grab from guest";
-    guint32 type = VD_AGENT_CLIPBOARD_UTF8_TEXT;
-    spice_main_channel_clipboard_selection_request(channel, selection, type);//将虚拟机剪贴板发送到主机
-//    request_clipboard_data(channel);
-    return TRUE; // Returning TRUE to indicate successful handling
-}
-
-void SpiceQt::handleClipboardSelectionRelease(guint selection)
-{
-    qDebug() << "Clipboard released";
-    // Implement logic to handle clipboard release if necessary
-}
-
-gboolean SpiceQt::handleClipboardSelectionRequest(SpiceMainChannel *channel, guint selection, guint type)
-{
-    qDebug() << "Clipboard request from guest";
-    QClipboard *clipboard = QApplication::clipboard();
-    QString clipboardText = clipboard->text();
-    QByteArray data = clipboardText.toUtf8();
-    qDebug() << "Clipboard text: " << clipboardText;
-    qDebug() << "Clipboard data size: " << data.size();
-//    qDebug() << "Main channel: " << mainChannel;
-    qDebug() << "Clipboard request from guest";
-    if (channel) {
-        spice_main_channel_clipboard_selection_notify(channel, selection, type,
-                                              reinterpret_cast<const guchar *>(data.data()), static_cast<size_t>(data.size()));
-        qDebug() << "Clipboard data sent to SPICE";
-    } else {
-        qDebug() << "Main channel is null";
-        return FALSE; // Returning FALSE to indicate unsuccessful handling
-    }
-
-    return TRUE; // Returning TRUE to indicate successful handling
-}
-
-
-/*--------------------------------------------------------------------------------------*/
 
 void send_key(SpiceDisplay *display, int scancode, int down)
 {
@@ -284,7 +198,8 @@ static void primary_create(SpiceChannel *channel, gint format, gint width, gint 
     d->width = width;
     d->height = height;
     d->data_origin = d->data = imgdata;
-    callbackSettingsChanged(display, width, height, 4);
+    //uiCallbackSettingsChanged (0, width, height, 4);
+    callbackSettingsChanged(0, width, height, 4);
 }
 
 static void primary_destroy(SpiceChannel *channel, gpointer data) {
@@ -330,79 +245,23 @@ static void cursor_invalidate(SpiceDisplay *display)
 
 static void cursor_move(SpiceCursorChannel *channel, gint x, gint y, gpointer data)
 {
-    SpiceDisplay *display = SPICE_DISPLAY(data);
-    SpiceDisplayPrivate *d = SPICE_DISPLAY_GET_PRIVATE(display);
-    qDebug()<<"光标移动！";
-    if (!d || !d->cursor_init_done) {
-        SPICE_DEBUG("Cursor channel not initialized");
-        return;
-    }
-    SpiceQt::getSpice()->updateCursor(x, y);
-    //d->spiceQtInstance->updateCursor(x, y);
 }
 
 static void cursor_reset(SpiceCursorChannel *channel, gpointer data)
 {
-    SpiceDisplay *display = SPICE_DISPLAY(data);
-    SpiceDisplayPrivate *d = SPICE_DISPLAY_GET_PRIVATE(display);
-
-    if (!d || !d->cursor_init_done) {
-        SPICE_DEBUG("Cursor channel not initialized");
-        return;
-    }
-    d->cursor_visible = TRUE;
     SpiceQt::getSpice()->showCursor(true);
-    //d->spiceQtInstance->showCursor(true);
 }
 
 static void cursor_set(SpiceCursorChannel *channel,
                        gint width, gint height, gint hot_x, gint hot_y,
                        gpointer rgba, gpointer data)
 {
-    SpiceDisplay *display = SPICE_DISPLAY(data);
-    SpiceDisplayPrivate *d = SPICE_DISPLAY_GET_PRIVATE(display);
-
-    if (!d || !d->cursor_init_done) {
-        SPICE_DEBUG("Cursor channel not initialized");
-        return;
-    }
-//    qDebug()<<"光标位置设置！";
-    d->cursor_width = width;// + hot_x;
-    d->cursor_height = height;// + hot_y;
-    d->cursor_hot_x = hot_x;
-    d->cursor_hot_y = hot_y;
-
-    // 将光标图像数据复制到 d->cursor_data
-    if (d->cursor_data) {
-        g_free(d->cursor_data);
-    }
-    d->cursor_data = g_malloc(width * height * 4);
-    memcpy(d->cursor_data, rgba, width * height * 4);
-
-    d->cursor_visible = TRUE;
-    d->cursor_init_done = TRUE;
-
-    QImage cursorImage(reinterpret_cast<const uchar*>(rgba), width, height, QImage::Format_RGBA8888);
-    QCursor cursor(QPixmap::fromImage(cursorImage), hot_x, hot_y);
-    QApplication::setOverrideCursor(cursor);
-
     SpiceQt::getSpice()->showCursor(true);
-    //d->spiceQtInstance->showCursor(true);
-
 }
 
 static void cursor_hide(SpiceCursorChannel *channel, gpointer data)
 {
-    SpiceDisplay *display = SPICE_DISPLAY(data);
-    SpiceDisplayPrivate *d = SPICE_DISPLAY_GET_PRIVATE(display);
-
-    if (!d || !d->cursor_init_done) {
-        SPICE_DEBUG("Cursor channel not initialized");
-        return;
-    }
-    d->cursor_visible = FALSE;
     SpiceQt::getSpice()->showCursor(false);
-    //d->spiceQtInstance->showCursor(true);
 }
 
 static void disconnect_main(SpiceDisplay *display)
@@ -428,28 +287,16 @@ static void channel_new(SpiceSession *s, SpiceChannel *channel, gpointer data)
     SpiceDisplay *display = static_cast<SpiceDisplay*>(data);
     SpiceDisplayPrivate *d = SPICE_DISPLAY_GET_PRIVATE(display);
     if (!d)
-    {
-        qDebug() << "Failed to get SpiceDisplayPrivate";
         return;
-    }
+
     int id;
 
     g_object_get(channel, "channel-id", &id, NULL);
     if (SPICE_IS_MAIN_CHANNEL(channel)) {
         d->main = SPICE_MAIN_CHANNEL(channel);
-        SpiceQt::getSpice()->setMainChannel(SPICE_MAIN_CHANNEL(channel));
-        //d->spiceQtInstance->setMainChannel(SPICE_MAIN_CHANNEL(channel));
         g_signal_connect(channel, "main-mouse-update",
                                       G_CALLBACK(update_mouse_mode), display);
         update_mouse_mode(channel, display);
-        g_signal_connect(channel, "main-clipboard-selection",
-                                      G_CALLBACK(clipboardSelection), 0);
-        g_signal_connect(channel, "main-clipboard-selection-grab",
-                                      G_CALLBACK(clipboardSelectionGrab), 0);
-        g_signal_connect(channel, "main-clipboard-selection-release",
-                                      G_CALLBACK(clipboardSelectionRelease), 0);
-        g_signal_connect(channel, "main-clipboard-selection-request",
-                                      G_CALLBACK(clipboardSelectionRequest), 0);
         return;
     }
 
@@ -465,7 +312,6 @@ static void channel_new(SpiceSession *s, SpiceChannel *channel, gpointer data)
                          G_CALLBACK(invalidate), display);
         g_signal_connect(channel, "display-mark",
                          G_CALLBACK(mark), display);
-
         spice_channel_connect(channel);
         return;
     }
@@ -474,7 +320,6 @@ static void channel_new(SpiceSession *s, SpiceChannel *channel, gpointer data)
         if (id != d->channel_id)
             return;
         d->cursor = SPICE_CURSOR_CHANNEL(channel);
-        d->cursor_init_done = TRUE;
         g_signal_connect(channel, "cursor-set",
                          G_CALLBACK(cursor_set), display);
         g_signal_connect(channel, "cursor-move",
@@ -483,7 +328,6 @@ static void channel_new(SpiceSession *s, SpiceChannel *channel, gpointer data)
                          G_CALLBACK(cursor_hide), display);
         g_signal_connect(channel, "cursor-reset",
                          G_CALLBACK(cursor_reset), display);
-        qDebug()<<"光标初始化完成!";
         spice_channel_connect(channel);
         return;
     }
@@ -495,7 +339,6 @@ static void channel_new(SpiceSession *s, SpiceChannel *channel, gpointer data)
         spice_channel_connect(channel);
         guint32 modifiers;
         modifiers = SpiceQt::getSpice()->getKeyboardLockModifiers();
-        //modifiers = d->spiceQtInstance->getKeyboardLockModifiers();
         sync_keyboard_lock_modifiers(display, modifiers);
         return;
     }

@@ -4,5 +4,6 @@
         <file>icon/警示红叉.png</file>
         <file>icon/粘贴.png</file>
         <file>icon/fullscreen.png</file>
+        <file>icon/Photo_UKey_Line.png</file>
     </qresource>
 </RCC>

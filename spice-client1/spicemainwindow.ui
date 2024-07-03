@@ -110,6 +110,7 @@
    <addaction name="actiontoolpaste"/>
    <addaction name="separator"/>
    <addaction name="actiontoolfullscreen"/>
+   <addaction name="action_usbredir"/>
    <addaction name="separator"/>
    <addaction name="actionResize_to"/>
   </widget>
@@ -278,6 +279,18 @@
    </property>
    <property name="text">
     <string>Automatic clipboard sharing between host and guest</string>
+   </property>
+  </action>
+  <action name="action_usbredir">
+   <property name="icon">
+    <iconset theme="usbredir" resource="res.qrc">
+     <normaloff>:/icon/Photo_UKey_Line.png</normaloff>:/icon/Photo_UKey_Line.png</iconset>
+   </property>
+   <property name="text">
+    <string>usbredir</string>
+   </property>
+   <property name="toolTip">
+    <string>usb_redir</string>
    </property>
   </action>
  </widget>

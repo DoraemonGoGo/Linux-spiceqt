@@ -29,7 +29,10 @@ extern "C"
 #include "spice-common.h"
 #include "spice-gtk-session.h"
 #include "spice-grabsequence.h"
+#include <GL/gl.h>
 }
+// 使用前向声明
+class SpiceQt;
 
 #define SPICE_DISPLAY_GET_PRIVATE(obj)                                  \
     (G_TYPE_INSTANCE_GET_PRIVATE((obj), SPICE_TYPE_DISPLAY, SpiceDisplayPrivate))
@@ -52,9 +55,21 @@ struct _SpiceDisplayPrivate {
     gint                    shmid;
     gpointer                data_origin; /* the original display image data */
     gpointer                data; /* converted if necessary to 32 bits */
+    GLuint                  texture_id;  // OpenGL 纹理 ID
 
     /* window border */
     gint                    ww, wh, mx, my;
+
+
+    gboolean                cursor_init_done;     // 是否完成光标初始化
+    gint                    cursor_width;          // 光标宽度
+    gint                    cursor_height;         // 光标高度
+    gint                    cursor_hot_x;          // 光标热点 X 坐标
+    gint                    cursor_hot_y;          // 光标热点 Y 坐标
+    gint                    cursor_x;              // 光标 X 坐标
+    gint                    cursor_y;              // 光标 Y 坐标
+    gboolean                cursor_visible;        // 光标是否可见
+    gpointer                cursor_data;           // 光标图像数据
 
     bool                    convert;
     bool                    have_mitshm;
@@ -62,12 +77,15 @@ struct _SpiceDisplayPrivate {
     gboolean                only_downscale;
     gboolean                disable_inputs;
 
+
+
     SpiceSession            *session;
     SpiceMainChannel        *main;
     SpiceChannel            *display;
     SpiceCursorChannel      *cursor;
     SpiceInputsChannel      *inputs;
     SpiceSmartcardChannel   *smartcard;
+    SpiceQt                 *spiceQtInstance;
 
     enum SpiceMouseMode     mouse_mode;
     int                     mouse_grab_active;

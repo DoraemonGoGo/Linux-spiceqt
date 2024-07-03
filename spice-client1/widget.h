@@ -40,6 +40,7 @@ private:
 private:
     Ui::Widget *ui;
     //Ui::SpiceMainWindow spiceui;
+    QList<SpiceMainWindow*> spiceWindows;  // 管理多个实例
 };
 
 #endif // WIDGET_H

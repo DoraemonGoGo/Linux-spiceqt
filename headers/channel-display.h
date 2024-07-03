@@ -57,6 +57,7 @@ struct _SpiceGlScanout {
     guint32 stride;
     guint32 format;
     gboolean y0top;
+    guint32 texture_id; // 新添加的texture ID字段
 };
 
 /**

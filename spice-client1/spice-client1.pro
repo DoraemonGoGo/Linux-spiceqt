@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT += core gui widgets multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -29,7 +30,9 @@ CXXFLAGS += -g
 UI_DIR = ./UI
 
 QMAKE_LFLAGS += -L../
-INCLUDEPATH += /usr/include/glib-2.0 /usr/include/glib-2.0/gobject /usr/lib/x86_64-linux-gnu/glib-2.0/include /usr/include/spice-client-glib-2.0 /usr/include/pixman-1 /usr/include/spice-1 ../common ../headers
+INCLUDEPATH += /usr/include/glib-2.0 /usr/include/glib-2.0/gobject /usr/lib/x86_64-linux-gnu/glib-2.0/include /usr/include/spice-client-glib-2.0 /usr/include/libusb-1.0 /usr/include/pixman-1 /usr/include/spice-1 ../common ../headers
+LIBS += `pkg-config --libs glib-2.0 spice-client-glib-2.0`
+LIBS += -lusb-1.0
 LIBS += -lspice-qt
 LIBS += -L/home/doraemon/Downloads/spice-qt/build -lspice-qt
 

@@ -1,0 +1,23 @@
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "QtBuild",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "/opt/Qt5.12.2/5.12.2/gcc_64/bin"
+                }
+            ],
+            "externalConsole": false,
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+    ]
+}

@@ -3,11 +3,12 @@ TEMPLATE = lib
 QT += widgets
 QT += core gui
 QT += gui x11extras
+QT += core gui widgets multimedia
 CONFIG += no_keywords
 CXXFLAGS += -g
 
-INCLUDEPATH += /usr/include/glib-2.0 /usr/include/glib-2.0/gobject /usr/include/glib-2.0/glib /usr/lib/x86_64-linux-gnu/glib-2.0/include /usr/include/spice-client-glib-2.0 /usr/include/pixman-1 /usr/include/spice-1 ./common ./headers
-LIBS += `pkg-config --libs glib-2.0 spice-client-glib-2.0`
+INCLUDEPATH += /usr/include/glib-2.0 /usr/include/glib-2.0/gobject /usr/include/glib-2.0/glib /usr/include/libusb-1.0 /usr/lib/x86_64-linux-gnu/glib-2.0/include /usr/include/spice-client-glib-2.0 /usr/include/pixman-1 /usr/include/spice-1 ./common ./headers
+LIBS += `pkg-config --libs glib-2.0 spice-client-glib-2.0 usb-1.0`
 HEADERS += headers/spice-common.h \
            headers/spice-widget.h \
            headers/spice-widget-priv.h \
