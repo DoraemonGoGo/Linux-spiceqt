@@ -16,15 +16,15 @@
  
 static void main_channel_event(SpiceChannel *channel, SpiceChannelEvent event, gpointer data)
 {	
-    //SpiceQt *client = static_cast<SpiceQt*>(data);
+    SpiceQt *client = static_cast<SpiceQt*>(data);
     switch (event) {
     case SPICE_CHANNEL_OPENED:
         printf("main channel: connected\n");
         break;  
     case SPICE_CHANNEL_CLOSED:
         printf("main channel: connection lost\n");
-        SpiceQt::getSpice()->clearImage();
-        //client->clearImage();
+        //SpiceQt::getSpice()->clearImage();
+        client->clearImage();
         break;
     case SPICE_CHANNEL_ERROR_CONNECT:
         printf("main channel: failed to connect\n");
@@ -34,24 +34,24 @@ static void main_channel_event(SpiceChannel *channel, SpiceChannelEvent event, g
 
 static void main_agent_update(SpiceChannel *channel, gpointer data)
 {
-   // SpiceQt *client = static_cast<SpiceQt*>(data);
+    SpiceQt *client = static_cast<SpiceQt*>(data);
     bool agent_connected;
     gboolean ac;
     g_object_get(channel, "agent-connected", &ac, NULL);
     agent_connected = ac ? true : false;
     qDebug()<<"agent is "<<ac;
-    SpiceQt::getSpice()->setAgentConnected(agent_connected);
-    //client->setAgentConnected(agent_connected);
+    //SpiceQt::getSpice()->setAgentConnected(agent_connected);
+    client->setAgentConnected(agent_connected);
 }
 
 static void inputs_modifiers(SpiceChannel *channel, gpointer data)
 {
-    //SpiceQt *client = static_cast<SpiceQt*>(data);
+   SpiceQt *client = static_cast<SpiceQt*>(data);
     int m;
 
     g_object_get(channel, "key-modifiers", &m, NULL);
-    SpiceQt::getSpice()->setKbdModifiers(m);
-    //client->setKbdModifiers(m);
+    //SpiceQt::getSpice()->setKbdModifiers(m);
+    client->setKbdModifiers(m);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -336,10 +336,14 @@ static void on_device_error(SpiceUsbDeviceManager *manager, SpiceUsbDevice *devi
 static void on_device_added(SpiceUsbDeviceManager *manager, SpiceUsbDevice *device, gpointer user_data)
 {
     qDebug() << "USB设备已添加";
-    //SpiceQt *client = static_cast<SpiceQt *>(user_data);
+    SpiceQt *client = static_cast<SpiceQt *>(user_data);
+    if(client == nullptr)
+    {
+        qDebug()<<"USB client为空！";
+    }
     // 处理USB设备添加
-    SpiceQt::getSpice()->redirect_usb_device();
-    //client->redirect_usb_device();
+    //SpiceQt::getSpice()->redirect_usb_device();
+    client->redirect_usb_device();
 }
 
 static void on_device_removed(SpiceUsbDeviceManager *manager, SpiceUsbDevice *device, gpointer user_data)
@@ -365,47 +369,51 @@ static void on_connect_device_async_complete(GObject *source_object, GAsyncResul
 
 static void channel_new(SpiceSession *session, SpiceChannel *channel, gpointer data)
 {
-    //SpiceQt *client = static_cast<SpiceQt*>(data);
+    SpiceQt *client = static_cast<SpiceQt*>(data);
 
     int id;
     g_object_get(channel, "channel-id", &id, NULL);
     if (SPICE_IS_MAIN_CHANNEL(channel)) {
+        if(client == nullptr)
+        {
+            qDebug()<<"SpiceQt 为空！！！";
+        }
        qDebug()<<"主通道初始化";
        g_signal_connect(channel, "channel-event",
-                         G_CALLBACK(main_channel_event), 0);
+                         G_CALLBACK(main_channel_event), client);
        g_signal_connect(channel, "main-agent-update",
-                         G_CALLBACK(main_agent_update), 0);
+                         G_CALLBACK(main_agent_update), client);
        return;
     }
     if (SPICE_IS_DISPLAY_CHANNEL(channel)) {
         qDebug() << "display channel new";
-        SpiceDisplay *display = SpiceQt::getSpice()->spiceDisplayGLib();
-        //SpiceDisplay *display = client->spiceDisplayGLib();
+//        SpiceDisplay *display = SpiceQt::getSpice()->spiceDisplayGLib();
+        SpiceDisplay *display = client->spiceDisplayGLib();
         if (display)
             return;
         qDebug()<<"ggggggggg";
-        display = spice_display_new(session, id);    
-        SpiceQt::getSpice()->setSpiceDisplayGLib(display);
-        //client->setSpiceDisplayGLib(display);
+        display = spice_display_new(session, id, client);
+        //SpiceQt::getSpice()->setSpiceDisplayGLib(display);
+        client->setSpiceDisplayGLib(display);
 //        qDebug()<<"display = "<<SpiceQt::getSpice()->spiceDisplayGLib();
     }
     if (SPICE_IS_INPUTS_CHANNEL(channel)) {
         qDebug()<<"输入通道初始化！！";
         g_signal_connect(channel, "inputs-modifiers",
-                         G_CALLBACK(inputs_modifiers), 0);
+                         G_CALLBACK(inputs_modifiers), client);
 
     }
     if (SPICE_IS_PLAYBACK_CHANNEL(channel)) {
 
-        SpiceAudio *audio = SpiceQt::getSpice()->spiceAudioGLib();
-        //SpiceAudio *audio = client->spiceAudioGLib();
+        //SpiceAudio *audio = SpiceQt::getSpice()->spiceAudioGLib();
+        SpiceAudio *audio = client->spiceAudioGLib();
         if (audio)
             return;
         audio = spice_audio_get(session, NULL);
         if(!audio)
             qDebug()<<"音频为空！";
-        SpiceQt::getSpice()->setSpiceAudioGLib(audio);
-        //client->setSpiceAudioGLib(audio);
+        //SpiceQt::getSpice()->setSpiceAudioGLib(audio);
+        client->setSpiceAudioGLib(audio);
 //        SpiceQt::getSpice()->initializePlaybackChannel(SPICE_PLAYBACK_CHANNEL(channel));
         qDebug()<<"音频播放初始化完成！";
     }
@@ -429,7 +437,7 @@ static void channel_destroy(SpiceSession *session, SpiceChannel *channel)
 {
 }
 
-SpiceQt * SpiceQt::instance = NULL;
+//SpiceQt * SpiceQt::instance = NULL;
 QMap<int, int> * SpiceQt::keymap = NULL;
 
 SpiceQt::SpiceQt(QWidget *parent)
@@ -456,13 +464,13 @@ SpiceQt::SpiceQt(QWidget *parent)
     QObject::connect(QApplication::clipboard(), &QClipboard::dataChanged, this, &SpiceQt::onClipboardDataChanged);
 }
 
-SpiceQt * SpiceQt::getSpice(QWidget *parent)
-{
-    if (instance)
-        return instance;
-    instance = new SpiceQt(parent);
-    return instance;
-}
+//SpiceQt * SpiceQt::getSpice(QWidget *parent)
+//{
+//    if (instance)
+//        return instance;
+//    instance = new SpiceQt(parent);
+//    return instance;
+//}
 
 SpiceQt::~SpiceQt()
 {
@@ -557,23 +565,24 @@ void SpiceQt::setSpiceDisplayGLib(SpiceDisplay *sd)
 
 void SpiceQt::disconnectFromGuest()
 {
-//    img = QImage(dataWidth, dataHeight, QImage::Format_RGB32);
-//    if (!img.isNull()) {
-//        QPainter painter(&img);
-//        painter.setBrush(QBrush(Qt::black));
-//        painter.drawRect(0, 0, dataWidth, dataHeight);
-//        painter.end(); 
-//    }
-    clearImage();
+
+//    clearImage();
     if (SGsession) {
+//        spice_session_disconnect(SGsession);
+//        display = NULL;
+//        SGsession = NULL;
+//        audio = NULL;
         spice_session_disconnect(SGsession);
-        display = NULL;
-        SGsession = NULL;
-        audio = NULL;
+        g_object_unref(SGsession);
+        SGsession = nullptr;
+        qDebug() << "Disconnected from guest";
     }
 }
+
 void SpiceQt::connectToGuest(const QString &host, const QString &port)
 {
+    disconnectFromGuest();
+    qDebug()<<"ip:"<<host<<" "<<"端口号:"<<port;
     SGsession = spice_session_new();
     g_object_set(SGsession, "host", \
                  host.toLatin1().constData(), NULL);
@@ -581,10 +590,13 @@ void SpiceQt::connectToGuest(const QString &host, const QString &port)
                  port.toLatin1().constData(), NULL);
 
     g_signal_connect(SGsession, "channel-new",
-                                 G_CALLBACK(channel_new), 0);
-    g_signal_connect(SGsession, "channel-destroy", G_CALLBACK(channel_destroy), 0);
-    if (!spice_session_connect(SGsession)) {
+                                 G_CALLBACK(channel_new), this);
+    g_signal_connect(SGsession, "channel-destroy", G_CALLBACK(channel_destroy), this);
 
+    if (!spice_session_connect(SGsession)) {
+        qDebug() << "Failed to connect to Spice session";
+        g_object_unref(SGsession);
+        SGsession = nullptr;
     }
     usb_device_manager = spice_usb_device_manager_get(SGsession, NULL);
     if (!usb_device_manager) {
@@ -595,6 +607,7 @@ void SpiceQt::connectToGuest(const QString &host, const QString &port)
     g_signal_connect(usb_device_manager, "device-error", G_CALLBACK(on_device_error), this);
     g_signal_connect(usb_device_manager, "device-added", G_CALLBACK(on_device_added), this);
     g_signal_connect(usb_device_manager, "device-removed", G_CALLBACK(on_device_removed), this);
+
 
 }
 
@@ -635,38 +648,6 @@ quint32 SpiceQt::getKeyboardLockModifiers()
     return modifiers;
 }
 
-//void SpiceQt::setTemporaryImage()
-//{
-//    qDebug() << "setTemporaryImage called. Resizing:" << resizing;
-//    if (img.isNull())
-//    {
-//        qDebug() << "Warning: img is null when setting temporary image.";
-//    }
-//    else
-//    {
-//        if (!resizing)
-//        {
-//            this->tempImg = img;
-//            qDebug() << "Temporary image set. Size:" << tempImg.size();
-//            update(); // 触发重绘以使用临时图像
-//        }
-//    }
-
-//}
-
-//void SpiceQt::finalizeResize()
-//{
-//    qDebug() << "finalizeResize: applying final resize";
-//    resizing = false;
-
-//    // 获取窗口内容区域的尺寸
-//    QRect contentRect = this->rect();
-//    int newWidth = contentRect.width();
-//    int newHeight = contentRect.height();
-
-//    settingsChanged(newWidth, newHeight, 32);
-//}
-
 void SpiceQt::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);
@@ -677,47 +658,32 @@ void SpiceQt::paintEvent(QPaintEvent *event)
 //    qDebug()<<resizing;
     if (!img.isNull())
     {
-        QImage scaledImg = img.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        p.drawImage(0, 0, img);
+        QImage scaledImg = img.scaled(this->size(), Qt::KeepAspectRatio);
+        qDebug()<<"scaledImg size:"<<scaledImg.size();
+        p.drawImage(0, 0, scaledImg);
 //                p.drawImage(0, 0, scaledImg);
     }
-//    if (resizing && !tempImg.isNull())
-//    {
-//        qDebug()<<"拉伸图像绘制!!!!!!!!!!!!!!!!!";
-//        // 绘制临时图像
-//        qDebug() << "tempImage. Size:" << tempImg.size();
-//        QImage scaledTempImg = tempImg.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-//         qDebug() << "scaled TempImage. Size:" << scaledTempImg.size();
-//        p.drawImage(0, 0, scaledTempImg);
-//    }
-//    else if (!img.isNull())
-//    {
-//        qDebug()<<"正常图片显示!!!!!!!!!!!!!!!!";
-//        // 绘制当前图像
-//       // QImage scaledImg = img.scaled(this->size(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-//        p.drawImage(0, 0, img);
-//    }
 }
 
-void SpiceQt::resizeEvent(QResizeEvent *event)
-{
-    QWidget::resizeEvent(event);
+//void SpiceQt::resizeEvent(QResizeEvent *event)
+//{
+//    QWidget::resizeEvent(event);
 
-    int newWidth = event->size().width();
-    int newHeight = event->size().height();
-    qDebug() << "resizeEvent: new size:" << newWidth << "x" << newHeight;
-    // 更新图像缓冲区大小
+//    int newWidth = event->size().width();
+//    int newHeight = event->size().height();
+//    qDebug() << "resizeEvent: new size:" << newWidth << "x" << newHeight;
+//    // 更新图像缓冲区大小
 
-//    resize(newWidth, newHeight);
-    settingsChanged(newWidth, newHeight, 32);  // 假设 bpp 为 32
-    // 在拉伸过程中使用临时图像
+//    //resize(newWidth, newHeight);
+//    settingsChanged(newWidth, newHeight, 32);  // 假设 bpp 为 32
+//    // 在拉伸过程中使用临时图像
 
-//    setTemporaryImage();
-//    resizing = true;
+//    //setTemporaryImage();
+//    //resizing = true;
 
-    // 重启定时器，延迟200毫秒后更新图像内容
-//    resizeTimer.start(100);
-}
+//    // 重启定时器，延迟200毫秒后更新图像内容
+//    //resizeTimer.start(100);
+//}
 
 void SpiceQt::spiceResize(int w, int h)
 {
@@ -739,7 +705,7 @@ void SpiceQt::settingsChanged(int w, int h, int bpp)
     dataWidth = w;
     dataHeight = h;
     rate = double(height()) / double(dataHeight);
-    img = QImage(w, h, QImage::Format_RGB32);
+//    img = QImage(width(), height(), QImage::Format_RGB32);
 
 //    img.fill(Qt::white);
 //    clearImage();
@@ -753,24 +719,13 @@ void SpiceQt::settingsChanged(int w, int h, int bpp)
 
 void SpiceQt::updateImage(uchar *data, int x, int y, int w, int h)
 {
-//    if(!resizing)
-//    {
-//        uint *source = reinterpret_cast<uint*>(data);
-//        for (int i = y; i < y + h; i++)
-//            for (int j = x; j < x + w; j++)
-//                img.setPixel(j, i, source[dataWidth * i + j]);
-        uint *source = reinterpret_cast<uint*>(data);
-        for (int i = y; i < y + h; i++)
-        {
-            uint *line = reinterpret_cast<uint*>(img.scanLine(i));
-            for (int j = x; j < x + w; j++)
-            {
-                line[j] = source[dataWidth * i + j];
-            }
-        }
-        qDebug() << "updateImage called. New image size:" << img.size();
-         update(x, y, w, h);
-//    }
+    img = QImage(width(), height(), QImage::Format_RGB32);
+    uint *source = reinterpret_cast<uint*>(data);
+    for (int i = y; i < y + height(); i++)
+        for (int j = x; j < x + width(); j++)
+            img.setPixel(j, i, source[dataWidth * i + j]);
+    qDebug() << "updateImage called. New image size:" << img.size();
+     update(x, y, w, h);
 
 }
 

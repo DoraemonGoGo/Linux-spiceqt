@@ -30,7 +30,7 @@ void Widget::on_connbtn_clicked()
 {
     QString ip = ui->ipedit->text();
     QString port = ui->portedit->text();
-    smw = new SpiceMainWindow();
+    SpiceMainWindow *smw = new SpiceMainWindow();
     smw->setWindowTitle("SpiceConnection");
     qDebug()<<"______________________________";
     smw->showspice(ip, port);
@@ -42,4 +42,7 @@ void Widget::on_connbtn_clicked()
 Widget::~Widget()
 {
     delete ui;
+
+    // 删除所有创建的窗口实例
+    qDeleteAll(spiceWindows);
 }

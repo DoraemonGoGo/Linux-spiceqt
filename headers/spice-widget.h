@@ -25,7 +25,7 @@ extern "C"
 #include "spice-util.h"
 #include "spice-gtk-session.h"
 }
-
+class SpiceQt;
 
 G_BEGIN_DECLS
 
@@ -71,7 +71,7 @@ typedef enum
 
 GType	        spice_display_get_type(void);
 
-SpiceDisplay* spice_display_new(SpiceSession *session, int channel_id);
+SpiceDisplay* spice_display_new(SpiceSession *session, int channel_id, SpiceQt *instance);
 SpiceDisplay* spice_display_new_with_monitor(SpiceSession *session, gint channel_id, gint monitor_id);
 
 void spice_display_send_keys(SpiceDisplay *display, const guint *keyvals,

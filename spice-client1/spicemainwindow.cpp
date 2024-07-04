@@ -16,7 +16,8 @@
 
 SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::SpiceMainWindow)
+    ui(new Ui::SpiceMainWindow),
+    spicewindow(new SpiceQt(this))
 //    resizeTimer(new QTimer(this))
 {
     ui->setupUi(this);
@@ -28,7 +29,7 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
 //    setCentralWidget(central);
 //    spicewindow = SpiceQt::getSpice();
 
-    spicewindow = SpiceQt::getSpice();
+//    spicewindow = SpiceQt::getSpice();
 
     ui->layout->addWidget(spicewindow);
 //    central->setLayout(layout);
@@ -88,6 +89,12 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
 SpiceMainWindow::~SpiceMainWindow()
 {
     delete ui;
+
+    // 确保在关闭窗口时断开连接并释放资源
+    if (spicewindow) {
+        spicewindow->disconnectFromGuest();
+        delete spicewindow;
+    }
 }
 
 void SpiceMainWindow::showspice(QString ip, QString port)
@@ -96,11 +103,12 @@ void SpiceMainWindow::showspice(QString ip, QString port)
     qDebug() << spicewindow;
 //    int height = widget1->height();
 //    int width = widget1->width();
+    setWindowTitle(QString("SpiceConnection - %1:%2").arg(ip).arg(port));
     int spiceheight = spicewindow->height();
     int spicewidth = spicewindow->width();
 //    qDebug() << height << " , " << width << endl;
 //    qDebug() << spiceheight << " , " << spicewidth << endl;
-//    spicewindow->show();
+    spicewindow->show();
     spicewindow->connectToGuest(ip, port);
 }
 
@@ -118,12 +126,22 @@ void SpiceMainWindow::keyPressEvent(QKeyEvent *event)
 
 void SpiceMainWindow::resizeEvent(QResizeEvent *event)
 {
-    QMainWindow::resizeEvent(event);
+//    QMainWindow::resizeEvent(event);
 
     QRect contentRect = this->layout()->geometry();
     int newWidth = contentRect.width();
     int newHeight = contentRect.height();
-    spicewindow->resizeEvent(event);
+//    spicewindow->resizeEvent(event);
+    int scalew=event->size().width()/event->oldSize().width();
+    int scaleh=event->size().height()/event->oldSize().height();
+    ui->centralwidget->resize(ui->centralwidget->width()*scalew,ui->centralwidget->height()*scaleh);
+//    spicewindow->resize(event->size().width(), event->size().height());
+//        ui->centralwidget->resize(ui->centralwidget->width()*scalew,ui->centralwidget->height()*scaleh);
+    spicewindow->settingsChanged(event->size().width(), event->size().height(), 32);
+//    qDebug()<<event->oldSize()<<" "<<event->size();
+//    qDebug()<<ui->centralwidget->width()<<" "<<ui->centralwidget->height();
+//    qDebug()<<newWidth<<" "<<newHeight;
+//    qDebug()<<this->size();
 }
 
 //设置工具栏显示

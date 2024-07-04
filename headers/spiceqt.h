@@ -33,9 +33,9 @@ class SpiceQt : public QWidget
 {
     Q_OBJECT
 public:
-    SpiceQt(QWidget *parent = NULL);
+    explicit SpiceQt(QWidget *parent = NULL);
     ~SpiceQt() override;
-    static SpiceQt *getSpice(QWidget *parent = NULL);
+//    static SpiceQt *getSpice(QWidget *parent = NULL);
     SpiceSession *getSession();
     SpiceDisplay* getDisplay() const;
     SpiceDisplayPrivate* getSpiceDisplayPrivate();
@@ -55,7 +55,7 @@ public:
     void settingsChanged(int width, int height, int bpp);
     void setKbdModifiers(int m);
     void spiceResize(int w, int h);
-    void resizeEvent(QResizeEvent *event) override;
+//    void resizeEvent(QResizeEvent *event) override;
 //    void setTemporaryImage();
 //    void finalizeResize();
     void showCursor(bool visible)
@@ -133,7 +133,7 @@ Q_SIGNALS:
 private:
     static QMap<int, int> * getKeymap();
     void prepareMouseData();
-    static SpiceQt *instance;
+//    static SpiceQt *instance;
     SpiceSession * SGsession;
     SpiceDisplay * display;
     SpiceDisplayPrivate * d;

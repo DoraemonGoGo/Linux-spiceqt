@@ -32,10 +32,9 @@ protected:
     void keyPress(QKeyEvent *event);
 
 private:
-    SpiceQt *_spiceWidget;
-    QLineEdit *ipedit;
-    QLineEdit *portedit;
-    SpiceMainWindow *smw;
+//    QLineEdit *ipedit;
+//    QLineEdit *portedit;
+//    SpiceMainWindow *smw;
 
 private:
     Ui::Widget *ui;

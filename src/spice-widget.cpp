@@ -33,8 +33,8 @@ static void callbackInvalidate(SpiceDisplayPrivate *d, gint x, gint y, gint w, g
     }
 
     uchar *img = static_cast<uchar*>(d->data);
-    SpiceQt::getSpice()->updateImage(img, x, y, w, h);
-    //d->spiceQtInstance->updateImage(img, x, y, w, h);
+    //SpiceQt::getSpice()->updateImage(img, x, y, w, h);
+    d->spiceQtInstance->updateImage(img, x, y, w, h);
 }
 
 // OpenGL 绘图函数
@@ -58,12 +58,13 @@ static void draw_gl(SpiceDisplay *display) {
 
 static void callbackSettingsChanged(SpiceDisplay *display, gint width, gint height, gint bpp)
 {
-    SpiceQt::getSpice()->settingsChanged(width, height, bpp);
+    //SpiceQt::getSpice()->settingsChanged(width, height, bpp);
 
-//    SpiceDisplayPrivate *d = SPICE_DISPLAY_GET_PRIVATE(display);
-//    if (d->spiceQtInstance) {
-//        d->spiceQtInstance->settingsChanged(width, height, bpp);
-//    }
+    SpiceDisplayPrivate *d = SPICE_DISPLAY_GET_PRIVATE(display);
+//    SpiceDisplayPrivate *d = static_cast<SpiceDisplayPrivate*>(instance);
+    if (d->spiceQtInstance) {
+        d->spiceQtInstance->settingsChanged(width, height, bpp);
+    }
 }
 
 static void spice_display_dispose(GObject *obj)
@@ -136,7 +137,7 @@ static void spice_display_init(SpiceDisplay *display)
     d->cursor_y = 0;              // 初始化 cursor_y
     d->cursor_visible = FALSE;    // 初始化 cursor_visible
     d->cursor_data = NULL;        // 初始化 cursor_data
-    SpiceQt::getSpice()->initializeCursor(d);
+//    SpiceQt::getSpice()->initializeCursor(d);
 }
 
 
@@ -337,8 +338,8 @@ static void cursor_move(SpiceCursorChannel *channel, gint x, gint y, gpointer da
         SPICE_DEBUG("Cursor channel not initialized");
         return;
     }
-    SpiceQt::getSpice()->updateCursor(x, y);
-    //d->spiceQtInstance->updateCursor(x, y);
+    //SpiceQt::getSpice()->updateCursor(x, y);
+    d->spiceQtInstance->updateCursor(x, y);
 }
 
 static void cursor_reset(SpiceCursorChannel *channel, gpointer data)
@@ -351,8 +352,8 @@ static void cursor_reset(SpiceCursorChannel *channel, gpointer data)
         return;
     }
     d->cursor_visible = TRUE;
-    SpiceQt::getSpice()->showCursor(true);
-    //d->spiceQtInstance->showCursor(true);
+    //SpiceQt::getSpice()->showCursor(true);
+    d->spiceQtInstance->showCursor(true);
 }
 
 static void cursor_set(SpiceCursorChannel *channel,
@@ -386,8 +387,8 @@ static void cursor_set(SpiceCursorChannel *channel,
     QCursor cursor(QPixmap::fromImage(cursorImage), hot_x, hot_y);
     QApplication::setOverrideCursor(cursor);
 
-    SpiceQt::getSpice()->showCursor(true);
-    //d->spiceQtInstance->showCursor(true);
+    //SpiceQt::getSpice()->showCursor(true);
+    d->spiceQtInstance->showCursor(true);
 
 }
 
@@ -401,8 +402,8 @@ static void cursor_hide(SpiceCursorChannel *channel, gpointer data)
         return;
     }
     d->cursor_visible = FALSE;
-    SpiceQt::getSpice()->showCursor(false);
-    //d->spiceQtInstance->showCursor(true);
+    //SpiceQt::getSpice()->showCursor(false);
+    d->spiceQtInstance->showCursor(true);
 }
 
 static void disconnect_main(SpiceDisplay *display)
@@ -437,8 +438,8 @@ static void channel_new(SpiceSession *s, SpiceChannel *channel, gpointer data)
     g_object_get(channel, "channel-id", &id, NULL);
     if (SPICE_IS_MAIN_CHANNEL(channel)) {
         d->main = SPICE_MAIN_CHANNEL(channel);
-        SpiceQt::getSpice()->setMainChannel(SPICE_MAIN_CHANNEL(channel));
-        //d->spiceQtInstance->setMainChannel(SPICE_MAIN_CHANNEL(channel));
+        //SpiceQt::getSpice()->setMainChannel(SPICE_MAIN_CHANNEL(channel));
+        d->spiceQtInstance->setMainChannel(SPICE_MAIN_CHANNEL(channel));
         g_signal_connect(channel, "main-mouse-update",
                                       G_CALLBACK(update_mouse_mode), display);
         update_mouse_mode(channel, display);
@@ -494,8 +495,8 @@ static void channel_new(SpiceSession *s, SpiceChannel *channel, gpointer data)
             return;
         spice_channel_connect(channel);
         guint32 modifiers;
-        modifiers = SpiceQt::getSpice()->getKeyboardLockModifiers();
-        //modifiers = d->spiceQtInstance->getKeyboardLockModifiers();
+        //modifiers = SpiceQt::getSpice()->getKeyboardLockModifiers();
+        modifiers = d->spiceQtInstance->getKeyboardLockModifiers();
         sync_keyboard_lock_modifiers(display, modifiers);
         return;
     }
@@ -554,7 +555,7 @@ static void channel_destroy(SpiceSession *s, SpiceChannel *channel, gpointer dat
  *
  * Returns: a new #SpiceDisplay widget.
  **/
-SpiceDisplay *spice_display_new(SpiceSession *session, int id)
+SpiceDisplay *spice_display_new(SpiceSession *session, int id, SpiceQt *instance)
 {
     SpiceDisplay *display;
     SpiceDisplayPrivate *d;
@@ -565,6 +566,7 @@ SpiceDisplay *spice_display_new(SpiceSession *session, int id)
     d = SPICE_DISPLAY_GET_PRIVATE(display);
     d->session = static_cast<SpiceSession*>(g_object_ref(session));
     d->channel_id = id;
+    d->spiceQtInstance = instance;
     SPICE_DEBUG("channel_id:%d",d->channel_id);
 
     g_signal_connect(session, "channel-new",
