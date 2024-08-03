@@ -61,7 +61,6 @@
     </property>
     <addaction name="actionFullscreen"/>
     <addaction name="actionToolBar"/>
-    <addaction name="actionStatusBar"/>
    </widget>
    <widget class="QMenu" name="menuInput">
     <property name="title">
@@ -93,7 +92,6 @@
    <addaction name="menuOptions"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>

@@ -2176,6 +2176,8 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtabbar.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtabwidget.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qrubberband.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QDesktopWidget \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdesktopwidget.h \
 		../spice-client1/spicemainwindow.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMainWindow \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmainwindow.h \
@@ -2185,6 +2187,24 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QDialog \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdialog.h \
 		UI/ui_spicemainwindow.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QVariant \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QAction \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qaction.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qactiongroup.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QApplication \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qapplication.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreapplication.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qeventloop.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qguiapplication.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qinputmethod.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMenu \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmenu.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QMenuBar \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qmenubar.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QToolBar \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qtoolbar.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QVBoxLayout \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
 		../headers/spice-client.h \
 		../headers/spice-session.h \
 		../headers/spice-util.h \
@@ -2198,7 +2218,6 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QtCoreDepends \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractanimation.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstracteventdispatcher.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qeventloop.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractnativeeventfilter.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractproxymodel.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qabstractstate.h \
@@ -2222,7 +2241,6 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcollator.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcommandlineoption.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcommandlineparser.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreapplication.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcryptographichash.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qdeadlinetimer.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qelapsedtimer.h \
@@ -2342,8 +2360,6 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qgenericmatrix.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qgenericplugin.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qgenericpluginfactory.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qguiapplication.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qinputmethod.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qiconengine.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qiconengineplugin.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qimageiohandler.h \
@@ -2411,7 +2427,6 @@ spicemainwindow.o: ../spice-client1/spicemainwindow.cpp /opt/Qt5.12.2/5.12.2/gcc
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtextlist.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtexttable.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtguiversion.h \
-		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QWidget \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/QAudioOutput \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qaudiooutput.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtMultimedia/qtmultimediaglobal.h \
@@ -2540,7 +2555,34 @@ resdialog.o: ../spice-client1/resdialog.cpp ../spice-client1/resdialog.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qfiledevice.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qvector2d.h \
 		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtouchdevice.h \
-		UI/ui_resdialog.h
+		UI/ui_resdialog.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/QVariant \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QApplication \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qapplication.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qcoreapplication.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtCore/qeventloop.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qdesktopwidget.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qguiapplication.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qinputmethod.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QHBoxLayout \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qboxlayout.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qlayout.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qlayoutitem.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qgridlayout.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QLabel \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qlabel.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qframe.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QLineEdit \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qlineedit.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtextcursor.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtextformat.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qpen.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qtextoption.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QPushButton \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qpushbutton.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/qabstractbutton.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtGui/qicon.h \
+		/opt/Qt5.12.2/5.12.2/gcc_64/include/QtWidgets/QVBoxLayout
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o resdialog.o ../spice-client1/resdialog.cpp
 
 qrc_res.o: qrc_res.cpp 

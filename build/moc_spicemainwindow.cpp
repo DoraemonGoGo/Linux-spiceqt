@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_SpiceMainWindow_t {
-    QByteArrayData data[12];
-    char stringdata0[251];
+    QByteArrayData data[11];
+    char stringdata0[224];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -35,20 +35,18 @@ QT_MOC_LITERAL(0, 0, 15), // "SpiceMainWindow"
 QT_MOC_LITERAL(1, 16, 24), // "on_actionToolBar_toggled"
 QT_MOC_LITERAL(2, 41, 0), // ""
 QT_MOC_LITERAL(3, 42, 4), // "arg1"
-QT_MOC_LITERAL(4, 47, 26), // "on_actionStatusBar_toggled"
-QT_MOC_LITERAL(5, 74, 29), // "on_actionFullscreen_triggered"
-QT_MOC_LITERAL(6, 104, 7), // "checked"
-QT_MOC_LITERAL(7, 112, 33), // "on_actiontoolfullscreen_trigg..."
-QT_MOC_LITERAL(8, 146, 28), // "on_actionResize_to_triggered"
-QT_MOC_LITERAL(9, 175, 28), // "on_actiontoolclose_triggered"
-QT_MOC_LITERAL(10, 204, 28), // "on_action_usbredir_triggered"
-QT_MOC_LITERAL(11, 233, 17) // "updateSpiceWindow"
+QT_MOC_LITERAL(4, 47, 29), // "on_actionFullscreen_triggered"
+QT_MOC_LITERAL(5, 77, 7), // "checked"
+QT_MOC_LITERAL(6, 85, 33), // "on_actiontoolfullscreen_trigg..."
+QT_MOC_LITERAL(7, 119, 28), // "on_actionResize_to_triggered"
+QT_MOC_LITERAL(8, 148, 28), // "on_actiontoolclose_triggered"
+QT_MOC_LITERAL(9, 177, 28), // "on_action_usbredir_triggered"
+QT_MOC_LITERAL(10, 206, 17) // "updateSpiceWindow"
 
     },
     "SpiceMainWindow\0on_actionToolBar_toggled\0"
-    "\0arg1\0on_actionStatusBar_toggled\0"
-    "on_actionFullscreen_triggered\0checked\0"
-    "on_actiontoolfullscreen_triggered\0"
+    "\0arg1\0on_actionFullscreen_triggered\0"
+    "checked\0on_actiontoolfullscreen_triggered\0"
     "on_actionResize_to_triggered\0"
     "on_actiontoolclose_triggered\0"
     "on_action_usbredir_triggered\0"
@@ -62,7 +60,7 @@ static const uint qt_meta_data_SpiceMainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       8,   14, // methods
+       7,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -70,19 +68,17 @@ static const uint qt_meta_data_SpiceMainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   54,    2, 0x08 /* Private */,
-       4,    1,   57,    2, 0x08 /* Private */,
-       5,    1,   60,    2, 0x08 /* Private */,
-       7,    0,   63,    2, 0x08 /* Private */,
-       8,    0,   64,    2, 0x08 /* Private */,
-       9,    0,   65,    2, 0x08 /* Private */,
-      10,    0,   66,    2, 0x08 /* Private */,
-      11,    0,   67,    2, 0x08 /* Private */,
+       1,    1,   49,    2, 0x08 /* Private */,
+       4,    1,   52,    2, 0x08 /* Private */,
+       6,    0,   55,    2, 0x08 /* Private */,
+       7,    0,   56,    2, 0x08 /* Private */,
+       8,    0,   57,    2, 0x08 /* Private */,
+       9,    0,   58,    2, 0x08 /* Private */,
+      10,    0,   59,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Bool,    3,
-    QMetaType::Void, QMetaType::Bool,    3,
-    QMetaType::Void, QMetaType::Bool,    6,
+    QMetaType::Void, QMetaType::Bool,    5,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -99,13 +95,12 @@ void SpiceMainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->on_actionToolBar_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 1: _t->on_actionStatusBar_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 2: _t->on_actionFullscreen_triggered((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 3: _t->on_actiontoolfullscreen_triggered(); break;
-        case 4: _t->on_actionResize_to_triggered(); break;
-        case 5: _t->on_actiontoolclose_triggered(); break;
-        case 6: _t->on_action_usbredir_triggered(); break;
-        case 7: _t->updateSpiceWindow(); break;
+        case 1: _t->on_actionFullscreen_triggered((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 2: _t->on_actiontoolfullscreen_triggered(); break;
+        case 3: _t->on_actionResize_to_triggered(); break;
+        case 4: _t->on_actiontoolclose_triggered(); break;
+        case 5: _t->on_action_usbredir_triggered(); break;
+        case 6: _t->updateSpiceWindow(); break;
         default: ;
         }
     }
@@ -140,13 +135,13 @@ int SpiceMainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 8)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 8;
+        _id -= 7;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 8)
+        if (_id < 7)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 8;
+        _id -= 7;
     }
     return _id;
 }

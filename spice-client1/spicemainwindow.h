@@ -34,7 +34,7 @@ protected:
 
 private Q_SLOTS:
     void on_actionToolBar_toggled(bool arg1);
-    void on_actionStatusBar_toggled(bool arg1);
+//    void on_actionStatusBar_toggled(bool arg1);
     void on_actionFullscreen_triggered(bool checked);
     void on_actiontoolfullscreen_triggered();
     void on_actionResize_to_triggered();

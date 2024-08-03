@@ -652,38 +652,30 @@ void SpiceQt::paintEvent(QPaintEvent *event)
 {
     QPainter p(this);
 
-    // 清除背景
-//    p.fillRect(rect(), Qt::white);
-
-//    qDebug()<<resizing;
     if (!img.isNull())
     {
         QImage scaledImg = img.scaled(this->size(), Qt::KeepAspectRatio);
         qDebug()<<"scaledImg size:"<<scaledImg.size();
         p.drawImage(0, 0, scaledImg);
-//                p.drawImage(0, 0, scaledImg);
     }
 }
 
-//void SpiceQt::resizeEvent(QResizeEvent *event)
-//{
-//    QWidget::resizeEvent(event);
+void SpiceQt::resizeEvent(QResizeEvent *event)
+{
+    QWidget::resizeEvent(event);
 
-//    int newWidth = event->size().width();
-//    int newHeight = event->size().height();
-//    qDebug() << "resizeEvent: new size:" << newWidth << "x" << newHeight;
-//    // 更新图像缓冲区大小
+    int newWidth = event->size().width();
+    int newHeight = event->size().height();
+    qDebug() << "spiceQt-rersize: new size:" << newWidth << "x" << newHeight;
+    // 更新图像缓冲区大小
 
-//    //resize(newWidth, newHeight);
+    dataWidth = newWidth;
+    dataHeight = newHeight;
+
+    //resize(newWidth, newHeight);
 //    settingsChanged(newWidth, newHeight, 32);  // 假设 bpp 为 32
-//    // 在拉伸过程中使用临时图像
-
-//    //setTemporaryImage();
-//    //resizing = true;
-
-//    // 重启定时器，延迟200毫秒后更新图像内容
-//    //resizeTimer.start(100);
-//}
+    // 在拉伸过程中使用临时图像
+}
 
 void SpiceQt::spiceResize(int w, int h)
 {
@@ -725,8 +717,7 @@ void SpiceQt::updateImage(uchar *data, int x, int y, int w, int h)
         for (int j = x; j < x + width(); j++)
             img.setPixel(j, i, source[dataWidth * i + j]);
     qDebug() << "updateImage called. New image size:" << img.size();
-     update(x, y, w, h);
-
+    update(x, y, w, h);
 }
 
 void SpiceQt::setKbdModifiers(int m)

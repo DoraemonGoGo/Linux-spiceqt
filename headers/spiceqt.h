@@ -55,7 +55,7 @@ public:
     void settingsChanged(int width, int height, int bpp);
     void setKbdModifiers(int m);
     void spiceResize(int w, int h);
-//    void resizeEvent(QResizeEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 //    void setTemporaryImage();
 //    void finalizeResize();
     void showCursor(bool visible)

@@ -2,6 +2,7 @@
 #include "QMouseEvent"
 #include <QPushButton>
 #include <QListWidget>
+#include <QDesktopWidget>
 #include "spicemainwindow.h"
 #include "ui_spicemainwindow.h"
 #include <spice-client.h>
@@ -37,7 +38,7 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
 
     spicewindow->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     ui->actionToolBar->setChecked(true);
-    ui->actionStatusBar->setChecked(true);
+//    ui->actionStatusBar->setChecked(true);
 
     // 使用定时器定期更新显示窗口
 //    connect(resizeTimer, &QTimer::timeout, this, &SpiceMainWindow::handleResizeTimeout);
@@ -78,7 +79,7 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
                 //this->addAction(a)
 
                 a->setToolTip(a->text());
-                a->setStatusTip(a->text());
+//                a->setStatusTip(a->text());
 
             }
         }
@@ -118,7 +119,7 @@ void SpiceMainWindow::keyPressEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_Escape && isFullScreen())
     {
         ui->toolBar->setVisible(true);
-        ui->statusBar->setVisible(true);
+//        ui->statusBar->setVisible(true);
         ui->menubar->setVisible(true);
         showNormal();
     }
@@ -131,13 +132,26 @@ void SpiceMainWindow::resizeEvent(QResizeEvent *event)
     QRect contentRect = this->layout()->geometry();
     int newWidth = contentRect.width();
     int newHeight = contentRect.height();
+
+
+//    int newWidth = event->size().width();
+//    int newHeight = event->size().height();
+
 //    spicewindow->resizeEvent(event);
     int scalew=event->size().width()/event->oldSize().width();
     int scaleh=event->size().height()/event->oldSize().height();
-    ui->centralwidget->resize(ui->centralwidget->width()*scalew,ui->centralwidget->height()*scaleh);
+    //影响全屏状态下鼠标是否能操作问题
+//    ui->centralwidget->resize(ui->centralwidget->width()*scalew,ui->centralwidget->height()*scaleh);
+    qDebug()<<"窗口大小改变！"<<":"<<newWidth<<","<<newHeight;
 //    spicewindow->resize(event->size().width(), event->size().height());
 //        ui->centralwidget->resize(ui->centralwidget->width()*scalew,ui->centralwidget->height()*scaleh);
-    spicewindow->settingsChanged(event->size().width(), event->size().height(), 32);
+//    spicewindow->settingsChanged(event->size().width(), event->size().height(), 32);
+//    spicewindow->resizeEvent(event);
+//    spicewindow->resize(event->size().width(), event->size().height());
+    spicewindow->spiceResize(event->size().width(), event->size().height());
+//    spicewindow->spiceResize(newWidth, newHeight);
+
+//    spicewindow->resizeEvent(event);
 //    qDebug()<<event->oldSize()<<" "<<event->size();
 //    qDebug()<<ui->centralwidget->width()<<" "<<ui->centralwidget->height();
 //    qDebug()<<newWidth<<" "<<newHeight;
@@ -151,39 +165,84 @@ void SpiceMainWindow::on_actionToolBar_toggled(bool arg1)
 }
 
 //设置状态栏显示
-void SpiceMainWindow::on_actionStatusBar_toggled(bool arg1)
-{
-    ui->statusBar->setVisible(ui->actionStatusBar->isChecked());
-}
+//void SpiceMainWindow::on_actionStatusBar_toggled(bool arg1)
+//{
+//    //ui->statusBar->setVisible(ui->actionStatusBar->isChecked());
+//}
 
 //菜单中虚拟机全屏显示
 void SpiceMainWindow::fullscreen(bool full)
 {
-;
+
     ui->toolBar->setVisible(!full);
-    ui->statusBar->setVisible(!full);
+//    ui->statusBar->setVisible(!full);
     ui->menubar->setVisible(!full);
     ui->actionFullscreen->setShortcut(  full ? QKeySequence("Esc") : QKeySequence("Ctrl+F"));
 
     static bool maximized = false;// 记录当前状态
-    if ( full )
-    {
-        maximized = isFullScreen();
-    }
-    else if ( maximized && isFullScreen() )
-    {
-        return;
+//    if ( full )
+//    {
+//        maximized = isFullScreen();
+//    }
+//    else if ( maximized && isFullScreen() )
+//    {
+//        return;
+//    }
+
+//    if ( full && !isFullScreen() || !full && isFullScreen() )
+//    {
+//        if (isFullScreen())
+//        {
+//            showNormal();
+//        }
+//        else
+//            showFullScreen();
+
+//        // 获取屏幕分辨率
+//        QRect screenGeometry = QApplication::desktop()->screenGeometry(this);
+//        int screenWidth = screenGeometry.width();
+//        int screenHeight = screenGeometry.height();
+
+//        // 打印窗口几何信息
+//        QRect contentRect = this->geometry();
+//        int newWidth = full ? screenWidth : contentRect.width();
+//        int newHeight = full ? screenHeight : contentRect.height();
+//        qDebug() << "New dimensions: " << newWidth << "x" << newHeight;
+
+//        // 直接设置窗口几何属性
+//        setGeometry(0, 0, newWidth, newHeight);
+
+//        // 触发 resize 事件
+//        resizeEvent(new QResizeEvent(QSize(newWidth, newHeight), size()));
+//    }
+    if (full) {
+            // 记录是否最大化状态
+            maximized = isMaximized();
+            showFullScreen();
+        } else {
+            if (maximized) {
+                showMaximized();
+            } else {
+                showNormal();
+            }
+        }
+    //在全屏状态下需要获取到窗口的大小和分辨率，然后调整显示窗口的大小
+    // 确保窗口在进入全屏和退出全屏后调整大小
+    QRect screenGeometry = QApplication::desktop()->screenGeometry(this);
+    int screenWidth = screenGeometry.width();
+    int screenHeight = screenGeometry.height();
+
+    QRect contentRect = this->geometry();
+    int newWidth = full ? screenWidth : contentRect.width();
+    int newHeight = full ? screenHeight : contentRect.height();
+    qDebug() << "New dimensions: " << newWidth << "x" << newHeight;
+
+    // 调整spicewindow的大小
+    if (spicewindow) {
+        spicewindow->resize(newWidth, newHeight);
+        spicewindow->spiceResize(newWidth, newHeight);
     }
 
-    if ( full && !isFullScreen() || !full && isFullScreen() )
-    {
-        if (isFullScreen())
-        {
-            showNormal();
-        }
-        else
-            showFullScreen();
-    }
 }
 
 void SpiceMainWindow::on_actionFullscreen_triggered(bool checked)
@@ -197,7 +256,7 @@ void SpiceMainWindow::on_actiontoolfullscreen_triggered()
 {
    auto full = isFullScreen();
    ui->toolBar->setVisible(full);
-   ui->statusBar->setVisible(full);
+//   ui->statusBar->setVisible(full);
    ui->menubar->setVisible(full);
 
    if(full)

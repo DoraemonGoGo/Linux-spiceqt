@@ -15,7 +15,6 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
-#include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -58,7 +57,6 @@ public:
     QMenu *menuInput;
     QMenu *menuOptions;
     QMenu *menuHelp;
-    QStatusBar *statusBar;
     QToolBar *toolBar;
 
     void setupUi(QMainWindow *SpiceMainWindow)
@@ -197,9 +195,6 @@ public:
         menuHelp = new QMenu(menubar);
         menuHelp->setObjectName(QString::fromUtf8("menuHelp"));
         SpiceMainWindow->setMenuBar(menubar);
-        statusBar = new QStatusBar(SpiceMainWindow);
-        statusBar->setObjectName(QString::fromUtf8("statusBar"));
-        SpiceMainWindow->setStatusBar(statusBar);
         toolBar = new QToolBar(SpiceMainWindow);
         toolBar->setObjectName(QString::fromUtf8("toolBar"));
         SpiceMainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
@@ -218,7 +213,6 @@ public:
         menuedit->addAction(actionPaste_to_guest);
         menuView->addAction(actionFullscreen);
         menuView->addAction(actionToolBar);
-        menuView->addAction(actionStatusBar);
         menuOptions->addAction(actionGrab_keyboard_when_active_and_focused);
         menuOptions->addAction(actionGrab_mouse);
         menuOptions->addAction(actiontoggle_mouse_mode);

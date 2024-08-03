@@ -58,8 +58,6 @@ static void draw_gl(SpiceDisplay *display) {
 
 static void callbackSettingsChanged(SpiceDisplay *display, gint width, gint height, gint bpp)
 {
-    //SpiceQt::getSpice()->settingsChanged(width, height, bpp);
-
     SpiceDisplayPrivate *d = SPICE_DISPLAY_GET_PRIVATE(display);
 //    SpiceDisplayPrivate *d = static_cast<SpiceDisplayPrivate*>(instance);
     if (d->spiceQtInstance) {
