@@ -66,31 +66,26 @@
     <property name="title">
      <string>Input</string>
     </property>
-   </widget>
-   <widget class="QMenu" name="menuOptions">
-    <property name="title">
-     <string>Options</string>
-    </property>
-    <addaction name="actionGrab_keyboard_when_active_and_focused"/>
-    <addaction name="actionGrab_mouse"/>
-    <addaction name="actiontoggle_mouse_mode"/>
-    <addaction name="actionResize"/>
-    <addaction name="actionScale_display"/>
-    <addaction name="actionDisable_input"/>
-    <addaction name="actionsync_modifiers"/>
-    <addaction name="actionAutomatic_clipboard_bewteen_host_and_guest"/>
-   </widget>
-   <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
+    <addaction name="actionCtrl_Alt_Delete"/>
+    <addaction name="actionCtrl_Alt_Backspace"/>
+    <addaction name="separator"/>
+    <addaction name="actionCtrl_Alt_F1"/>
+    <addaction name="actionCtrl_Alt_F2"/>
+    <addaction name="actionCtrl_Alt_F3"/>
+    <addaction name="actionCtrl_Alt_F4"/>
+    <addaction name="actionCtrl_Alt_F5"/>
+    <addaction name="actionCtrl_Alt_F6"/>
+    <addaction name="actionCtrl_Alt_F7"/>
+    <addaction name="actionCtrl_Alt_F8"/>
+    <addaction name="actionCtrl_Alt_F9"/>
+    <addaction name="actionCtrl_Alt_F10"/>
+    <addaction name="actionCtrl_Alt_F11"/>
+    <addaction name="actionCtrl_Alt_F12"/>
    </widget>
    <addaction name="menu"/>
    <addaction name="menuedit"/>
    <addaction name="menuView"/>
    <addaction name="menuInput"/>
-   <addaction name="menuOptions"/>
-   <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
@@ -104,8 +99,6 @@
    </attribute>
    <addaction name="actiontoolclose"/>
    <addaction name="separator"/>
-   <addaction name="actiontoolcopy"/>
-   <addaction name="actiontoolpaste"/>
    <addaction name="separator"/>
    <addaction name="actiontoolfullscreen"/>
    <addaction name="action_usbredir"/>
@@ -289,6 +282,76 @@
    </property>
    <property name="toolTip">
     <string>usb_redir</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_Delete">
+   <property name="text">
+    <string>Ctrl+Alt+删除</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_Backspace">
+   <property name="text">
+    <string>Ctrl+Alt+退格</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_F1">
+   <property name="text">
+    <string>Ctrl+Alt+F1</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_F2">
+   <property name="text">
+    <string>Ctrl+Alt+F2</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_F3">
+   <property name="text">
+    <string>Ctrl+Alt+F3</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_F4">
+   <property name="text">
+    <string>Ctrl+Alt+F4</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_F5">
+   <property name="text">
+    <string>Ctrl+Alt+F5</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_F6">
+   <property name="text">
+    <string>Ctrl+Alt+F6</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_F7">
+   <property name="text">
+    <string>Ctrl+Alt+F7</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_F8">
+   <property name="text">
+    <string>Ctrl+Alt+F8</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_F9">
+   <property name="text">
+    <string>Ctrl+Alt+F9</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_F10">
+   <property name="text">
+    <string>Ctrl+Alt+F10</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_F11">
+   <property name="text">
+    <string>Ctrl+Alt+F11</string>
+   </property>
+  </action>
+  <action name="actionCtrl_Alt_F12">
+   <property name="text">
+    <string>Ctrl+Alt+F12</string>
    </property>
   </action>
  </widget>

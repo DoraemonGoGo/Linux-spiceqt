@@ -654,7 +654,7 @@ void SpiceQt::paintEvent(QPaintEvent *event)
 
     if (!img.isNull())
     {
-        QImage scaledImg = img.scaled(this->size(), Qt::KeepAspectRatio);
+        QImage scaledImg = img.scaled(this->size(), Qt::IgnoreAspectRatio);
         qDebug()<<"scaledImg size:"<<scaledImg.size();
         p.drawImage(0, 0, scaledImg);
     }
@@ -921,6 +921,63 @@ void SpiceQt::keyReleaseEvent(QKeyEvent *event)
 {
     QMap<int, int> *map = SpiceQt::getKeymap();
     send_key(display, map->value(event->nativeScanCode()), 0);
+}
+
+void SpiceQt::sendShortcut(const QString &shortcut)
+{
+    static QMap<QString, int> keyMap;
+   if (keyMap.isEmpty()) {
+       keyMap["Ctrl+Alt+Delete"] = 0x53; // 示例扫描码
+       keyMap["Ctrl+Alt+F1"] = 0x3B;     // 示例扫描码
+       keyMap["Ctrl+Alt+F2"] = 0x3C;     // 示例扫描码
+       keyMap["Ctrl+Alt+F3"] = 0x3D;
+       keyMap["Ctrl+Alt+F4"] = 0x3E;
+       keyMap["Ctrl+Alt+F5"] = 0x3F;
+       keyMap["Ctrl+Alt+F6"] = 0x40;
+       keyMap["Ctrl+Alt+F7"] = 0x41;
+       keyMap["Ctrl+Alt+F8"] = 0x42;
+       keyMap["Ctrl+Alt+F9"] = 0x43;
+       keyMap["Ctrl+Alt+F10"] = 0x44;
+       keyMap["Ctrl+Alt+F11"] = 0x57;
+       keyMap["Ctrl+Alt+F12"] = 0x58;
+       // 添加更多映射...
+   }
+
+   QStringList keys = shortcut.split("+");
+   bool ctrlPressed = keys.contains("Ctrl");
+   bool altPressed = keys.contains("Alt");
+   keys.removeAll("Ctrl");
+   keys.removeAll("Alt");
+
+   if (keys.isEmpty()) {
+       qWarning() << "Invalid shortcut:" << shortcut;
+       return;
+   }
+
+   QString key = keys.first();
+   if (!keyMap.contains(shortcut)) {
+       qWarning() << "Unknown shortcut:" << shortcut;
+       return;
+   }
+
+   int scancode = keyMap.value(shortcut);
+
+   if (ctrlPressed) {
+       send_key(display, 0x1D, 1); // Ctrl 键按下
+   }
+   if (altPressed) {
+       send_key(display, 0x38, 1); // Alt 键按下
+   }
+
+   send_key(display, scancode, 1); // 发送对应键码的按下事件
+   send_key(display, scancode, 0); // 发送对应键码的抬起事件
+
+   if (altPressed) {
+       send_key(display, 0x38, 0); // Alt 键抬起
+   }
+   if (ctrlPressed) {
+       send_key(display, 0x1D, 0); // Ctrl 键抬起
+   }
 }
 
 void SpiceQt::prepareMouseData()

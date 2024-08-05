@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>392</width>
-    <height>309</height>
+    <width>332</width>
+    <height>232</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,9 +27,12 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="2,7,1,1">
+      <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="5,10,1,1">
        <property name="spacing">
         <number>0</number>
+       </property>
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
        </property>
        <item>
         <widget class="QLabel" name="label">
@@ -51,6 +54,9 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
          </property>
         </widget>
        </item>
@@ -89,7 +95,7 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="2,7,1,1">
+      <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="5,10,1,1">
        <property name="spacing">
         <number>0</number>
        </property>
@@ -124,6 +130,12 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="maximumSize">
+          <size>
+           <width>1000000</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="styleSheet">
           <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
@@ -148,14 +160,14 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="2,7,0,0">
+      <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="5,10,0,0">
        <property name="spacing">
         <number>0</number>
        </property>
        <item>
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>x:</string>
+          <string>    x:</string>
          </property>
         </widget>
        </item>
@@ -204,14 +216,14 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="2,7,0,0">
+      <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="5,10,0,0">
        <property name="spacing">
         <number>0</number>
        </property>
        <item>
         <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>y:</string>
+          <string>    y:</string>
          </property>
         </widget>
        </item>

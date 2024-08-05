@@ -41,6 +41,7 @@ private Q_SLOTS:
     void on_actiontoolclose_triggered();
     void on_action_usbredir_triggered();
     void updateSpiceWindow();
+    void handleShortcutAction();
 //    void handleResizeTimeout();
 //    void onUsbDeviceAdded(SpiceUsbDevice *device);
 //    void onUsbDeviceRemoved(SpiceUsbDevice *device);

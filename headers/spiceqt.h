@@ -56,8 +56,10 @@ public:
     void setKbdModifiers(int m);
     void spiceResize(int w, int h);
     void resizeEvent(QResizeEvent *event) override;
-//    void setTemporaryImage();
-//    void finalizeResize();
+    //发送快捷键
+    void sendShortcut(const QString &shortcut);
+//    int convertKeyStringToQtKey(const QString &keyString);
+
     void showCursor(bool visible)
     {
 //        if (visible)

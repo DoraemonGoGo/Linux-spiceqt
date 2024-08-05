@@ -40,9 +40,11 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
     ui->actionToolBar->setChecked(true);
 //    ui->actionStatusBar->setChecked(true);
 
-    // 使用定时器定期更新显示窗口
-//    connect(resizeTimer, &QTimer::timeout, this, &SpiceMainWindow::handleResizeTimeout);
-//    resizeTimer->setSingleShot(true);
+    //将快捷键菜单项连接到处理函数
+    QList<QAction*> actions = ui->menuInput->actions();
+    for (QAction* action : actions) {
+        connect(action, &QAction::triggered, this, &SpiceMainWindow::handleShortcutAction);
+    }
 
     qDebug()<<"------------------------------------------------------";
     //设置状态栏获取鼠标指向位置
@@ -85,6 +87,21 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
         }
     }
 
+}
+
+void SpiceMainWindow::handleShortcutAction()
+{
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (!action) return;
+
+    QString shortcut = action->objectName().remove("action");
+    shortcut.replace("_", "+");
+
+    qDebug() << "Shortcut clicked:" << shortcut;
+
+    if (spicewindow) {
+        spicewindow->sendShortcut(shortcut);
+    }
 }
 
 SpiceMainWindow::~SpiceMainWindow()

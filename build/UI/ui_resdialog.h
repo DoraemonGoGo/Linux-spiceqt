@@ -54,7 +54,7 @@ public:
     {
         if (ResDialog->objectName().isEmpty())
             ResDialog->setObjectName(QString::fromUtf8("ResDialog"));
-        ResDialog->resize(392, 309);
+        ResDialog->resize(332, 232);
         ResDialog->setWindowOpacity(0.900000000000000);
         verticalLayout_3 = new QVBoxLayout(ResDialog);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
@@ -68,6 +68,7 @@ public:
         horizontalLayout_7 = new QHBoxLayout();
         horizontalLayout_7->setSpacing(0);
         horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
+        horizontalLayout_7->setSizeConstraint(QLayout::SetDefaultConstraint);
         label = new QLabel(ResDialog);
         label->setObjectName(QString::fromUtf8("label"));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
@@ -82,6 +83,7 @@ public:
         lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
         sizePolicy.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
         lineEdit->setSizePolicy(sizePolicy);
+        lineEdit->setLayoutDirection(Qt::LeftToRight);
 
         horizontalLayout_7->addWidget(lineEdit);
 
@@ -101,8 +103,8 @@ public:
 
         horizontalLayout_7->addWidget(pushButton);
 
-        horizontalLayout_7->setStretch(0, 2);
-        horizontalLayout_7->setStretch(1, 7);
+        horizontalLayout_7->setStretch(0, 5);
+        horizontalLayout_7->setStretch(1, 10);
         horizontalLayout_7->setStretch(2, 1);
         horizontalLayout_7->setStretch(3, 1);
 
@@ -129,6 +131,7 @@ public:
         pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
         sizePolicy.setHeightForWidth(pushButton_4->sizePolicy().hasHeightForWidth());
         pushButton_4->setSizePolicy(sizePolicy);
+        pushButton_4->setMaximumSize(QSize(1000000, 16777215));
         pushButton_4->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);"));
 
         horizontalLayout_8->addWidget(pushButton_4);
@@ -140,8 +143,8 @@ public:
 
         horizontalLayout_8->addWidget(pushButton_3);
 
-        horizontalLayout_8->setStretch(0, 2);
-        horizontalLayout_8->setStretch(1, 7);
+        horizontalLayout_8->setStretch(0, 5);
+        horizontalLayout_8->setStretch(1, 10);
         horizontalLayout_8->setStretch(2, 1);
         horizontalLayout_8->setStretch(3, 1);
 
@@ -177,8 +180,8 @@ public:
 
         horizontalLayout_9->addWidget(pushButton_8);
 
-        horizontalLayout_9->setStretch(0, 2);
-        horizontalLayout_9->setStretch(1, 7);
+        horizontalLayout_9->setStretch(0, 5);
+        horizontalLayout_9->setStretch(1, 10);
 
         verticalLayout_2->addLayout(horizontalLayout_9);
 
@@ -212,8 +215,8 @@ public:
 
         horizontalLayout_11->addWidget(pushButton_10);
 
-        horizontalLayout_11->setStretch(0, 2);
-        horizontalLayout_11->setStretch(1, 7);
+        horizontalLayout_11->setStretch(0, 5);
+        horizontalLayout_11->setStretch(1, 10);
 
         verticalLayout_2->addLayout(horizontalLayout_11);
 
@@ -256,10 +259,10 @@ public:
         label_3->setText(QApplication::translate("ResDialog", "height:", nullptr));
         pushButton_4->setText(QApplication::translate("ResDialog", "+", nullptr));
         pushButton_3->setText(QApplication::translate("ResDialog", "-", nullptr));
-        label_5->setText(QApplication::translate("ResDialog", "x:", nullptr));
+        label_5->setText(QApplication::translate("ResDialog", "    x:", nullptr));
         pushButton_7->setText(QApplication::translate("ResDialog", "+", nullptr));
         pushButton_8->setText(QApplication::translate("ResDialog", "-", nullptr));
-        label_6->setText(QApplication::translate("ResDialog", "y:", nullptr));
+        label_6->setText(QApplication::translate("ResDialog", "    y:", nullptr));
         pushButton_9->setText(QApplication::translate("ResDialog", "+", nullptr));
         pushButton_10->setText(QApplication::translate("ResDialog", "-", nullptr));
         pushButton_6->setText(QApplication::translate("ResDialog", "Apply", nullptr));

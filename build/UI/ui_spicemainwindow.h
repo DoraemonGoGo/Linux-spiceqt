@@ -47,6 +47,20 @@ public:
     QAction *actionsync_modifiers;
     QAction *actionAutomatic_clipboard_bewteen_host_and_guest;
     QAction *action_usbredir;
+    QAction *actionCtrl_Alt_Delete;
+    QAction *actionCtrl_Alt_Backspace;
+    QAction *actionCtrl_Alt_F1;
+    QAction *actionCtrl_Alt_F2;
+    QAction *actionCtrl_Alt_F3;
+    QAction *actionCtrl_Alt_F4;
+    QAction *actionCtrl_Alt_F5;
+    QAction *actionCtrl_Alt_F6;
+    QAction *actionCtrl_Alt_F7;
+    QAction *actionCtrl_Alt_F8;
+    QAction *actionCtrl_Alt_F9;
+    QAction *actionCtrl_Alt_F10;
+    QAction *actionCtrl_Alt_F11;
+    QAction *actionCtrl_Alt_F12;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QVBoxLayout *layout;
@@ -55,8 +69,6 @@ public:
     QMenu *menuedit;
     QMenu *menuView;
     QMenu *menuInput;
-    QMenu *menuOptions;
-    QMenu *menuHelp;
     QToolBar *toolBar;
 
     void setupUi(QMainWindow *SpiceMainWindow)
@@ -163,6 +175,34 @@ public:
             icon4.addFile(QString::fromUtf8(":/icon/Photo_UKey_Line.png"), QSize(), QIcon::Normal, QIcon::Off);
         }
         action_usbredir->setIcon(icon4);
+        actionCtrl_Alt_Delete = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_Delete->setObjectName(QString::fromUtf8("actionCtrl_Alt_Delete"));
+        actionCtrl_Alt_Backspace = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_Backspace->setObjectName(QString::fromUtf8("actionCtrl_Alt_Backspace"));
+        actionCtrl_Alt_F1 = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_F1->setObjectName(QString::fromUtf8("actionCtrl_Alt_F1"));
+        actionCtrl_Alt_F2 = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_F2->setObjectName(QString::fromUtf8("actionCtrl_Alt_F2"));
+        actionCtrl_Alt_F3 = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_F3->setObjectName(QString::fromUtf8("actionCtrl_Alt_F3"));
+        actionCtrl_Alt_F4 = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_F4->setObjectName(QString::fromUtf8("actionCtrl_Alt_F4"));
+        actionCtrl_Alt_F5 = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_F5->setObjectName(QString::fromUtf8("actionCtrl_Alt_F5"));
+        actionCtrl_Alt_F6 = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_F6->setObjectName(QString::fromUtf8("actionCtrl_Alt_F6"));
+        actionCtrl_Alt_F7 = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_F7->setObjectName(QString::fromUtf8("actionCtrl_Alt_F7"));
+        actionCtrl_Alt_F8 = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_F8->setObjectName(QString::fromUtf8("actionCtrl_Alt_F8"));
+        actionCtrl_Alt_F9 = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_F9->setObjectName(QString::fromUtf8("actionCtrl_Alt_F9"));
+        actionCtrl_Alt_F10 = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_F10->setObjectName(QString::fromUtf8("actionCtrl_Alt_F10"));
+        actionCtrl_Alt_F11 = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_F11->setObjectName(QString::fromUtf8("actionCtrl_Alt_F11"));
+        actionCtrl_Alt_F12 = new QAction(SpiceMainWindow);
+        actionCtrl_Alt_F12->setObjectName(QString::fromUtf8("actionCtrl_Alt_F12"));
         centralwidget = new QWidget(SpiceMainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -190,10 +230,6 @@ public:
         menuView->setObjectName(QString::fromUtf8("menuView"));
         menuInput = new QMenu(menubar);
         menuInput->setObjectName(QString::fromUtf8("menuInput"));
-        menuOptions = new QMenu(menubar);
-        menuOptions->setObjectName(QString::fromUtf8("menuOptions"));
-        menuHelp = new QMenu(menubar);
-        menuHelp->setObjectName(QString::fromUtf8("menuHelp"));
         SpiceMainWindow->setMenuBar(menubar);
         toolBar = new QToolBar(SpiceMainWindow);
         toolBar->setObjectName(QString::fromUtf8("toolBar"));
@@ -203,8 +239,6 @@ public:
         menubar->addAction(menuedit->menuAction());
         menubar->addAction(menuView->menuAction());
         menubar->addAction(menuInput->menuAction());
-        menubar->addAction(menuOptions->menuAction());
-        menubar->addAction(menuHelp->menuAction());
         menu->addAction(action);
         menu->addAction(action_2);
         menu->addSeparator();
@@ -213,18 +247,23 @@ public:
         menuedit->addAction(actionPaste_to_guest);
         menuView->addAction(actionFullscreen);
         menuView->addAction(actionToolBar);
-        menuOptions->addAction(actionGrab_keyboard_when_active_and_focused);
-        menuOptions->addAction(actionGrab_mouse);
-        menuOptions->addAction(actiontoggle_mouse_mode);
-        menuOptions->addAction(actionResize);
-        menuOptions->addAction(actionScale_display);
-        menuOptions->addAction(actionDisable_input);
-        menuOptions->addAction(actionsync_modifiers);
-        menuOptions->addAction(actionAutomatic_clipboard_bewteen_host_and_guest);
+        menuInput->addAction(actionCtrl_Alt_Delete);
+        menuInput->addAction(actionCtrl_Alt_Backspace);
+        menuInput->addSeparator();
+        menuInput->addAction(actionCtrl_Alt_F1);
+        menuInput->addAction(actionCtrl_Alt_F2);
+        menuInput->addAction(actionCtrl_Alt_F3);
+        menuInput->addAction(actionCtrl_Alt_F4);
+        menuInput->addAction(actionCtrl_Alt_F5);
+        menuInput->addAction(actionCtrl_Alt_F6);
+        menuInput->addAction(actionCtrl_Alt_F7);
+        menuInput->addAction(actionCtrl_Alt_F8);
+        menuInput->addAction(actionCtrl_Alt_F9);
+        menuInput->addAction(actionCtrl_Alt_F10);
+        menuInput->addAction(actionCtrl_Alt_F11);
+        menuInput->addAction(actionCtrl_Alt_F12);
         toolBar->addAction(actiontoolclose);
         toolBar->addSeparator();
-        toolBar->addAction(actiontoolcopy);
-        toolBar->addAction(actiontoolpaste);
         toolBar->addSeparator();
         toolBar->addAction(actiontoolfullscreen);
         toolBar->addAction(action_usbredir);
@@ -265,12 +304,24 @@ public:
 #ifndef QT_NO_TOOLTIP
         action_usbredir->setToolTip(QApplication::translate("SpiceMainWindow", "usb_redir", nullptr));
 #endif // QT_NO_TOOLTIP
+        actionCtrl_Alt_Delete->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+\345\210\240\351\231\244", nullptr));
+        actionCtrl_Alt_Backspace->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+\351\200\200\346\240\274", nullptr));
+        actionCtrl_Alt_F1->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F1", nullptr));
+        actionCtrl_Alt_F2->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F2", nullptr));
+        actionCtrl_Alt_F3->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F3", nullptr));
+        actionCtrl_Alt_F4->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F4", nullptr));
+        actionCtrl_Alt_F5->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F5", nullptr));
+        actionCtrl_Alt_F6->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F6", nullptr));
+        actionCtrl_Alt_F7->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F7", nullptr));
+        actionCtrl_Alt_F8->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F8", nullptr));
+        actionCtrl_Alt_F9->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F9", nullptr));
+        actionCtrl_Alt_F10->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F10", nullptr));
+        actionCtrl_Alt_F11->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F11", nullptr));
+        actionCtrl_Alt_F12->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F12", nullptr));
         menu->setTitle(QApplication::translate("SpiceMainWindow", "File", nullptr));
         menuedit->setTitle(QApplication::translate("SpiceMainWindow", "Edit", nullptr));
         menuView->setTitle(QApplication::translate("SpiceMainWindow", "View", nullptr));
         menuInput->setTitle(QApplication::translate("SpiceMainWindow", "Input", nullptr));
-        menuOptions->setTitle(QApplication::translate("SpiceMainWindow", "Options", nullptr));
-        menuHelp->setTitle(QApplication::translate("SpiceMainWindow", "Help", nullptr));
         toolBar->setWindowTitle(QApplication::translate("SpiceMainWindow", "toolBar", nullptr));
     } // retranslateUi
 
