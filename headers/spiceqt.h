@@ -110,6 +110,18 @@ public:
     void stopAudioInput();
     void sendRecordedData();
 
+    //多显示器功能
+//    void configureMonitors();
+    void initializeWithMonitor(int monitor_id);
+    SpiceDisplayChannel* getDisplayChannel(int monitor_id);
+    static void onPrimarySurfaceCreate(SpiceDisplayChannel *channel, gpointer data);
+    static void onPrimarySurfaceDestroy(SpiceDisplayChannel *channel, gpointer data);
+    static void onInvalidate(SpiceDisplayChannel *channel, gint x, gint y, gint w, gint h, gpointer data);
+    void setupDisplayWindow(const SpiceDisplayMonitorConfig &monitor);
+    void updateDisplayContent();
+    void connectToDisplayChannelEvents();
+
+
 protected:
     void paintEvent(QPaintEvent *event) override;
 
@@ -132,6 +144,9 @@ public Q_SLOTS:
 Q_SIGNALS:
     void imageSize(int, int);
 
+public:
+
+
 private:
     static QMap<int, int> * getKeymap();
     void prepareMouseData();
@@ -141,6 +156,8 @@ private:
     SpiceDisplayPrivate * d;
     SpiceAudio   * audio;
     SpiceMainChannel *mainChannel;
+    int            monitor_id;//显示器id
+    SpiceDisplayChannel *display_channel;//显示通道
     SpiceUsbDeviceManager *usb_device_manager;
     uchar        * buf;
     QImage         img;
@@ -151,9 +168,9 @@ private:
     bool           numLock;
     bool           capsLock;
     bool           agentConnected;
-    QTimer resizeTimer;    // 用于延迟更新的定时器
-    QImage tempImg;        // 拉伸过程中使用的临时图像
-    bool resizing = false; // 标识是否正在拉伸窗口
+//    QTimer resizeTimer;    // 用于延迟更新的定时器
+//    QImage tempImg;        // 拉伸过程中使用的临时图像
+//    bool resizing = false; // 标识是否正在拉伸窗口
 
     static QMap<int, int>* keymap;
 
@@ -167,6 +184,7 @@ private:
     QIODevice *audioOutputDevice;
     QAudioInput *audioInput;
     QBuffer *audioInputBuffer;
+
 };
 
 #endif SPICEQT_H

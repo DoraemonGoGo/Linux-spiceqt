@@ -5,6 +5,7 @@
 #include <QDesktopWidget>
 #include "spicemainwindow.h"
 #include "ui_spicemainwindow.h"
+#include <smallmenuwidget.h>
 #include <spice-client.h>
 #include "spiceqt.h"
 #include "spice-widget.h"
@@ -15,14 +16,22 @@
 #include "QTimer"
 
 
-SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
+SpiceMainWindow::SpiceMainWindow(QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::SpiceMainWindow),
     spicewindow(new SpiceQt(this))
 //    resizeTimer(new QTimer(this))
 {
     ui->setupUi(this);
+    smallMenu = new SmallMenuWidget(this);
+    smallMenu->setAttribute(Qt::WA_NoSystemBackground, true);
 
+    setMouseTracking(true);  // 启用主窗口的鼠标跟踪
+    centralWidget()->setMouseTracking(true);  // 启用中心组件的鼠标跟踪
+
+    // 将刘海窗口移动到屏幕顶部中间，并隐藏
+    smallMenu->move((QApplication::desktop()->width() - smallMenu->width()) / 2, 0);
+    smallMenu->hide();
     //设置instance的嵌入和布局
 //    QHBoxLayout *layout = new QHBoxLayout();
 //    spicewindow = new SpiceQt();
@@ -88,6 +97,42 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent) :
     }
 
 }
+
+void SpiceMainWindow::mouseMoveEvent(QMouseEvent *event) {
+    if (!isFullScreen()) {
+        // 如果不是全屏模式，直接返回，不做任何操作
+        return;
+    }
+
+    int mouseX = event->globalX();
+    int mouseY = event->globalY();
+    qDebug()<<mouseX<<"  "<<mouseY;
+    // 获取屏幕宽度
+    int screenWidth = QApplication::desktop()->screenGeometry(this).width();
+    int startX = (screenWidth - 300) / 2;  // 菜单宽度假设为300像素
+    int endX = startX + 300;
+    qDebug()<<startX<<" "<<endX;
+    // 检查鼠标是否在顶部中间区域
+    if (mouseX >= startX && mouseX <= endX && mouseY <= 20) { // 顶部5像素内
+        if (!smallMenu->isVisible()) {  // 如果菜单未显示
+            smallMenu->move((screenWidth - smallMenu->width()) / 2, 0);
+            smallMenu->show();  // 在鼠标位置显示菜单
+        }
+    }
+    else {
+        // 延迟隐藏菜单栏，给用户时间移动鼠标
+        QTimer::singleShot(500, this, [this]() {
+            if (smallMenu->isVisible()) {
+                smallMenu->hide();
+                qDebug() << "smallMenu hidden after delay";
+            }
+        });
+//           if (smallMenu->isVisible()) {
+//               smallMenu->hide();  // 鼠标离开时隐藏刘海窗口
+//           }
+       }
+}
+
 
 void SpiceMainWindow::handleShortcutAction()
 {
@@ -236,6 +281,10 @@ void SpiceMainWindow::fullscreen(bool full)
             // 记录是否最大化状态
             maximized = isMaximized();
             showFullScreen();
+            // 将刘海窗口移动到屏幕顶部中间
+            int screenWidth = QApplication::desktop()->screenGeometry(this).width();
+            smallMenu->move((screenWidth - smallMenu->width()) / 2, 0);
+            smallMenu->show();
         } else {
             if (maximized) {
                 showMaximized();
@@ -290,6 +339,14 @@ void SpiceMainWindow::on_actionResize_to_triggered()
 {
     resdia = new ResDialog(this);
     resdia->show();
+}
+
+void SpiceMainWindow::NotFullScreen()
+{
+    showNormal();
+    ui->toolBar->setVisible(true);
+ //   ui->statusBar->setVisible(full);
+    ui->menubar->setVisible(true);
 }
 
 //工具栏close按钮关闭主窗口
@@ -447,4 +504,12 @@ void SpiceMainWindow::updateSpiceWindow()
     {
         spicewindow->update();
     }
+}
+
+void SpiceMainWindow::on_action_1_triggered()
+{
+    int screenWidth = QApplication::desktop()->screenGeometry(this).width();
+//            smallMenu->resize(330, 65);  // 假设smallMenu宽300，高50
+    smallMenu->move((screenWidth - smallMenu->width()) / 2, 100);
+    smallMenu->show();
 }

@@ -43,7 +43,7 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="action"/>
+    <addaction name="action_1"/>
     <addaction name="action_2"/>
     <addaction name="separator"/>
     <addaction name="actionclose"/>
@@ -105,7 +105,7 @@
    <addaction name="separator"/>
    <addaction name="actionResize_to"/>
   </widget>
-  <action name="action">
+  <action name="action_1">
    <property name="text">
     <string>connect</string>
    </property>

@@ -14,16 +14,9 @@ HEADERS += headers/spice-common.h \
            headers/spice-widget-priv.h \
            headers/spice-gtk-session.h \
            headers/spiceqt.h \
-#    spicewidget.h \
-#    spicemainwindow.h
 
 SOURCES += src/spice-widget.cpp \
            src/spiceqt.cpp \
-#    spicewidget.cpp \
-#    spicemainwindow.cpp
 
 CONFIG += no_keywords
 
-FORMS += \
-    spicewidget.ui \
-    spicemainwindow.ui

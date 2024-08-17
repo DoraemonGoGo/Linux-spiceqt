@@ -15,7 +15,8 @@ class SpiceMainWindow;
 
 class ResizeTo;
 class SpiceQt;
-
+class MenuWindow;
+class SmallMenuWidget;
 
 class SpiceMainWindow : public QMainWindow
 {
@@ -27,12 +28,14 @@ public:
     void showspice(QString ip, QString port);
     void fullscreen(bool full);
     void initializeUsbRedirection();
+    void NotFullScreen();
 
 protected:
     void keyPressEvent(QKeyEvent *event);
     void resizeEvent(QResizeEvent *event);
+    void mouseMoveEvent(QMouseEvent *event) override;
 
-private Q_SLOTS:
+public Q_SLOTS:
     void on_actionToolBar_toggled(bool arg1);
 //    void on_actionStatusBar_toggled(bool arg1);
     void on_actionFullscreen_triggered(bool checked);
@@ -48,13 +51,20 @@ private Q_SLOTS:
 
 //    void on_actiontoolpaste_triggered();
 
+    void on_action_1_triggered();
+
+public:
+    SpiceQt *spicewindow;
+
 private:
     Ui::SpiceMainWindow *ui;
-    SpiceQt *spicewindow;
+//    SpiceQt *spicewindow;
     ResizeTo *res;
     ResDialog *resdia;
     QSet<QString> whiteList;
     QSet<QString> blackList;
+//    MenuWindow *SmallMenu;
+    SmallMenuWidget *smallMenu;
 //    QTimer *resizeTimer; // 新增 QTimer 成员变量
 //    static void on_usb_device_added(SpiceUsbDeviceManager *manager, SpiceUsbDevice *device, gpointer user_data);
 //    static void on_usb_device_removed(SpiceUsbDeviceManager *manager, SpiceUsbDevice *device, gpointer user_data);

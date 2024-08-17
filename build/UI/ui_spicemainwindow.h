@@ -24,7 +24,7 @@ QT_BEGIN_NAMESPACE
 class Ui_SpiceMainWindow
 {
 public:
-    QAction *action;
+    QAction *action_1;
     QAction *action_2;
     QAction *action_3;
     QAction *actionclose;
@@ -76,8 +76,8 @@ public:
         if (SpiceMainWindow->objectName().isEmpty())
             SpiceMainWindow->setObjectName(QString::fromUtf8("SpiceMainWindow"));
         SpiceMainWindow->resize(633, 615);
-        action = new QAction(SpiceMainWindow);
-        action->setObjectName(QString::fromUtf8("action"));
+        action_1 = new QAction(SpiceMainWindow);
+        action_1->setObjectName(QString::fromUtf8("action_1"));
         action_2 = new QAction(SpiceMainWindow);
         action_2->setObjectName(QString::fromUtf8("action_2"));
         action_3 = new QAction(SpiceMainWindow);
@@ -239,7 +239,7 @@ public:
         menubar->addAction(menuedit->menuAction());
         menubar->addAction(menuView->menuAction());
         menubar->addAction(menuInput->menuAction());
-        menu->addAction(action);
+        menu->addAction(action_1);
         menu->addAction(action_2);
         menu->addSeparator();
         menu->addAction(actionclose);
@@ -278,7 +278,7 @@ public:
     void retranslateUi(QMainWindow *SpiceMainWindow)
     {
         SpiceMainWindow->setWindowTitle(QApplication::translate("SpiceMainWindow", "MainWindow", nullptr));
-        action->setText(QApplication::translate("SpiceMainWindow", "connect", nullptr));
+        action_1->setText(QApplication::translate("SpiceMainWindow", "connect", nullptr));
         action_2->setText(QApplication::translate("SpiceMainWindow", "recent", nullptr));
         action_3->setText(QApplication::translate("SpiceMainWindow", "\346\217\222\345\205\245", nullptr));
         actionclose->setText(QApplication::translate("SpiceMainWindow", "close", nullptr));

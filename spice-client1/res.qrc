@@ -5,5 +5,7 @@
         <file>icon/粘贴.png</file>
         <file>icon/fullscreen.png</file>
         <file>icon/Photo_UKey_Line.png</file>
+        <file>icon/菜单.png</file>
+        <file>icon/退出全屏.png</file>
     </qresource>
 </RCC>

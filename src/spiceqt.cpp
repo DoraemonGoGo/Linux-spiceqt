@@ -608,8 +608,72 @@ void SpiceQt::connectToGuest(const QString &host, const QString &port)
     g_signal_connect(usb_device_manager, "device-added", G_CALLBACK(on_device_added), this);
     g_signal_connect(usb_device_manager, "device-removed", G_CALLBACK(on_device_removed), this);
 
-
 }
+
+//void SpiceQt::initializeWithMonitor(int monitor_id)
+//{
+//    this->monitor_id = monitor_id;
+//    display_channel = getDisplayChannel(monitor_id);
+//    if (display_channel) {
+//        connectToDisplayChannelEvents();
+//        updateDisplayContent();
+//    }
+//}
+
+//SpiceDisplayChannel* SpiceQt::getDisplayChannel(int monitor_id)
+//{
+//    GList *channels = spice_session_get_channels(SGsession);
+//    for (GList *iter = channels; iter != nullptr; iter = iter->next) {
+//        SpiceChannel *channel = SPICE_CHANNEL(iter->data);
+//        if (SPICE_IS_DISPLAY_CHANNEL(channel)) {
+//            SpiceDisplayChannel *display_channel = SPICE_DISPLAY_CHANNEL(channel);
+////            int channel_id = spice_channel_get_id(SPICE_CHANNEL(display_channel));
+//            int channel_id = get_display_id(display);
+//            if (channel_id == monitor_id) {
+//                return display_channel;
+//            }
+//        }
+//    }
+//    return nullptr;
+//}
+
+//void SpiceQt::connectToDisplayChannelEvents()
+//{
+//    if (display_channel) {
+//        g_signal_connect(display_channel, "display-primary-create",
+//                         G_CALLBACK(onPrimarySurfaceCreate), this);
+//        g_signal_connect(display_channel, "display-primary-destroy",
+//                         G_CALLBACK(onPrimarySurfaceDestroy), this);
+//        g_signal_connect(display_channel, "display-invalidate",
+//                         G_CALLBACK(onInvalidate), this);
+//    }
+//}
+
+//void SpiceQt::updateDisplayContent()
+//{
+//    if (display_channel) {
+//        // 获取主表面并更新图像
+//        const QImage surface_image = QImage(reinterpret_cast<const uchar*>(spice_display_channel_get_primary_surface(display_channel)),
+//                                            spice_display_channel_get_width(display_channel),
+//                                            spice_display_channel_get_height(display_channel),
+//                                            QImage::Format_RGB32);
+//        img = surface_image;
+//        update();  // 触发重绘
+//    }
+//}
+
+//void SpiceQt::onPrimarySurfaceCreate(SpiceDisplayChannel *channel, gpointer data)
+//{
+//    SpiceQt *self = static_cast<SpiceQt*>(data);
+//    self->updateDisplayContent();
+//}
+
+//void SpiceQt::onPrimarySurfaceDestroy(SpiceDisplayChannel *channel, gpointer data)
+//{
+//    SpiceQt *self = static_cast<SpiceQt*>(data);
+//    self->img = QImage();  // 清除图像
+//    self->update();
+//}
 
 SpiceDisplayPrivate* SpiceQt::getSpiceDisplayPrivate()
 {
@@ -632,17 +696,25 @@ void SpiceQt::initializeCursor(SpiceDisplayPrivate *d)
 
 quint32 SpiceQt::getKeyboardLockModifiers()
 {
-    XKeyboardState keyboard_state;
-    Display *x_display = QX11Info::display();
+//    XKeyboardState keyboard_state;
+//    Display *x_display = QX11Info::display();
     quint32 modifiers = 0;
+    Qt::KeyboardModifiers keyboardModifiers = QApplication::keyboardModifiers();
 
-    XGetKeyboardControl(x_display, &keyboard_state);
+//    XGetKeyboardControl(x_display, &keyboard_state);
 
-    if (keyboard_state.led_mask & 0x01)
+//    if (keyboard_state.led_mask & 0x01)
+//        modifiers |= SPICE_INPUTS_CAPS_LOCK;
+//    if (keyboard_state.led_mask & 0x02)
+//        modifiers |= SPICE_INPUTS_NUM_LOCK;
+//    if (keyboard_state.led_mask & 0x04)
+//        modifiers |= SPICE_INPUTS_SCROLL_LOCK;
+
+    if (capsLock)
         modifiers |= SPICE_INPUTS_CAPS_LOCK;
-    if (keyboard_state.led_mask & 0x02)
+    if (numLock)
         modifiers |= SPICE_INPUTS_NUM_LOCK;
-    if (keyboard_state.led_mask & 0x04)
+    if (scrollLock)
         modifiers |= SPICE_INPUTS_SCROLL_LOCK;
 
     return modifiers;
@@ -902,19 +974,41 @@ bool SpiceQt::x11Event(XEvent *event)
 
 void SpiceQt::enterEvent(QEvent *event)
 {
-    XGrabKeyboard(QX11Info::display(), DefaultRootWindow(QX11Info::display()), true, 
-                  GrabModeAsync, GrabModeAsync, CurrentTime);
+//    XGrabKeyboard(QX11Info::display(), DefaultRootWindow(QX11Info::display()), true,
+//                  GrabModeAsync, GrabModeAsync, CurrentTime);
+    // 在鼠标进入事件时，可以将窗口设置为模态状态，从而抓取输入
+    this->setWindowModality(Qt::ApplicationModal);
+    qDebug() << "Keyboard input grabbed using Qt ApplicationModal";
 }
 
 void SpiceQt::leaveEvent(QEvent *event)
 {
-    XUngrabKeyboard(QX11Info::display(), CurrentTime);
+//    XUngrabKeyboard(QX11Info::display(), CurrentTime);
+    // 在鼠标离开事件时，取消模态状态，释放输入
+    this->setWindowModality(Qt::NonModal);
+    qDebug() << "Keyboard input released using Qt NonModal";
 }
 
 void SpiceQt::keyPressEvent(QKeyEvent *event)
 {
-        QMap<int, int> *map = SpiceQt::getKeymap();
-        send_key(display, map->value(event->nativeScanCode()), 1);
+    switch (event->key()) {
+        case Qt::Key_CapsLock:
+            // Toggle Caps Lock state
+            capsLock = !capsLock;
+            break;
+        case Qt::Key_NumLock:
+            // Toggle Num Lock state
+            numLock = !numLock;
+            break;
+        case Qt::Key_ScrollLock:
+            // Toggle Scroll Lock state
+            scrollLock = !scrollLock;
+            break;
+        default:
+            break;
+    }
+    QMap<int, int> *map = SpiceQt::getKeymap();
+    send_key(display, map->value(event->nativeScanCode()), 1);
 }
 
 void SpiceQt::keyReleaseEvent(QKeyEvent *event)
@@ -925,9 +1019,10 @@ void SpiceQt::keyReleaseEvent(QKeyEvent *event)
 
 void SpiceQt::sendShortcut(const QString &shortcut)
 {
-    static QMap<QString, int> keyMap;
+   static QMap<QString, int> keyMap;
    if (keyMap.isEmpty()) {
        keyMap["Ctrl+Alt+Delete"] = 0x53; // 示例扫描码
+       keyMap["Ctrl+Alt+Space"] = 0x39;  // 空格键的扫描码
        keyMap["Ctrl+Alt+F1"] = 0x3B;     // 示例扫描码
        keyMap["Ctrl+Alt+F2"] = 0x3C;     // 示例扫描码
        keyMap["Ctrl+Alt+F3"] = 0x3D;

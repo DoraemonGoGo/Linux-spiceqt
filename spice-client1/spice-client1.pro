@@ -42,17 +42,20 @@ SOURCES += \
         main.cpp \
         widget.cpp \
     spicemainwindow.cpp \
-    resdialog.cpp
+    resdialog.cpp \
+    smallmenuwidget.cpp
 
 HEADERS += \
         widget.h \
     spicemainwindow.h \
-    resdialog.h
+    resdialog.h \
+    smallmenuwidget.h
 
 FORMS += \
         widget.ui \
     spicemainwindow.ui \
-    resdialog.ui
+    resdialog.ui \
+    smallmenuwidget.ui
 
 CONFIG += no_keywords
 
