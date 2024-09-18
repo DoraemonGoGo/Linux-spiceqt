@@ -9,10 +9,10 @@ CXXFLAGS += -g
 
 INCLUDEPATH += /usr/include/glib-2.0 /usr/include/glib-2.0/gobject /usr/include/glib-2.0/glib /usr/include/libusb-1.0 /usr/lib/x86_64-linux-gnu/glib-2.0/include /usr/include/spice-client-glib-2.0 /usr/include/pixman-1 /usr/include/spice-1 ./common ./headers
 LIBS += `pkg-config --libs glib-2.0 spice-client-glib-2.0 usb-1.0`
-HEADERS += headers/spice-common.h \
-           headers/spice-widget.h \
+HEADERS += headers/spice-widget.h \
+#           headers/spice-common.h \
            headers/spice-widget-priv.h \
-           headers/spice-gtk-session.h \
+#           headers/spice-gtk-session.h \
            headers/spiceqt.h \
 
 SOURCES += src/spice-widget.cpp \

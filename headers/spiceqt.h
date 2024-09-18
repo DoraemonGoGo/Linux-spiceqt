@@ -17,14 +17,15 @@ extern "C" {
 #include <channel-main.h>
 #include <channel-display.h>
 #include <channel-inputs.h>
-#include <X11/XKBlib.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
+//#include <X11/XKBlib.h>
+//#include <X11/Xlib.h>
+//#include <X11/Xutil.h>
 #include <spice-audio.h>
 };
 
 #include "spice-widget.h"
 
+#define MAX_MONITORS 4 // 定义最大显示器数量
 
 #ifndef SPICEQT_H
 #define SPICEQT_H
@@ -58,7 +59,6 @@ public:
     void resizeEvent(QResizeEvent *event) override;
     //发送快捷键
     void sendShortcut(const QString &shortcut);
-//    int convertKeyStringToQtKey(const QString &keyString);
 
     void showCursor(bool visible)
     {
@@ -91,8 +91,8 @@ public:
 
     bool isRunning(){return true;}
     void redirect_usb_device();
-    void redirectUsbDevice(gchar *device_description);
-    void stopUsbRedirect(gchar *device_description);
+//    void redirectUsbDevice(gchar *device_description);
+//    void stopUsbRedirect(gchar *device_description);
 
     void request_clipboard_data(SpiceMainChannel *channel);
     gboolean handleClipboardSelectionGrab(SpiceMainChannel *channel, guint selection, gpointer types, guint ntypes);
@@ -112,15 +112,7 @@ public:
 
     //多显示器功能
 //    void configureMonitors();
-    void initializeWithMonitor(int monitor_id);
-    SpiceDisplayChannel* getDisplayChannel(int monitor_id);
-    static void onPrimarySurfaceCreate(SpiceDisplayChannel *channel, gpointer data);
-    static void onPrimarySurfaceDestroy(SpiceDisplayChannel *channel, gpointer data);
-    static void onInvalidate(SpiceDisplayChannel *channel, gint x, gint y, gint w, gint h, gpointer data);
-    void setupDisplayWindow(const SpiceDisplayMonitorConfig &monitor);
-    void updateDisplayContent();
-    void connectToDisplayChannelEvents();
-
+    void initializeMultiMonitor();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -133,7 +125,7 @@ protected:
     void keyReleaseEvent(QKeyEvent *event);
     void enterEvent(QEvent *event);
     void leaveEvent(QEvent *event);
-    bool x11Event(XEvent *event);
+//    bool x11Event(XEvent *event);
 
 //    bool eventFilter(QObject *obj, QEvent *event) override;
 
@@ -157,6 +149,7 @@ private:
     SpiceAudio   * audio;
     SpiceMainChannel *mainChannel;
     int            monitor_id;//显示器id
+    QList<SpiceDisplayMonitorConfig> monitorConfigs;
     SpiceDisplayChannel *display_channel;//显示通道
     SpiceUsbDeviceManager *usb_device_manager;
     uchar        * buf;
@@ -168,9 +161,6 @@ private:
     bool           numLock;
     bool           capsLock;
     bool           agentConnected;
-//    QTimer resizeTimer;    // 用于延迟更新的定时器
-//    QImage tempImg;        // 拉伸过程中使用的临时图像
-//    bool resizing = false; // 标识是否正在拉伸窗口
 
     static QMap<int, int>* keymap;
 

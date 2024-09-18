@@ -169,8 +169,6 @@ void SpiceMainWindow::showspice(QString ip, QString port)
     setWindowTitle(QString("SpiceConnection - %1:%2").arg(ip).arg(port));
     int spiceheight = spicewindow->height();
     int spicewidth = spicewindow->width();
-//    qDebug() << height << " , " << width << endl;
-//    qDebug() << spiceheight << " , " << spicewidth << endl;
     spicewindow->show();
     spicewindow->connectToGuest(ip, port);
 }
@@ -242,41 +240,6 @@ void SpiceMainWindow::fullscreen(bool full)
     ui->actionFullscreen->setShortcut(  full ? QKeySequence("Esc") : QKeySequence("Ctrl+F"));
 
     static bool maximized = false;// 记录当前状态
-//    if ( full )
-//    {
-//        maximized = isFullScreen();
-//    }
-//    else if ( maximized && isFullScreen() )
-//    {
-//        return;
-//    }
-
-//    if ( full && !isFullScreen() || !full && isFullScreen() )
-//    {
-//        if (isFullScreen())
-//        {
-//            showNormal();
-//        }
-//        else
-//            showFullScreen();
-
-//        // 获取屏幕分辨率
-//        QRect screenGeometry = QApplication::desktop()->screenGeometry(this);
-//        int screenWidth = screenGeometry.width();
-//        int screenHeight = screenGeometry.height();
-
-//        // 打印窗口几何信息
-//        QRect contentRect = this->geometry();
-//        int newWidth = full ? screenWidth : contentRect.width();
-//        int newHeight = full ? screenHeight : contentRect.height();
-//        qDebug() << "New dimensions: " << newWidth << "x" << newHeight;
-
-//        // 直接设置窗口几何属性
-//        setGeometry(0, 0, newWidth, newHeight);
-
-//        // 触发 resize 事件
-//        resizeEvent(new QResizeEvent(QSize(newWidth, newHeight), size()));
-//    }
     if (full) {
             // 记录是否最大化状态
             maximized = isMaximized();

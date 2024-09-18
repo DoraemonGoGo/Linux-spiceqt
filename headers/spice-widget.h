@@ -23,7 +23,6 @@ extern "C"
 #include "spice-client.h"
 
 #include "spice-util.h"
-#include "spice-gtk-session.h"
 }
 class SpiceQt;
 

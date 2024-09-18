@@ -38,23 +38,23 @@ static void callbackInvalidate(SpiceDisplayPrivate *d, gint x, gint y, gint w, g
 }
 
 // OpenGL 绘图函数
-static void draw_gl(SpiceDisplay *display) {
-    SpiceDisplayChannel *channel = SPICE_DISPLAY_CHANNEL(display);
-    const SpiceGlScanout *scanout = spice_display_channel_get_gl_scanout(channel);
-    if (scanout) {
-        GLuint texture_id = scanout->texture_id;  // 假设 id 是正确的成员变量名
-        glBindTexture(GL_TEXTURE_2D, texture_id);
+//static void draw_gl(SpiceDisplay *display) {
+//    SpiceDisplayChannel *channel = SPICE_DISPLAY_CHANNEL(display);
+//    const SpiceGlScanout *scanout = spice_display_channel_get_gl_scanout(channel);
+//    if (scanout) {
+//        GLuint texture_id = scanout->texture_id;  // 假设 id 是正确的成员变量名
+//        glBindTexture(GL_TEXTURE_2D, texture_id);
         
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
-        glEnd();
+//        glBegin(GL_QUADS);
+//        glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
+//        glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
+//        glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
+//        glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
+//        glEnd();
         
-        spice_display_gl_draw_done(channel);
-    }
-}
+//        spice_display_gl_draw_done(channel);
+//    }
+//}
 
 static void callbackSettingsChanged(SpiceDisplay *display, gint width, gint height, gint bpp)
 {
@@ -62,6 +62,25 @@ static void callbackSettingsChanged(SpiceDisplay *display, gint width, gint heig
 //    SpiceDisplayPrivate *d = static_cast<SpiceDisplayPrivate*>(instance);
     if (d->spiceQtInstance) {
         d->spiceQtInstance->settingsChanged(width, height, bpp);
+        // 处理多个显示器时的逻辑
+        if (d->monitor_id > 0) {
+            SpiceMainChannel *main_channel = d->spiceQtInstance->getMainChannel();
+            if (main_channel) {
+                SpiceDisplayMonitorConfig monitor_config;
+                monitor_config.id = d->monitor_id;
+                monitor_config.surface_id = 0; // 默认主显示器
+                monitor_config.x = 0;
+                monitor_config.y = 0;
+                monitor_config.width = width;
+                monitor_config.height = height;
+
+                // 使用 SPICE API 更新显示器配置
+                spice_main_channel_update_display(main_channel, monitor_config.id, monitor_config.x, monitor_config.y, monitor_config.width, monitor_config.height, TRUE);
+
+                // 发送显示器配置到客户端
+                spice_main_channel_send_monitor_config(main_channel);
+            }
+        }
     }
 }
 
@@ -273,9 +292,14 @@ static void primary_create(SpiceChannel *channel, gint format, gint width, gint 
     SpiceDisplayPrivate *d = SPICE_DISPLAY_GET_PRIVATE(display);
 
     // TODO: For now, don't do anything for secondary monitors
-    if (get_display_id(display) > 0) {
-        return;
-    }
+//    if (get_display_id(display) > 0) {
+//        return;
+//    }
+
+    // 如果 monitor_id 大于 0，则跳过默认主显示器的配置
+//    if (d->monitor_id > 0) {
+//        return;
+//    }
 
     d->format = static_cast<SpiceSurfaceFmt>(format);
     d->stride = stride;
@@ -291,6 +315,11 @@ static void primary_destroy(SpiceChannel *channel, gpointer data) {
     SpiceDisplayPrivate *d = SPICE_DISPLAY_GET_PRIVATE(display);
     if (!d)
         return;
+
+    // 如果 monitor_id 大于 0，则跳过默认主显示器的配置销毁
+//    if (d->monitor_id > 0) {
+//        return;
+//    }
 
     d->format = static_cast<SpiceSurfaceFmt>(0);
     d->width  = 0;

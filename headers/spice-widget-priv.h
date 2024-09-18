@@ -26,8 +26,6 @@ extern "C"
 {
 #undef signals
 #include "spice-widget.h"
-#include "spice-common.h"
-#include "spice-gtk-session.h"
 #include "spice-grabsequence.h"
 #include <GL/gl.h>
 }
