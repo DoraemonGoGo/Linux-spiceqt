@@ -3,7 +3,7 @@
 #include <QPalette>
 #include <QPushButton>
 #include <QListWidget>
-#include <QX11Info>
+//#include <QX11Info>
 #include "spiceqt.h"
 #include "spice-widget.h"
 #include "spice-widget-priv.h"
@@ -16,9 +16,11 @@
  
 static void main_channel_event(SpiceChannel *channel, SpiceChannelEvent event, gpointer data)
 {	
+    qDebug()<<"----------------main channel event-------------------";
     SpiceQt *client = static_cast<SpiceQt*>(data);
+    qDebug()<<"event:"<<event;
     switch (event) {
-    qDebug()<<event;
+
     case SPICE_CHANNEL_OPENED:
 //        printf("main channel: connected\n");
         qDebug()<<"main channel: connected";
@@ -336,7 +338,16 @@ static void channel_new(SpiceSession *session, SpiceChannel *channel, gpointer d
         {
             qDebug()<<"SpiceQt 为空！！！";
         }
+        // 检查主通道是否支持无缝迁移
+        if (spice_channel_test_capability(SPICE_CHANNEL(channel), SPICE_MAIN_CAP_SEAMLESS_MIGRATE)) {
+            qDebug() << "Main channel supports seamless migration.";
+        } else {
+            qDebug() << "Main channel does not support seamless migration.";
+        }
        qDebug()<<"主通道初始化";
+       gboolean can_connect1 = spice_channel_test_common_capability(channel, SPICE_COMMON_CAP_PROTOCOL_AUTH_SELECTION);
+       qDebug() << "Channel can connect:" << can_connect1;
+
        g_signal_connect(channel, "channel-event",
                          G_CALLBACK(main_channel_event), client);
        g_signal_connect(channel, "main-agent-update",
@@ -500,6 +511,15 @@ void SpiceQt::connectToGuest(const QString &host, const QString &port)
         qDebug() << "Failed to connect to Spice session";
         g_object_unref(SGsession);
         SGsession = nullptr;
+    }
+    qDebug()<<"--------------------Spice Get Channel-------------------";
+    GList *spice_channel = spice_session_get_channels(SGsession);
+    for (GList *it = spice_channel; it != NULL; it = it->next) {
+        SpiceChannel *channel = SPICE_CHANNEL(it->data);
+        qDebug() << "Channel type:" << G_OBJECT_TYPE_NAME(channel);
+        if (SPICE_IS_MAIN_CHANNEL(channel)) {
+            qDebug() << "Main channel found!";
+        }
     }
     usb_device_manager = spice_usb_device_manager_get(SGsession, NULL);
     if (!usb_device_manager) {
@@ -1206,4 +1226,93 @@ QMap<int, int>* SpiceQt::getKeymap()
     keymap->insert(0xf7, 0x174);
     return keymap;
 }
+//文件传输
+
+void SpiceQt::startFileTransfer(const QStringList &sourceFilePaths) {
+    if (!mainChannel) {
+            qWarning() << "Main channel is not initialized.";
+            return;
+        }
+
+        qDebug() << "Starting file transfer for multiple files:" << sourceFilePaths;
+
+        if (!agentConnected) {
+            qWarning() << "Agent is not connected. File transfer may fail.";
+            return;
+        }
+
+        QList<GFile *> files;
+        for (const QString &sourceFilePath : sourceFilePaths) {
+            GFile *file = g_file_new_for_path(sourceFilePath.toUtf8().constData());
+            if (file) {
+                files.append(file);
+            } else {
+                qWarning() << "Failed to create GFile for path:" << sourceFilePath;
+            }
+        }
+
+        // 将 GFile* 列表转换为 GFile** 数组
+        GFile **fileArray = new GFile*[files.size() + 1];  // 多一个 NULL 结束
+        for (int i = 0; i < files.size(); ++i) {
+            fileArray[i] = files.at(i);
+        }
+        fileArray[files.size()] = nullptr;  // NULL 终止符
+
+        // 调用异步文件传输函数
+        spice_main_file_copy_async(
+            mainChannel,
+            fileArray,                     // GFile 数组
+            G_FILE_COPY_NONE,              // GFileCopyFlags
+            nullptr,                       // 可取消对象 (GCancellable)
+            onFileTransferProgress,        // 进度回调
+            this,                          // 传递当前实例
+            onFileTransferFinished,        // 完成回调
+            this                           // 传递当前实例
+        );
+
+        // 清理
+        for (GFile *file : files) {
+            g_object_unref(file);
+        }
+        delete[] fileArray;
+}
+
+// 文件传输进度回调
+void SpiceQt::onFileTransferProgress(goffset current_num_bytes, goffset total_num_bytes, gpointer user_data) {
+    SpiceQt *self = static_cast<SpiceQt *>(user_data);
+    double progress = (double)current_num_bytes / (double)total_num_bytes * 100;
+    qDebug() << "File transfer progress:" << progress << "% (" << current_num_bytes << "/" << total_num_bytes << " bytes)";
+
+    // 触发进度信号
+    Q_EMIT self->fileTransferProgress(progress);
+}
+
+// 文件传输完成回调
+void SpiceQt::onFileTransferFinished(GObject *source_object, GAsyncResult *res, gpointer user_data) {
+    SpiceQt *self = static_cast<SpiceQt *>(user_data);
+    GError *error = nullptr;
+
+    if (spice_main_file_copy_finish(SPICE_MAIN_CHANNEL(source_object), res, &error)) {
+        qDebug() << "File transfer finished successfully!";
+        //触发完成信号
+        Q_EMIT self->fileTransferCompleted();
+    } else {
+        qWarning() << "File transfer failed: " << error->message;
+        g_error_free(error);
+    }
+}
+
+void SpiceQt::cancelFileTransfer() {
+    if (fileTransferTask) {
+        spice_file_transfer_task_cancel(fileTransferTask);  // 取消文件传输
+        progressTimer->stop();  // 停止进度更新的定时器
+
+        // 触发文件传输取消信号
+        Q_EMIT fileTransferCancelled();
+        qDebug() << "File transfer cancelled.";
+    } else {
+        qWarning() << "No active file transfer to cancel.";
+    }
+}
+
 

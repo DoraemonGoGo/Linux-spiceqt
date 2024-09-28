@@ -61,6 +61,7 @@ public:
     QAction *actionCtrl_Alt_F10;
     QAction *actionCtrl_Alt_F11;
     QAction *actionCtrl_Alt_F12;
+    QAction *actionFile_input;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QVBoxLayout *layout;
@@ -69,6 +70,7 @@ public:
     QMenu *menuedit;
     QMenu *menuView;
     QMenu *menuInput;
+    QMenu *menuTransfer;
     QToolBar *toolBar;
 
     void setupUi(QMainWindow *SpiceMainWindow)
@@ -203,6 +205,8 @@ public:
         actionCtrl_Alt_F11->setObjectName(QString::fromUtf8("actionCtrl_Alt_F11"));
         actionCtrl_Alt_F12 = new QAction(SpiceMainWindow);
         actionCtrl_Alt_F12->setObjectName(QString::fromUtf8("actionCtrl_Alt_F12"));
+        actionFile_input = new QAction(SpiceMainWindow);
+        actionFile_input->setObjectName(QString::fromUtf8("actionFile_input"));
         centralwidget = new QWidget(SpiceMainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -230,6 +234,8 @@ public:
         menuView->setObjectName(QString::fromUtf8("menuView"));
         menuInput = new QMenu(menubar);
         menuInput->setObjectName(QString::fromUtf8("menuInput"));
+        menuTransfer = new QMenu(menubar);
+        menuTransfer->setObjectName(QString::fromUtf8("menuTransfer"));
         SpiceMainWindow->setMenuBar(menubar);
         toolBar = new QToolBar(SpiceMainWindow);
         toolBar->setObjectName(QString::fromUtf8("toolBar"));
@@ -239,6 +245,7 @@ public:
         menubar->addAction(menuedit->menuAction());
         menubar->addAction(menuView->menuAction());
         menubar->addAction(menuInput->menuAction());
+        menubar->addAction(menuTransfer->menuAction());
         menu->addAction(action_1);
         menu->addAction(action_2);
         menu->addSeparator();
@@ -262,6 +269,7 @@ public:
         menuInput->addAction(actionCtrl_Alt_F10);
         menuInput->addAction(actionCtrl_Alt_F11);
         menuInput->addAction(actionCtrl_Alt_F12);
+        menuTransfer->addAction(actionFile_input);
         toolBar->addAction(actiontoolclose);
         toolBar->addSeparator();
         toolBar->addSeparator();
@@ -318,10 +326,12 @@ public:
         actionCtrl_Alt_F10->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F10", nullptr));
         actionCtrl_Alt_F11->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F11", nullptr));
         actionCtrl_Alt_F12->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F12", nullptr));
+        actionFile_input->setText(QApplication::translate("SpiceMainWindow", "File_input", nullptr));
         menu->setTitle(QApplication::translate("SpiceMainWindow", "File", nullptr));
         menuedit->setTitle(QApplication::translate("SpiceMainWindow", "Edit", nullptr));
         menuView->setTitle(QApplication::translate("SpiceMainWindow", "View", nullptr));
         menuInput->setTitle(QApplication::translate("SpiceMainWindow", "Input", nullptr));
+        menuTransfer->setTitle(QApplication::translate("SpiceMainWindow", "Transfer", nullptr));
         toolBar->setWindowTitle(QApplication::translate("SpiceMainWindow", "toolBar", nullptr));
     } // retranslateUi
 

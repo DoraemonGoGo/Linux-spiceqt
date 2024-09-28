@@ -82,10 +82,17 @@
     <addaction name="actionCtrl_Alt_F11"/>
     <addaction name="actionCtrl_Alt_F12"/>
    </widget>
+   <widget class="QMenu" name="menuTransfer">
+    <property name="title">
+     <string>Transfer</string>
+    </property>
+    <addaction name="actionFile_input"/>
+   </widget>
    <addaction name="menu"/>
    <addaction name="menuedit"/>
    <addaction name="menuView"/>
    <addaction name="menuInput"/>
+   <addaction name="menuTransfer"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
@@ -352,6 +359,11 @@
   <action name="actionCtrl_Alt_F12">
    <property name="text">
     <string>Ctrl+Alt+F12</string>
+   </property>
+  </action>
+  <action name="actionFile_input">
+   <property name="text">
+    <string>File_input</string>
    </property>
   </action>
  </widget>

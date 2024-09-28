@@ -14,6 +14,8 @@
 #include "../common/messages.h"
 #include "../common/marshaller.h"
 #include "QTimer"
+//文件传输
+#include "transferwindow.h"
 
 
 SpiceMainWindow::SpiceMainWindow(QWidget *parent):
@@ -95,7 +97,8 @@ SpiceMainWindow::SpiceMainWindow(QWidget *parent):
             }
         }
     }
-
+    // 连接文件传输功能
+    connect(ui->actionFile_input, &QAction::triggered, this, &SpiceMainWindow::on_actionFile_Input_triggered);
 }
 
 void SpiceMainWindow::mouseMoveEvent(QMouseEvent *event) {
@@ -475,4 +478,12 @@ void SpiceMainWindow::on_action_1_triggered()
 //            smallMenu->resize(330, 65);  // 假设smallMenu宽300，高50
     smallMenu->move((screenWidth - smallMenu->width()) / 2, 100);
     smallMenu->show();
+}
+
+//文件传输按钮
+void SpiceMainWindow::on_actionFile_Input_triggered()
+{
+    TransferWindow *transferWindow = new TransferWindow(spicewindow, this);
+    transferWindow->setAttribute(Qt::WA_DeleteOnClose);  // 确保关闭时释放内存
+    transferWindow->open();  // 使用 open 打开对话框
 }

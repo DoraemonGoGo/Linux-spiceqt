@@ -17,6 +17,8 @@ class ResizeTo;
 class SpiceQt;
 class MenuWindow;
 class SmallMenuWidget;
+//文件传输
+class TransferWindow;
 
 class SpiceMainWindow : public QMainWindow
 {
@@ -52,6 +54,8 @@ public Q_SLOTS:
 //    void on_actiontoolpaste_triggered();
 
     void on_action_1_triggered();
+    //文件传输
+    void on_actionFile_Input_triggered(); // 新增的槽函数
 
 public:
     SpiceQt *spicewindow;
@@ -71,6 +75,8 @@ private:
 //    static void usb_connect_callback(GObject *source_object, GAsyncResult *res, gpointer user_data);
 //    static void usb_disconnect_callback(GObject *source_object, GAsyncResult *res, gpointer user_data);
 //    bool isDeviceAllowed(SpiceUsbDevice *device);
+    //文件传输
+    TransferWindow *transferWindow;
 };
 
 #endif // SPICEMAINWINDOW_H

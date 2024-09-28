@@ -7,6 +7,14 @@
 #include <QAudioInput>
 #include <QBuffer>
 #include <spice/vd_agent.h>
+//文件传输
+#include <QTimer>
+#include <QMessageBox>
+#include <gio/gio.h>                // GFile, GError 相关
+#include <spice-client.h>           // spice_main_file_copy_async() 和其他主通道函数
+#include <spice-channel.h>          // SpiceMainChannel 类型
+#include <QProgressBar>
+
 extern "C" {
 #include <stdlib.h>
 #include <stdio.h>
@@ -113,6 +121,13 @@ public:
     //多显示器功能
 //    void configureMonitors();
     void initializeMultiMonitor();
+    //文件传输
+    void startFileTransfer(const QStringList &sourceFilePaths);
+    // 文件传输进度回调
+    static void onFileTransferProgress(goffset current_num_bytes, goffset total_num_bytes, gpointer user_data);
+    // 文件传输完成回调s
+    static void onFileTransferFinished(GObject *source_object, GAsyncResult *res, gpointer user_data);
+    void handleFileTransferFinished(SpiceFileTransferTask *task, GError *error);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -131,10 +146,17 @@ protected:
 
 public Q_SLOTS:
       void onClipboardDataChanged();
+      //文件传输
+      //void updateFileTransferProgress(SpiceFileTransferTask *task);  // 用于更新进度
+      void cancelFileTransfer();
 
 
 Q_SIGNALS:
     void imageSize(int, int);
+    //文件传输
+    void fileTransferProgress(double progress);  // 文件传输进度信号
+    void fileTransferCompleted();  // 文件传输完成信号
+    void fileTransferCancelled();  //取消传输信号
 
 public:
 
@@ -174,6 +196,11 @@ private:
     QIODevice *audioOutputDevice;
     QAudioInput *audioInput;
     QBuffer *audioInputBuffer;
+    //文件传输
+    SpiceFileTransferTask *fileTransferTask;
+    QTimer *progressTimer;  // 新增成员变量：用于定期检查传输进度
+    QStringList pendingFileTransfers;  // 用于存储待传输的文件列表
+    //QProgressBar *progressBar; //用于显示进度
 
 };
 

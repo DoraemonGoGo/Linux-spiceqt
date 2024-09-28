@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_SpiceMainWindow_t {
-    QByteArrayData data[13];
-    char stringdata0[267];
+    QByteArrayData data[14];
+    char stringdata0[297];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -43,7 +43,8 @@ QT_MOC_LITERAL(8, 148, 28), // "on_actiontoolclose_triggered"
 QT_MOC_LITERAL(9, 177, 28), // "on_action_usbredir_triggered"
 QT_MOC_LITERAL(10, 206, 17), // "updateSpiceWindow"
 QT_MOC_LITERAL(11, 224, 20), // "handleShortcutAction"
-QT_MOC_LITERAL(12, 245, 21) // "on_action_1_triggered"
+QT_MOC_LITERAL(12, 245, 21), // "on_action_1_triggered"
+QT_MOC_LITERAL(13, 267, 29) // "on_actionFile_Input_triggered"
 
     },
     "SpiceMainWindow\0on_actionToolBar_toggled\0"
@@ -53,7 +54,8 @@ QT_MOC_LITERAL(12, 245, 21) // "on_action_1_triggered"
     "on_actiontoolclose_triggered\0"
     "on_action_usbredir_triggered\0"
     "updateSpiceWindow\0handleShortcutAction\0"
-    "on_action_1_triggered"
+    "on_action_1_triggered\0"
+    "on_actionFile_Input_triggered"
 };
 #undef QT_MOC_LITERAL
 
@@ -63,7 +65,7 @@ static const uint qt_meta_data_SpiceMainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       9,   14, // methods
+      10,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -71,19 +73,21 @@ static const uint qt_meta_data_SpiceMainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   59,    2, 0x0a /* Public */,
-       4,    1,   62,    2, 0x0a /* Public */,
-       6,    0,   65,    2, 0x0a /* Public */,
-       7,    0,   66,    2, 0x0a /* Public */,
-       8,    0,   67,    2, 0x0a /* Public */,
-       9,    0,   68,    2, 0x0a /* Public */,
-      10,    0,   69,    2, 0x0a /* Public */,
-      11,    0,   70,    2, 0x0a /* Public */,
-      12,    0,   71,    2, 0x0a /* Public */,
+       1,    1,   64,    2, 0x0a /* Public */,
+       4,    1,   67,    2, 0x0a /* Public */,
+       6,    0,   70,    2, 0x0a /* Public */,
+       7,    0,   71,    2, 0x0a /* Public */,
+       8,    0,   72,    2, 0x0a /* Public */,
+       9,    0,   73,    2, 0x0a /* Public */,
+      10,    0,   74,    2, 0x0a /* Public */,
+      11,    0,   75,    2, 0x0a /* Public */,
+      12,    0,   76,    2, 0x0a /* Public */,
+      13,    0,   77,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Bool,    3,
     QMetaType::Void, QMetaType::Bool,    5,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -110,6 +114,7 @@ void SpiceMainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int 
         case 6: _t->updateSpiceWindow(); break;
         case 7: _t->handleShortcutAction(); break;
         case 8: _t->on_action_1_triggered(); break;
+        case 9: _t->on_actionFile_Input_triggered(); break;
         default: ;
         }
     }
@@ -144,13 +149,13 @@ int SpiceMainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 10)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 10;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 9)
+        if (_id < 10)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 9;
+        _id -= 10;
     }
     return _id;
 }

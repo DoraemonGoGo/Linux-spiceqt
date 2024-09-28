@@ -43,13 +43,15 @@ SOURCES += \
         widget.cpp \
     spicemainwindow.cpp \
     resdialog.cpp \
-    smallmenuwidget.cpp
+    smallmenuwidget.cpp \
+    transferwindow.cpp
 
 HEADERS += \
         widget.h \
     spicemainwindow.h \
     resdialog.h \
-    smallmenuwidget.h
+    smallmenuwidget.h \
+    transferwindow.h
 
 FORMS += \
         widget.ui \
