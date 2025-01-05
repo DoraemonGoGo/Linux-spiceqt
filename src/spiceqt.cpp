@@ -3,7 +3,6 @@
 #include <QPalette>
 #include <QPushButton>
 #include <QListWidget>
-//#include <QX11Info>
 #include "spiceqt.h"
 #include "spice-widget.h"
 #include "spice-widget-priv.h"
@@ -13,26 +12,21 @@
 
 #define SPICE_MAIN_CHANNEL_GET_PRIVATE(obj)                             \
     (G_TYPE_INSTANCE_GET_PRIVATE((obj), SPICE_TYPE_MAIN_CHANNEL, SpiceMainChannelPrivate))
- 
+
 static void main_channel_event(SpiceChannel *channel, SpiceChannelEvent event, gpointer data)
 {	
     qDebug()<<"----------------main channel event-------------------";
     SpiceQt *client = static_cast<SpiceQt*>(data);
     qDebug()<<"event:"<<event;
     switch (event) {
-
     case SPICE_CHANNEL_OPENED:
-//        printf("main channel: connected\n");
         qDebug()<<"main channel: connected";
         break;  
     case SPICE_CHANNEL_CLOSED:
-//        printf("main channel: connection lost\n");
         qDebug()<<"main channel: connection lost";
-        //SpiceQt::getSpice()->clearImage();
         client->clearImage();
         break;
     case SPICE_CHANNEL_ERROR_CONNECT:
-//        printf("main channel: failed to connect\n");
         qDebug()<<"main channel: failed to connect";
         break;
     }
@@ -46,7 +40,10 @@ static void main_agent_update(SpiceChannel *channel, gpointer data)
     g_object_get(channel, "agent-connected", &ac, NULL);
     agent_connected = ac;
     qDebug()<<"agent is "<<ac;
-    //SpiceQt::getSpice()->setAgentConnected(agent_connected);
+    if(ac) {
+        qDebug()<<"初始化显示器";
+        client->initializeMultiMonitor();
+    }
     client->setAgentConnected(agent_connected);
 }
 
@@ -115,40 +112,7 @@ static void on_playback_stop(SpicePlaybackChannel *channel, gpointer user_data)
 void SpiceQt::initializePlaybackChannel(SpicePlaybackChannel *channel)
 {
     playback_channel = channel;
-//    g_signal_connect(playback_channel, "playback-data", G_CALLBACK(on_playback_data), this);
-//    g_signal_connect(playback_channel, "playback-start", G_CALLBACK(on_playback_start), this);
-//    g_signal_connect(playback_channel, "playback-stop", G_CALLBACK(on_playback_stop), this);
 }
-
-/*----------------------------------------------------------------------------*/
-//音频录制处理
-
-//static void on_record_start(SpiceRecordChannel *channel, gpointer user_data)
-//{
-//    SpiceQt *self = static_cast<SpiceQt*>(user_data);
-//    QAudioFormat format;
-//    format.setSampleRate(44100);
-//    format.setChannelCount(2);
-//    format.setSampleSize(16);
-//    format.setCodec("audio/pcm");
-//    format.setByteOrder(QAudioFormat::LittleEndian);
-//    format.setSampleType(QAudioFormat::SignedInt);
-
-//    self->startAudioInput(format);
-//}
-
-//static void on_record_stop(SpiceRecordChannel *channel, gpointer user_data)
-//{
-//    SpiceQt *self = static_cast<SpiceQt*>(user_data);
-//    self->stopAudioInput();
-//}
-
-//void SpiceQt::initializeRecordChannel(SpiceRecordChannel *channel)
-//{
-//    record_channel = channel;
-//    g_signal_connect(record_channel, "record-start", G_CALLBACK(on_record_start), this);
-//    g_signal_connect(record_channel, "record-stop", G_CALLBACK(on_record_stop), this);
-//}
 
 /*----------------------------------------------------------------------------*/
 // 检查并打印支持的音频格式
@@ -266,26 +230,43 @@ static void on_device_error(SpiceUsbDeviceManager *manager, SpiceUsbDevice *devi
 
 static void on_device_added(SpiceUsbDeviceManager *manager, SpiceUsbDevice *device, gpointer user_data)
 {
-    qDebug() << "USB设备已添加";
+    // 获取设备描述
+    gchar *description_c = spice_usb_device_get_description(device, "%1$s %2$s %3$s at %4$d-%5$d");
+    QString description = QString::fromUtf8(description_c);
+    qDebug() << description << "on_device_added设备已添加";
     SpiceQt *client = static_cast<SpiceQt *>(user_data);
     if(client == nullptr)
     {
         qDebug()<<"USB client为空！";
     }
     // 处理USB设备添加
-    //SpiceQt::getSpice()->redirect_usb_device();
-    client->redirect_usb_device();
+    Q_EMIT client->usbDeviceAdded(description);
 }
 
 static void on_device_removed(SpiceUsbDeviceManager *manager, SpiceUsbDevice *device, gpointer user_data)
 {
-    qDebug() << "USB设备已移除";
+    // 获取设备描述
+    gchar *description_c = spice_usb_device_get_description(device, "%1$s %2$s %3$s at %4$d-%5$d");
+    QString description = QString::fromUtf8(description_c);
+    qDebug() << description << "设备已移除";
+    SpiceQt *client = static_cast<SpiceQt *>(user_data);
+    if(client == nullptr)
+    {
+        qDebug()<<"USB client为空！";
+    }
+    Q_EMIT client->usbDeviceRemoved(description);
+
 }
 
 static void on_connect_device_async_complete(GObject *source_object, GAsyncResult *res, gpointer user_data) {
+    SpiceQt *client = static_cast<SpiceQt *>(user_data);
+    if(client == nullptr)
+    {
+        qDebug() << "USB client为空！";
+        return;
+    }
     GError *error = NULL;
     gboolean success = spice_usb_device_manager_connect_device_finish(SPICE_USB_DEVICE_MANAGER(source_object), res, &error);
-
     if (!success) {
         qDebug() << "连接设备时出错：" << (error ? error->message : "未知错误");
         if (error) {
@@ -293,39 +274,219 @@ static void on_connect_device_async_complete(GObject *source_object, GAsyncResul
         }
     } else {
         SpiceUsbDevice *device = (SpiceUsbDevice *)g_async_result_get_user_data(res);
-        qDebug() << "设备：" << spice_usb_device_get_description(device, "%1$s %2$s %3$s at %4$d-%5$d") << "已连接！";
+        gchar *description_c = spice_usb_device_get_description(device, "%1$s %2$s %3$s at %4$d-%5$d");
+        QString description = QString::fromUtf8(description_c);
+        qDebug() << "设备：" << description << "已连接！";
+//        Q_EMIT client->usbDeviceAdded(description);
+        g_free(description_c);
     }
 }
 
-void SpiceQt::redirect_usb_device() {
-    GPtrArray *devices = spice_usb_device_manager_get_devices_with_filter(usb_device_manager, NULL);
+//static void on_disconnect_device_async_complete(GObject *source_object, GAsyncResult *res, gpointer user_data)
+//{
+//    SpiceQt *client = static_cast<SpiceQt *>(user_data);
+//    if (!client) {
+//        qDebug() << "USB client为空！";
+//        return;
+//    }
 
-    // 遍历设备列表
-    for (guint i = 0; i < devices->len; i++) {
-        SpiceUsbDevice *device = (SpiceUsbDevice *)g_ptr_array_index(devices, i);
+//    GError *error = NULL;
+//    gboolean success = spice_usb_device_manager_disconnect_device_finish(SPICE_USB_DEVICE_MANAGER(source_object), res, &error);
 
-        // 检查设备是否已连接
-        if (!spice_usb_device_manager_is_device_connected(usb_device_manager, device)) {
-            qDebug() << "尝试连接 USB 设备：" << spice_usb_device_get_description(device, "%1$s %2$s %3$s at %4$d-%5$d");
-            GError *error = NULL;
-            spice_usb_device_manager_connect_device_async(usb_device_manager, device, NULL, on_connect_device_async_complete, &error);
-            if (error) {
-                qDebug() << "连接设备时出错：" << error->message;
-                g_error_free(error);
+//    if (!success) {
+//        qDebug() << "断开设备时出错：" << (error ? error->message : "未知错误");
+//        if (error) {
+//            g_error_free(error);
+//        }
+//        // 可以从 redirectedDevices 中移除设备，允许重试
+//    } else {
+//        qDebug() << "USB 设备已成功断开。";
+//        // 发出设备断开信号
+//        const gchar *USB_DESCRIPTION_FORMAT = "%s %s %s at %d-%d";
+//        SpiceUsbDevice *device = spice_usb_device_manager_disconnect_device_finish(SPICE_USB_DEVICE_MANAGER(source_object), res, &error);
+//        if (device) {
+//            gchar *description_c = spice_usb_device_get_description(device, USB_DESCRIPTION_FORMAT);
+//            if (description_c) {
+//                QString description = QString::fromUtf8(description_c);
+//                emit client->deviceDisconnected(description);
+//                g_free(description_c);
+//            }
+//        }
+//    }
+//}
+
+static void on_disconnect_device_async_complete(GObject *source_object, GAsyncResult *res, gpointer user_data)
+{
+    SpiceQt *client = static_cast<SpiceQt *>(user_data);
+    if (!client) {
+        qDebug() << "USB client为空！";
+        return;
+    }
+
+    GError *error = NULL;
+    gboolean success = spice_usb_device_manager_disconnect_device_finish(SPICE_USB_DEVICE_MANAGER(source_object), res, &error);
+
+    // 由于我们传递的是设备描述的指针，这里需要先将其转换回 QString*
+    QString *descPtr = static_cast<QString *>(user_data);
+    if (!descPtr) {
+        qDebug() << "设备描述指针为空！";
+        return;
+    }
+    QString description = *descPtr;
+    delete descPtr; // 释放内存
+
+    if (!success) {
+        qDebug() << "断开设备时出错：" << (error ? error->message : "未知错误");
+        if (error) {
+            g_error_free(error);
+        }
+        // 可以从 redirectedDevices 中移除设备，允许重试
+    } else {
+        qDebug() << "USB 设备已成功断开：" << description;
+        // 发出设备断开信号
+//        Q_EMIT client->usbDeviceRemoved(description);
+    }
+}
+
+void SpiceQt::disconnectUsbDevices(const QStringList &devices)
+{
+    if (devices.isEmpty()) {
+        qDebug() << "没有设备被选择进行断开。";
+        return;
+    }
+    SpiceSession *session = getSession();
+    if (!session) {
+        qDebug() << "SpiceSession is NULL";
+        return;
+    }
+
+    if (!usb_device_manager) {
+        qDebug() << "Failed to get SpiceUsbDeviceManager";
+        return;
+    }
+
+    const gchar *USB_DESCRIPTION_FORMAT = "%s %s %s at %d-%d";
+
+    GPtrArray *DeviceList = spice_usb_device_manager_get_devices(usb_device_manager);
+    if (DeviceList)
+    {
+        for (guint i = 0; i < DeviceList->len; i++) {
+            SpiceUsbDevice *device = (SpiceUsbDevice *)g_ptr_array_index(DeviceList, i);
+            gchar *description_c = spice_usb_device_get_description(device, USB_DESCRIPTION_FORMAT);
+            if (description_c) {
+                QString description = QString::fromUtf8(description_c);
+                g_free(description_c);
+
+                if (devices.contains(description) && redirectedDevices.contains(description)) {
+                    // 检查设备是否已经连接
+                    if (spice_usb_device_manager_is_device_connected(usb_device_manager, device)) {
+                        qDebug() << "尝试断开 USB 设备：" << description;
+                        // 创建一个新的 QString，作为 user_data 传递给回调
+                        QString *descPtr = new QString(description);
+
+                        // 异步断开设备
+                        spice_usb_device_manager_disconnect_device_async(usb_device_manager, device, NULL, on_disconnect_device_async_complete, descPtr);
+                        qDebug() << "已发起断开请求，等待回调结果...";
+                        // 从已重定向设备列表中移除设备
+                        redirectedDevices.remove(description);
+                    }
+                    else {
+                        qDebug() << "设备未连接：" << description;
+                        // 从已重定向设备列表中移除设备
+                        redirectedDevices.remove(description);
+                    }
+                }
             } else {
-                qDebug() << "设备：" << spice_usb_device_get_description(device, "%1$s %2$s %3$s at %4$d-%5$d") << "已连接！";
+                qDebug() << "Failed to get device description for device index:" << i;
             }
         }
-        // 异步连接设备
-        else {
-            qDebug() << "设备已连接：" << spice_usb_device_get_description(device, "%1$s %2$s %3$s at %4$d-%5$d");
-        }
+        g_ptr_array_free(DeviceList, TRUE);
     }
-    // 释放设备列表
-    g_ptr_array_unref(devices);
+    else {
+        qDebug() << "No USB devices found or USB Device Manager returned NULL";
+    }
+}
+
+
+void SpiceQt::redirect_usb_device(const QStringList &devices)
+{
+    if (devices.isEmpty()) {
+        qDebug() << "没有设备被选择进行重定向。";
+        return;
+    }
+
+    SpiceSession *session = getSession();
+    if (!session) {
+        qDebug() << "SpiceSession is NULL";
+        return;
+    }
+
+    SpiceUsbDeviceManager *manager = spice_usb_device_manager_get(session, NULL);
+    if (!manager) {
+        qDebug() << "Failed to get SpiceUsbDeviceManager";
+        return;
+    }
+
+    const gchar *USB_DESCRIPTION_FORMAT = "%s %s %s at %d-%d";
+
+    GPtrArray *DeviceList = spice_usb_device_manager_get_devices(manager);
+    if(DeviceList)
+    {
+        for (guint i = 0; i < DeviceList->len; i++) {
+            SpiceUsbDevice *device = (SpiceUsbDevice *)g_ptr_array_index(DeviceList, i);
+            gchar *description_c = spice_usb_device_get_description(device, USB_DESCRIPTION_FORMAT);
+            if (description_c) {
+                QString description = QString::fromUtf8(description_c);
+                g_free(description_c);
+
+                if (devices.contains(description) && !redirectedDevices.contains(description)) {
+                    // 检查设备是否已经连接
+                    if (!spice_usb_device_manager_is_device_connected(manager, device)) {
+                        qDebug() << "尝试连接 USB 设备：" << description;
+                        GError *error = NULL;
+
+                        // 异步连接设备
+                        spice_usb_device_manager_connect_device_async(manager, device, NULL, on_connect_device_async_complete, this);
+                        if (error) {
+                            qDebug() << "连接设备时出错：" << error->message;
+                            g_error_free(error);
+                        } else {
+                            qDebug() << "已发起连接请求，等待回调结果...";
+                            // 添加到已重定向设备列表
+                            redirectedDevices.insert(description);
+                        }
+                    }
+                    else {
+                        qDebug() << "设备已连接：" << description;
+                        // 添加到已重定向设备列表
+                        redirectedDevices.insert(description);
+                    }
+                }
+            } else {
+                qDebug() << "Failed to get device description for device index:" << i;
+            }
+        }
+        g_ptr_array_free(DeviceList, TRUE);
+    }
+    else {
+        qDebug() << "No USB devices found or USB Device Manager returned NULL";
+    }
 }
 
 /*----------------------------------------------------------------------------*/
+
+SpiceDisplay* SpiceQt::getSpiceDisplayById(int channel_id) {
+    auto it = displays.find(channel_id);
+    if (it != displays.end()) {
+        return it->second;  // 返回对应的显示器
+    }
+    return nullptr;  // 如果不存在，返回空指针
+}
+
+void SpiceQt::addSpiceDisplay(SpiceDisplay* display, int channel_id) {
+    displays[channel_id] = display;  // 将显示器与 channel-id 关联
+    qDebug() << "SpiceDisplay added for Channel ID:" << channel_id;
+}
 
 static void channel_new(SpiceSession *session, SpiceChannel *channel, gpointer data)
 {
@@ -355,15 +516,11 @@ static void channel_new(SpiceSession *session, SpiceChannel *channel, gpointer d
        return;
     }
     if (SPICE_IS_DISPLAY_CHANNEL(channel)) {
-        qDebug() << "display channel new";
-//        SpiceDisplay *display = SpiceQt::getSpice()->spiceDisplayGLib();
         SpiceDisplay *display = client->spiceDisplayGLib();
         if (display)
             return;
         display = spice_display_new(session, id, client);
-        //SpiceQt::getSpice()->setSpiceDisplayGLib(display);
         client->setSpiceDisplayGLib(display);
-//        qDebug()<<"display = "<<SpiceQt::getSpice()->spiceDisplayGLib();
     }
     if (SPICE_IS_INPUTS_CHANNEL(channel)) {
         qDebug()<<"输入通道初始化！！";
@@ -380,7 +537,6 @@ static void channel_new(SpiceSession *session, SpiceChannel *channel, gpointer d
         audio = spice_audio_get(session, NULL);
         if(!audio)
             qDebug()<<"音频为空！";
-        //SpiceQt::getSpice()->setSpiceAudioGLib(audio);
         client->setSpiceAudioGLib(audio);
 //        SpiceQt::getSpice()->initializePlaybackChannel(SPICE_PLAYBACK_CHANNEL(channel));
         qDebug()<<"音频播放初始化完成！";
@@ -409,7 +565,7 @@ static void channel_destroy(SpiceSession *session, SpiceChannel *channel)
 QMap<int, int> * SpiceQt::keymap = NULL;
 
 SpiceQt::SpiceQt(QWidget *parent)
-    : QWidget(parent), agentConnected(true)
+    : QWidget(parent), agentConnected(true), resizeTimer(new QTimer(this)), imageUpdateLock(false)
 {
 
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -422,23 +578,50 @@ SpiceQt::SpiceQt(QWidget *parent)
     setPalette(palette);
     setAutoFillBackground(true);
     setMouseTracking(true);
+
+
 //    grabMouse();
 //    grabKeyboard();与主窗口键盘事件冲突
 
     QObject::connect(QApplication::clipboard(), &QClipboard::dataChanged, this, &SpiceQt::onClipboardDataChanged);
-}
 
-//SpiceQt * SpiceQt::getSpice(QWidget *parent)
-//{
-//    if (instance)
-//        return instance;
-//    instance = new SpiceQt(parent);
-//    return instance;
-//}
+    // 初始化 QTimer，用于延迟拉伸后的图像更新
+    resizeTimer->setSingleShot(true); // 设置为单次触发
+    // 连接 QTimer 的超时信号到 onResizeTimeout 槽函数
+    connect(resizeTimer, &QTimer::timeout, this, &SpiceQt::onResizeTimeout);
+}
 
 SpiceQt::~SpiceQt()
 {
     // Cleanup resources
+    // 断开与SPICE服务器的连接
+    disconnectFromGuest();
+
+    // 释放 QTimer
+    if (resizeTimer) {
+        delete resizeTimer;
+    }
+
+    // 释放显示通道
+    if (display) {
+        qDebug() << "Releasing display channel";
+        g_object_unref(display);  // 释放引用
+        display = nullptr;
+    }
+
+    // 清理SPICE会话
+    if (SGsession) {
+        g_object_unref(SGsession);
+        SGsession = nullptr;
+    }
+
+    // 清理USB设备管理器
+    if (usb_device_manager) {
+        g_object_unref(usb_device_manager);
+        usb_device_manager = nullptr;
+    }
+
+    qDebug() << "SpiceQt对象已成功销毁";
 }
 
 SpiceDisplay* SpiceQt::getDisplay() const
@@ -478,8 +661,6 @@ void SpiceQt::setSpiceDisplayGLib(SpiceDisplay *sd)
 
 void SpiceQt::disconnectFromGuest()
 {
-
-//    clearImage();
     if (SGsession) {
 //        spice_session_disconnect(SGsession);
 //        display = NULL;
@@ -494,8 +675,9 @@ void SpiceQt::disconnectFromGuest()
 
 void SpiceQt::connectToGuest(const QString &host, const QString &port)
 {
-    spice_util_set_debug(true);
+//    spice_util_set_debug(true);
     disconnectFromGuest();
+    sizeAdjusted = false;  // 每次连接新的虚拟机时重置该标志
     qDebug()<<"ip:"<<host<<" "<<"端口号:"<<port;
     SGsession = spice_session_new();
     g_object_set(SGsession, "host", \
@@ -542,42 +724,123 @@ void SpiceQt::connectToGuest(const QString &host, const QString &port)
     }
     g_list_free(channels);
 
-    if (mainChannel) {
-        initializeMultiMonitor();
-    }
+}
 
+// 获取当前远程虚拟机的显示器数量
+int SpiceQt::detectDisplays() {
+    if (!SGsession) return 0; // 检查是否已经连接到远程会话
+
+    GList *channels = spice_session_get_channels(SGsession);
+    int displayCount = 0;
+
+    for (GList *it = channels; it != NULL; it = it->next) {
+        SpiceChannel *channel = SPICE_CHANNEL(it->data);
+        if (SPICE_IS_DISPLAY_CHANNEL(channel)) {
+            displayCount++; // 统计显示器数量
+        }
+    }
+    g_list_free(channels);
+    return displayCount;
 }
 
 void SpiceQt::initializeMultiMonitor() {
     // 初始化多个显示器的配置
+    monitorConfigs.clear();
     for (int i = 0; i < MAX_MONITORS; i++) {
         SpiceDisplayMonitorConfig monitor;
         monitor.id = i;
-        monitor.surface_id = 0; // 假设每个显示器都使用相同的surface
+//        monitor.surface_id = 0; // 假设每个显示器都使用相同的surface
         monitor.x = i * 1920; // 每个显示器的x坐标是前一个显示器宽度的累加
         monitor.y = 0;
         monitor.width = 1920;
         monitor.height = 1080;
 
         monitorConfigs.push_back(monitor);
-    }
 
-    // 向SPICE发送初始配置
-    for (const auto& monitor : monitorConfigs) {
-        spice_main_set_display(mainChannel, monitor.id, monitor.x, monitor.y, monitor.width, monitor.height);
+        qDebug()<<"monitorConfigs' size:"<<monitorConfigs.size();
+
+        // 调用 SPICE 的主通道更新显示器布局
+        spice_main_channel_update_display(mainChannel, monitor.id, monitor.x,
+                                          monitor.y, monitor.width, monitor.height, TRUE);
+        spice_main_channel_update_display_enabled(mainChannel, monitor.id, TRUE, TRUE);
+        qDebug() << "Monitor configured. ID:" << monitor.id
+                 << "Resolution:" << monitor.width << "x" << monitor.height
+                 << "Position:" << monitor.x << "," << monitor.y;
     }
-    spice_main_send_monitor_config(mainChannel);
+    // 发送所有显示器配置到虚拟机
+    spice_main_channel_send_monitor_config(mainChannel);
+    qDebug() << "Multi-monitor configuration applied.";
+    qDebug()<<"-------------------------显示器配置完成！！！------------------------";
+    // 获取并存储其他显示器信息，等待用户选择后启用
+    int numMonitors = detectDisplays(); // 假设你有一个方法来获取总的显示器数量
+    qDebug() << "总显示器数: " << numMonitors;
+
+    for (int i = 1; i < numMonitors; i++) {
+        // 记录其他显示器信息，但不启用
+        SpiceDisplayMonitorConfig monitor;
+        monitor.id = i;
+        monitorConfigs.push_back(monitor);
+    }
 }
 
-//void SpiceQt::initializeWithMonitor(int monitor_id)
-//{
-//    this->monitor_id = monitor_id;
-//    display_channel = getDisplayChannel(monitor_id);
-//    if (display_channel) {
-//        connectToDisplayChannelEvents();
-//        updateDisplayContent();
-//    }
-//}
+void SpiceQt::updateResolution(int width, int height) {
+    if (!sizeAdjusted) {
+        Q_EMIT resolutionChanged(width, height);  // 只发射一次信号
+        sizeAdjusted = true;  // 标记窗口已经调整过大小
+    }
+}
+
+void SpiceQt::initializeWithSession(SpiceSession *session, int monitorId)
+{
+    if (!session) {
+        qWarning() << "SpiceSession is null, cannot initialize SpiceQt.";
+        return;
+    }
+    this->SGsession = session;
+    this->monitor_id = monitorId;
+
+    qDebug()<<"--------------开始启用显示器----------------"<<endl;
+    // 启用显示器
+    enableMonitor(monitorId);
+
+    qDebug()<<"--------------结束启用显示器----------------"<<endl;
+    // 获取主通道
+        SpiceMainChannel *mainChannel = getMainChannel();
+        if (mainChannel) {
+            qDebug()<<"--------------initializeWithSession主通道不空----------------"<<endl;
+            // 主动设置显示器的初始配置
+            SpiceDisplayMonitorConfig monitor_config;
+            monitor_config.id = monitorId;       // 每个显示器应有独立的 ID
+            monitor_config.surface_id = monitorId; // 使用 monitorId 区分不同的显示器
+            monitor_config.x = monitorId * 1920; // 每个显示器的 X 坐标不同（例如，1920 像素偏移）
+            monitor_config.y = 0;                // Y 坐标默认设置为 0
+            monitor_config.width = 1920;         // 初始宽度
+            monitor_config.height = 1080;        // 初始高度
+
+            // 调用 spice_main_channel_update_display 更新显示器配置
+            spice_main_channel_update_display(mainChannel, monitor_config.id, monitor_config.x, monitor_config.y, monitor_config.width, monitor_config.height, TRUE);
+            spice_main_channel_update_display_enabled(mainChannel, monitor_config.id, TRUE, TRUE);
+            // 发送显示器配置到虚拟机
+            spice_main_channel_send_monitor_config(mainChannel);
+
+            qDebug() << "Initial display configuration sent for monitor ID:" << monitorId;
+        } else {
+            qWarning() << "Failed to get SpiceMainChannel, cannot send initial monitor config.";
+        }
+
+        qDebug() << "SpiceQt successfully initialized with monitor ID:" << monitorId;
+}
+
+void SpiceQt::enableMonitor(int monitorId) {
+    SpiceMainChannel *mainChannel = this->getMainChannel();
+    qDebug()<<"--------------获取主通道----------------"<<endl;
+    if (mainChannel) {
+        spice_main_set_display_enabled(mainChannel, monitorId, TRUE);
+    }
+    else {
+        qDebug()<<"--------------主通道为空!--------------"<<endl;
+    }
+}
 
 SpiceDisplayPrivate* SpiceQt::getSpiceDisplayPrivate()
 {
@@ -600,19 +863,8 @@ void SpiceQt::initializeCursor(SpiceDisplayPrivate *d)
 
 quint32 SpiceQt::getKeyboardLockModifiers()
 {
-//    XKeyboardState keyboard_state;
-//    Display *x_display = QX11Info::display();
     quint32 modifiers = 0;
     Qt::KeyboardModifiers keyboardModifiers = QApplication::keyboardModifiers();
-
-//    XGetKeyboardControl(x_display, &keyboard_state);
-
-//    if (keyboard_state.led_mask & 0x01)
-//        modifiers |= SPICE_INPUTS_CAPS_LOCK;
-//    if (keyboard_state.led_mask & 0x02)
-//        modifiers |= SPICE_INPUTS_NUM_LOCK;
-//    if (keyboard_state.led_mask & 0x04)
-//        modifiers |= SPICE_INPUTS_SCROLL_LOCK;
 
     if (capsLock)
         modifiers |= SPICE_INPUTS_CAPS_LOCK;
@@ -629,28 +881,59 @@ void SpiceQt::paintEvent(QPaintEvent *event)
     QPainter p(this);
 
     if (!img.isNull())
-    {
+    {        
         QImage scaledImg = img.scaled(this->size(), Qt::IgnoreAspectRatio);
-        qDebug()<<"scaledImg size:"<<scaledImg.size();
+//        qDebug()<<"scaledImg size:"<<scaledImg.size();
         p.drawImage(0, 0, scaledImg);
     }
 }
 
 void SpiceQt::resizeEvent(QResizeEvent *event)
 {
+
     QWidget::resizeEvent(event);
 
+    // 标记拉伸开始
+    // 锁定图像更新，防止在拉伸过程中频繁重绘
+    imageUpdateLock = true;
+    resizingInProgress = true;
+    // 如果计时器正在运行，则停止它
+    if (resizeTimer->isActive()) {
+        resizeTimer->stop();
+    }
     int newWidth = event->size().width();
     int newHeight = event->size().height();
-    qDebug() << "spiceQt-rersize: new size:" << newWidth << "x" << newHeight;
+    //qDebug() << "spiceQt-rersize: new size:" << newWidth << "x" << newHeight;
     // 更新图像缓冲区大小
-
+    img = img.scaled(newWidth, newHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     dataWidth = newWidth;
     dataHeight = newHeight;
 
-    //resize(newWidth, newHeight);
-//    settingsChanged(newWidth, newHeight, 32);  // 假设 bpp 为 32
-    // 在拉伸过程中使用临时图像
+    // 启动计时器，在 100 毫秒后触发 onResizeTimeout() 槽函数
+    resizeTimer->start(100);
+//    spiceResize(newWidth, newHeight);
+    // 拉伸窗口时调整 img 的大小以适应窗口
+
+//    imageUpdateLock = false; // 解锁
+//    update();
+}
+
+void SpiceQt::onResizeTimeout() {
+    // 拉伸结束后，解除图像更新锁定
+    imageUpdateLock = false;
+
+    // 更新远程虚拟机的分辨率，确保在窗口调整稳定后再执行
+    int newWidth = this->width();
+    int newHeight = this->height();
+    qDebug() << "Resize timeout triggered, updating remote resolution to:" << dataWidth << "x" << dataHeight;
+    // 调用 spiceResize 函数更新远程虚拟机的分辨率
+    spiceResize(dataWidth, dataHeight);
+
+    if (resizingInProgress) {
+        resizingInProgress = false; // 标记拉伸结束
+        update(); // 在拉伸结束后触发更新
+//        repaint();
+    }
 }
 
 void SpiceQt::spiceResize(int w, int h)
@@ -661,11 +944,6 @@ void SpiceQt::spiceResize(int w, int h)
 
     spice_main_set_display(d->main, d->channel_id, 0, 0, w, h);
 
-    /*---------------------------------------------------------------*/
-    // 更新窗口大小
-//    resize(w, h);
-    // 强制触发重绘
-//    repaint();
 }
 
 void SpiceQt::settingsChanged(int w, int h, int bpp)
@@ -673,11 +951,11 @@ void SpiceQt::settingsChanged(int w, int h, int bpp)
     dataWidth = w;
     dataHeight = h;
     rate = double(height()) / double(dataHeight);
-//    img = QImage(width(), height(), QImage::Format_RGB32);
+    img = QImage(width(), height(), QImage::Format_RGB32);
 
 //    img.fill(Qt::white);
 //    clearImage();
-    if (w != width() || h != height())
+    if (!imageUpdateLock && (w != width() || h != height()))
     {
         spiceResize(width(), height());
     }
@@ -687,12 +965,21 @@ void SpiceQt::settingsChanged(int w, int h, int bpp)
 
 void SpiceQt::updateImage(uchar *data, int x, int y, int w, int h)
 {
-    img = QImage(width(), height(), QImage::Format_RGB32);
+//    img = QImage(width(), height(), QImage::Format_RGB32);
+    if (imageUpdateLock || resizingInProgress) {
+        // 如果锁定，则跳过更新
+        return;
+    }
     uint *source = reinterpret_cast<uint*>(data);
-    for (int i = y; i < y + height(); i++)
-        for (int j = x; j < x + width(); j++)
-            img.setPixel(j, i, source[dataWidth * i + j]);
-    qDebug() << "updateImage called. New image size:" << img.size();
+    for (int i = y; i < y + h; i++) {
+        for (int j = x; j < x + w; j++) {
+            // 添加边界检查，确保不越界
+            if (i >= 0 && i < img.height() && j >= 0 && j < img.width()) {
+                img.setPixel(j, i, source[dataWidth * i + j]);
+            }
+        }
+    }
+
     update(x, y, w, h);
 }
 
@@ -871,11 +1158,6 @@ void SpiceQt::mouseReleaseEvent(QMouseEvent *event)
                               button,
                               button_mask);
 }
-
-//bool SpiceQt::x11Event(XEvent *event)
-//{
-//    return false;
-//}
 
 void SpiceQt::enterEvent(QEvent *event)
 {

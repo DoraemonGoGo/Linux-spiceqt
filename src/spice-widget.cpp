@@ -297,9 +297,12 @@ static void primary_create(SpiceChannel *channel, gint format, gint width, gint 
 //    }
 
     // 如果 monitor_id 大于 0，则跳过默认主显示器的配置
-//    if (d->monitor_id > 0) {
-//        return;
-//    }
+    if (d->monitor_id > 0) {
+        d->width = width;
+        d->height = height;
+        d->data_origin = d->data = imgdata;
+        qDebug()<<"%%%%%%%%%%%%%%%Secondary Monitor Config%%%%%%%%%%%%%%%%%%%";
+    }
 
     d->format = static_cast<SpiceSurfaceFmt>(format);
     d->stride = stride;
@@ -307,6 +310,12 @@ static void primary_create(SpiceChannel *channel, gint format, gint width, gint 
     d->width = width;
     d->height = height;
     d->data_origin = d->data = imgdata;
+    qDebug()<<"--------primary-display------------:"<<d->width<<d->height;
+    // 通知SpiceQt实例更新分辨率
+    if (d->spiceQtInstance) {
+        d->spiceQtInstance->updateResolution(width, height);
+    }
+
     callbackSettingsChanged(display, width, height, 4);
 }
 

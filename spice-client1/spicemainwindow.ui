@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>633</width>
-    <height>615</height>
+    <width>629</width>
+    <height>613</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,10 +21,40 @@
     </sizepolicy>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
      <layout class="QVBoxLayout" name="layout">
       <property name="spacing">
-       <number>0</number>
+       <number>2</number>
+      </property>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <property name="leftMargin">
+       <number>2</number>
+      </property>
+      <property name="topMargin">
+       <number>2</number>
+      </property>
+      <property name="rightMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>2</number>
       </property>
      </layout>
     </item>
@@ -35,7 +65,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>633</width>
+     <width>629</width>
      <height>28</height>
     </rect>
    </property>
@@ -110,7 +140,8 @@
    <addaction name="actiontoolfullscreen"/>
    <addaction name="action_usbredir"/>
    <addaction name="separator"/>
-   <addaction name="actionResize_to"/>
+   <addaction name="actionmulti_screen"/>
+   <addaction name="actionaddDisplay"/>
   </widget>
   <action name="action_1">
    <property name="text">
@@ -208,11 +239,6 @@
    </property>
    <property name="text">
     <string>toolfullscreen</string>
-   </property>
-  </action>
-  <action name="actionResize_to">
-   <property name="text">
-    <string>Resize to</string>
    </property>
   </action>
   <action name="actionGrab_keyboard_when_active_and_focused">
@@ -364,6 +390,24 @@
   <action name="actionFile_input">
    <property name="text">
     <string>File_input</string>
+   </property>
+  </action>
+  <action name="actionmulti_screen">
+   <property name="icon">
+    <iconset theme="multi_screen" resource="res.qrc">
+     <normaloff>:/icon/multi-screen.png</normaloff>:/icon/multi-screen.png</iconset>
+   </property>
+   <property name="text">
+    <string>multi_screen</string>
+   </property>
+  </action>
+  <action name="actionaddDisplay">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/icon/粘贴.png</normaloff>:/icon/粘贴.png</iconset>
+   </property>
+   <property name="text">
+    <string>addDisplay</string>
    </property>
   </action>
  </widget>

@@ -7,5 +7,6 @@
         <file>icon/Photo_UKey_Line.png</file>
         <file>icon/菜单.png</file>
         <file>icon/退出全屏.png</file>
+        <file>icon/multi-screen.png</file>
     </qresource>
 </RCC>

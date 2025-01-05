@@ -4,10 +4,11 @@
 #include <QMainWindow>
 #include <QKeyEvent>
 #include <QDebug>
-#include <resdialog.h>
+//#include <resdialog.h>
 #include <spice-client.h>
 #include <spice-channel.h>
 #include <libusb.h>
+#include <QListWidget>
 
 namespace Ui {
 class SpiceMainWindow;
@@ -27,54 +28,57 @@ class SpiceMainWindow : public QMainWindow
 public:
     explicit SpiceMainWindow(QWidget *parent = nullptr);
     ~SpiceMainWindow();
+
     void showspice(QString ip, QString port);
     void fullscreen(bool full);
     void initializeUsbRedirection();
     void NotFullScreen();
+    void onResolutionChanged(int width, int height);
+    void createDisplayWindow(int displayId);
+    void addUsbDeviceToList(const QString &description);
+    void removeUsbDeviceFromList(const QString &description);
+    void updateUsbDeviceList(); // 声明一个私有函数用于更新 USB 列表
 
 protected:
     void keyPressEvent(QKeyEvent *event);
     void resizeEvent(QResizeEvent *event);
     void mouseMoveEvent(QMouseEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
 
 public Q_SLOTS:
     void on_actionToolBar_toggled(bool arg1);
-//    void on_actionStatusBar_toggled(bool arg1);
     void on_actionFullscreen_triggered(bool checked);
     void on_actiontoolfullscreen_triggered();
-    void on_actionResize_to_triggered();
     void on_actiontoolclose_triggered();
-    void on_action_usbredir_triggered();
     void updateSpiceWindow();
     void handleShortcutAction();
-//    void handleResizeTimeout();
-//    void onUsbDeviceAdded(SpiceUsbDevice *device);
-//    void onUsbDeviceRemoved(SpiceUsbDevice *device);
-
-//    void on_actiontoolpaste_triggered();
 
     void on_action_1_triggered();
     //文件传输
-    void on_actionFile_Input_triggered(); // 新增的槽函数
+    void on_actionFile_input_triggered(); // 新增的槽函数
+    void on_actionmulti_screen_triggered();
+    void addDisplay_triggered();
+    //USB设备添加和删除
+    void onUsbDeviceAdded(const QString &description);
+    void onUsbDeviceRemoved(const QString &description);
+    void on_action_usbredir_triggered();
+    void disconnectUsbDevices(const QStringList &devices); // 新增槽函数
 
 public:
-    SpiceQt *spicewindow;
+    SpiceQt *spicewindow;  
 
 private:
     Ui::SpiceMainWindow *ui;
 //    SpiceQt *spicewindow;
     ResizeTo *res;
-    ResDialog *resdia;
+//    ResDialog *resdia;
     QSet<QString> whiteList;
     QSet<QString> blackList;
 //    MenuWindow *SmallMenu;
     SmallMenuWidget *smallMenu;
-//    QTimer *resizeTimer; // 新增 QTimer 成员变量
-//    static void on_usb_device_added(SpiceUsbDeviceManager *manager, SpiceUsbDevice *device, gpointer user_data);
-//    static void on_usb_device_removed(SpiceUsbDeviceManager *manager, SpiceUsbDevice *device, gpointer user_data);
-//    static void usb_connect_callback(GObject *source_object, GAsyncResult *res, gpointer user_data);
-//    static void usb_disconnect_callback(GObject *source_object, GAsyncResult *res, gpointer user_data);
-//    bool isDeviceAllowed(SpiceUsbDevice *device);
+    QListWidget *usbListWidget; // 添加 USB 列表窗口
+    QSet<QString> currentUsbDevices;
+    QList<QMainWindow *> monitorWindows;  // 用于存储多个显示窗口
     //文件传输
     TransferWindow *transferWindow;
 };

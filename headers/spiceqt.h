@@ -33,7 +33,7 @@ extern "C" {
 
 #include "spice-widget.h"
 
-#define MAX_MONITORS 4 // 定义最大显示器数量
+#define MAX_MONITORS 2 // 定义最大显示器数量
 
 #ifndef SPICEQT_H
 #define SPICEQT_H
@@ -98,7 +98,8 @@ public:
     bool getAgentConnected() { return agentConnected; }
 
     bool isRunning(){return true;}
-    void redirect_usb_device();
+    void redirect_usb_device(const QStringList &devices);
+    void disconnectUsbDevices(const QStringList &devices);
 //    void redirectUsbDevice(gchar *device_description);
 //    void stopUsbRedirect(gchar *device_description);
 
@@ -118,9 +119,16 @@ public:
     void stopAudioInput();
     void sendRecordedData();
 
+
     //多显示器功能
 //    void configureMonitors();
     void initializeMultiMonitor();
+    int detectDisplays();
+    void enableMonitor(int monitorId);
+    void initializeWithSession(SpiceSession *session, int monitorId);
+//    void createDisplayWindow(int displayId);
+
+    void updateResolution(int width, int height);
     //文件传输
     void startFileTransfer(const QStringList &sourceFilePaths);
     // 文件传输进度回调
@@ -129,9 +137,14 @@ public:
     static void onFileTransferFinished(GObject *source_object, GAsyncResult *res, gpointer user_data);
     void handleFileTransferFinished(SpiceFileTransferTask *task, GError *error);
 
+    // 获取指定 channel-id 的显示器
+    SpiceDisplay* getSpiceDisplayById(int channel_id);
+    // 添加新的显示器
+    void addSpiceDisplay(SpiceDisplay* display, int channel_id);
+    QSet<QString> getRedirectedDevices() const { return redirectedDevices; }
+
 protected:
     void paintEvent(QPaintEvent *event) override;
-
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
@@ -140,26 +153,26 @@ protected:
     void keyReleaseEvent(QKeyEvent *event);
     void enterEvent(QEvent *event);
     void leaveEvent(QEvent *event);
-//    bool x11Event(XEvent *event);
-
-//    bool eventFilter(QObject *obj, QEvent *event) override;
 
 public Q_SLOTS:
-      void onClipboardDataChanged();
-      //文件传输
-      //void updateFileTransferProgress(SpiceFileTransferTask *task);  // 用于更新进度
-      void cancelFileTransfer();
+    void onClipboardDataChanged();
+    //文件传输
+    //void updateFileTransferProgress(SpiceFileTransferTask *task);  // 用于更新进度
+    void cancelFileTransfer();
+    void onResizeTimeout();
+//    void emitUsbDeviceAdded(const QString &description);   // 声明为槽函数
 
 
 Q_SIGNALS:
     void imageSize(int, int);
+    void resolutionChanged(int width, int height);
     //文件传输
     void fileTransferProgress(double progress);  // 文件传输进度信号
     void fileTransferCompleted();  // 文件传输完成信号
     void fileTransferCancelled();  //取消传输信号
-
-public:
-
+    //USB设备添加和删除
+    void usbDeviceAdded(const QString &description);
+    void usbDeviceRemoved(const QString &description);
 
 private:
     static QMap<int, int> * getKeymap();
@@ -201,6 +214,17 @@ private:
     QTimer *progressTimer;  // 新增成员变量：用于定期检查传输进度
     QStringList pendingFileTransfers;  // 用于存储待传输的文件列表
     //QProgressBar *progressBar; //用于显示进度
+
+    bool sizeAdjusted; // 标志位，判断是否已调整大小
+    bool imageUpdateLock; // 用于控制图像更新的锁
+    QTimer *resizeTimer;
+    bool resizingInProgress = false;
+    QImage tempImg;
+    // 添加一个映射来管理每个显示通道的图像
+    QMap<int, QImage> displayImages;
+    std::map<int, SpiceDisplay*> displays;  // 存储 channel-id 和 SpiceDisplay 的映射
+
+    QSet<QString> redirectedDevices; // 追踪已重定向的设备
 
 };
 

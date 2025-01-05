@@ -41,8 +41,15 @@ void Widget::on_connbtn_clicked()
 
 Widget::~Widget()
 {
+    // 清除所有 SpiceMainWindow 实例
+    for (SpiceMainWindow* smw : spiceWindows) {
+        if (smw) {
+            smw->close();  // 确保断开与虚拟机的连接
+            delete smw;  // 释放内存
+        }
+    }
     delete ui;
 
     // 删除所有创建的窗口实例
-    qDeleteAll(spiceWindows);
+//    qDeleteAll(spiceWindows);
 }

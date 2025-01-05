@@ -73,19 +73,6 @@ SmallMenuWidget::SmallMenuWidget(QWidget *parent) :
     menu->addAction(actionF12);
     menu->addAction(actionF13);
     menu->addAction(actionF14);
-    //    menu->addAction("Ctrl+Alt+Delete");
-    //    menu->addAction("Ctrl+Alt+F1");
-    //    menu->addAction("Ctrl+Alt+F2");
-    //    menu->addAction("Ctrl+Alt+F3");
-    //    menu->addAction("Ctrl+Alt+F4");
-    //    menu->addAction("Ctrl+Alt+F5");
-    //    menu->addAction("Ctrl+Alt+F6");
-    //    menu->addAction("Ctrl+Alt+F7");
-    //    menu->addAction("Ctrl+Alt+F8");
-    //    menu->addAction("Ctrl+Alt+F9");
-    //    menu->addAction("Ctrl+Alt+F10");
-    //    menu->addAction("Ctrl+Alt+F11");
-    //    menu->addAction("Ctrl+Alt+F12");
 
     //将快捷键菜单项连接到处理函数
     QList<QAction*> actions = menu->actions();
@@ -97,16 +84,12 @@ SmallMenuWidget::SmallMenuWidget(QWidget *parent) :
         menu->exec(ui->MenuBtn->mapToGlobal(QPoint(0, ui->MenuBtn->height())));
     });
 
-
-
     // 将按钮的点击信号连接到槽函数
-
-
-
     connect(ui->CloseBtn, &QPushButton::clicked, this, &SmallMenuWidget::onCloseButtonClicked);
 //    connect(ui->MenuBtn, &QPushButton::clicked, this, &SmallMenuWidget::onMenuButtonClicked);
     connect(ui->NotFullBtn, &QPushButton::clicked, this, &SmallMenuWidget::onFullscreenButtonClicked);
     connect(ui->USBBtn, &QPushButton::clicked, this, &SmallMenuWidget::onUsbButtonClicked);
+    connect(ui->FileBtn, &QPushButton::clicked, this, &SmallMenuWidget::onFileButtonClicked);
 }
 
 void SmallMenuWidget::onCloseButtonClicked() {
@@ -115,6 +98,7 @@ void SmallMenuWidget::onCloseButtonClicked() {
     // 添加关闭逻辑，比如关闭主窗口
     SpiceMainWindow *mainWindow = qobject_cast<SpiceMainWindow*>(this->parentWidget());
     mainWindow->close();
+    checkIfMouseLeftMenu();  // 手动检测鼠标是否移出区域
 }
 
 void SmallMenuWidget::onMenuButtonClicked() {
@@ -129,6 +113,7 @@ void SmallMenuWidget::onFullscreenButtonClicked() {
     // 添加全屏切换逻辑
     SpiceMainWindow *mainWindow = qobject_cast<SpiceMainWindow*>(this->parentWidget());
     mainWindow->NotFullScreen();
+    checkIfMouseLeftMenu();  // 手动检测鼠标是否移出区域
 }
 
 void SmallMenuWidget::onUsbButtonClicked() {
@@ -153,6 +138,29 @@ void SmallMenuWidget::handleShortcutAction()
     if (mainWindow->spicewindow) {
         mainWindow->spicewindow->sendShortcut(shortcut);
     }
+
+    checkIfMouseLeftMenu();  // 手动检测鼠标是否移出区域
+}
+
+void SmallMenuWidget::onFileButtonClicked() {
+    // 处理 File 按钮的点击事件
+    qDebug() << "File button clicked";
+    // 添加 USB 相关逻辑
+    SpiceMainWindow *mainWindow = qobject_cast<SpiceMainWindow*>(this->parentWidget());
+    mainWindow->on_actionFile_input_triggered();
+    checkIfMouseLeftMenu();  // 手动检测鼠标是否移出区域
+}
+
+void SmallMenuWidget::checkIfMouseLeftMenu() {
+    QTimer::singleShot(500, this, [this]() {
+        QPoint cursorPos = QCursor::pos();
+        QRect menuRect = this->geometry();
+        if (!menuRect.contains(cursorPos)) {
+            this->hide();
+            isMenuActive = false;
+            qDebug() << "smallMenu hidden after delay";
+        }
+    });
 }
 
 SmallMenuWidget::~SmallMenuWidget()

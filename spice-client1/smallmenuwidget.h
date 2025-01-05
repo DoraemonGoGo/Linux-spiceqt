@@ -16,6 +16,8 @@ class SmallMenuWidget : public QWidget
 public:
     explicit SmallMenuWidget(QWidget *parent = nullptr);
     ~SmallMenuWidget();
+    void checkIfMouseLeftMenu();
+    bool isMenuActive = false;//小窗激活状态
 
 private Q_SLOTS:
     void onCloseButtonClicked();
@@ -23,6 +25,7 @@ private Q_SLOTS:
     void onFullscreenButtonClicked();
     void onUsbButtonClicked();
     void handleShortcutAction();
+    void onFileButtonClicked();
     
 private:
     Ui::SmallMenuWidget *ui;

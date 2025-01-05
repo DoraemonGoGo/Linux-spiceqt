@@ -37,7 +37,6 @@ public:
     QAction *actiontoolcopy;
     QAction *actiontoolpaste;
     QAction *actiontoolfullscreen;
-    QAction *actionResize_to;
     QAction *actionGrab_keyboard_when_active_and_focused;
     QAction *actionGrab_mouse;
     QAction *actiontoggle_mouse_mode;
@@ -62,6 +61,8 @@ public:
     QAction *actionCtrl_Alt_F11;
     QAction *actionCtrl_Alt_F12;
     QAction *actionFile_input;
+    QAction *actionmulti_screen;
+    QAction *actionaddDisplay;
     QWidget *centralwidget;
     QVBoxLayout *verticalLayout;
     QVBoxLayout *layout;
@@ -77,7 +78,7 @@ public:
     {
         if (SpiceMainWindow->objectName().isEmpty())
             SpiceMainWindow->setObjectName(QString::fromUtf8("SpiceMainWindow"));
-        SpiceMainWindow->resize(633, 615);
+        SpiceMainWindow->resize(629, 613);
         action_1 = new QAction(SpiceMainWindow);
         action_1->setObjectName(QString::fromUtf8("action_1"));
         action_2 = new QAction(SpiceMainWindow);
@@ -141,8 +142,6 @@ public:
         actiontoolfullscreen = new QAction(SpiceMainWindow);
         actiontoolfullscreen->setObjectName(QString::fromUtf8("actiontoolfullscreen"));
         actiontoolfullscreen->setIcon(icon1);
-        actionResize_to = new QAction(SpiceMainWindow);
-        actionResize_to->setObjectName(QString::fromUtf8("actionResize_to"));
         actionGrab_keyboard_when_active_and_focused = new QAction(SpiceMainWindow);
         actionGrab_keyboard_when_active_and_focused->setObjectName(QString::fromUtf8("actionGrab_keyboard_when_active_and_focused"));
         actionGrab_keyboard_when_active_and_focused->setCheckable(true);
@@ -207,6 +206,21 @@ public:
         actionCtrl_Alt_F12->setObjectName(QString::fromUtf8("actionCtrl_Alt_F12"));
         actionFile_input = new QAction(SpiceMainWindow);
         actionFile_input->setObjectName(QString::fromUtf8("actionFile_input"));
+        actionmulti_screen = new QAction(SpiceMainWindow);
+        actionmulti_screen->setObjectName(QString::fromUtf8("actionmulti_screen"));
+        QIcon icon5;
+        iconThemeName = QString::fromUtf8("multi_screen");
+        if (QIcon::hasThemeIcon(iconThemeName)) {
+            icon5 = QIcon::fromTheme(iconThemeName);
+        } else {
+            icon5.addFile(QString::fromUtf8(":/icon/multi-screen.png"), QSize(), QIcon::Normal, QIcon::Off);
+        }
+        actionmulti_screen->setIcon(icon5);
+        actionaddDisplay = new QAction(SpiceMainWindow);
+        actionaddDisplay->setObjectName(QString::fromUtf8("actionaddDisplay"));
+        QIcon icon6;
+        icon6.addFile(QString::fromUtf8(":/icon/\347\262\230\350\264\264.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionaddDisplay->setIcon(icon6);
         centralwidget = new QWidget(SpiceMainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -215,17 +229,21 @@ public:
         sizePolicy.setHeightForWidth(centralwidget->sizePolicy().hasHeightForWidth());
         centralwidget->setSizePolicy(sizePolicy);
         verticalLayout = new QVBoxLayout(centralwidget);
+        verticalLayout->setSpacing(0);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
         layout = new QVBoxLayout();
-        layout->setSpacing(0);
+        layout->setSpacing(2);
         layout->setObjectName(QString::fromUtf8("layout"));
+        layout->setSizeConstraint(QLayout::SetDefaultConstraint);
+        layout->setContentsMargins(2, 2, 2, 2);
 
         verticalLayout->addLayout(layout);
 
         SpiceMainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(SpiceMainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 633, 28));
+        menubar->setGeometry(QRect(0, 0, 629, 28));
         menu = new QMenu(menubar);
         menu->setObjectName(QString::fromUtf8("menu"));
         menuedit = new QMenu(menubar);
@@ -276,7 +294,8 @@ public:
         toolBar->addAction(actiontoolfullscreen);
         toolBar->addAction(action_usbredir);
         toolBar->addSeparator();
-        toolBar->addAction(actionResize_to);
+        toolBar->addAction(actionmulti_screen);
+        toolBar->addAction(actionaddDisplay);
 
         retranslateUi(SpiceMainWindow);
 
@@ -299,7 +318,6 @@ public:
         actiontoolcopy->setText(QApplication::translate("SpiceMainWindow", "toolcopy", nullptr));
         actiontoolpaste->setText(QApplication::translate("SpiceMainWindow", "toolpaste", nullptr));
         actiontoolfullscreen->setText(QApplication::translate("SpiceMainWindow", "toolfullscreen", nullptr));
-        actionResize_to->setText(QApplication::translate("SpiceMainWindow", "Resize to", nullptr));
         actionGrab_keyboard_when_active_and_focused->setText(QApplication::translate("SpiceMainWindow", "Grab keyboard when active and focused", nullptr));
         actionGrab_mouse->setText(QApplication::translate("SpiceMainWindow", "Grab mouse in server mode(no tablet/vdagent)", nullptr));
         actiontoggle_mouse_mode->setText(QApplication::translate("SpiceMainWindow", "Toggle mouse mode", nullptr));
@@ -327,6 +345,8 @@ public:
         actionCtrl_Alt_F11->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F11", nullptr));
         actionCtrl_Alt_F12->setText(QApplication::translate("SpiceMainWindow", "Ctrl+Alt+F12", nullptr));
         actionFile_input->setText(QApplication::translate("SpiceMainWindow", "File_input", nullptr));
+        actionmulti_screen->setText(QApplication::translate("SpiceMainWindow", "multi_screen", nullptr));
+        actionaddDisplay->setText(QApplication::translate("SpiceMainWindow", "addDisplay", nullptr));
         menu->setTitle(QApplication::translate("SpiceMainWindow", "File", nullptr));
         menuedit->setTitle(QApplication::translate("SpiceMainWindow", "Edit", nullptr));
         menuView->setTitle(QApplication::translate("SpiceMainWindow", "View", nullptr));

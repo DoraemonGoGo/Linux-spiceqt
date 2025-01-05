@@ -30,11 +30,12 @@ CXXFLAGS += -g
 UI_DIR = ./UI
 
 QMAKE_LFLAGS += -L../
+QMAKE_LFLAGS += -Wl,-rpath,/home/doraemon/Documents/spice-qt/build
 INCLUDEPATH += /usr/include/glib-2.0 /usr/include/glib-2.0/gobject /usr/lib/x86_64-linux-gnu/glib-2.0/include /usr/include/spice-client-glib-2.0 /usr/include/libusb-1.0 /usr/include/pixman-1 /usr/include/spice-1 ../common ../headers
 LIBS += `pkg-config --libs glib-2.0 spice-client-glib-2.0`
 LIBS += -lusb-1.0
 LIBS += -lspice-qt
-LIBS += -L/home/doraemon/Downloads/spice-qt/build -lspice-qt
+LIBS += -L/home/doraemon/Documents/spice-qt/build -lspice-qt
 
 LIBS += -lgobject-2.0 -lglib-2.0
 
@@ -42,22 +43,22 @@ SOURCES += \
         main.cpp \
         widget.cpp \
     spicemainwindow.cpp \
-    resdialog.cpp \
     smallmenuwidget.cpp \
-    transferwindow.cpp
+    transferwindow.cpp \
+    usbredirdialog.cpp
 
 HEADERS += \
         widget.h \
     spicemainwindow.h \
-    resdialog.h \
     smallmenuwidget.h \
-    transferwindow.h
+    transferwindow.h \
+    usbredirdialog.h
 
 FORMS += \
         widget.ui \
     spicemainwindow.ui \
-    resdialog.ui \
-    smallmenuwidget.ui
+    smallmenuwidget.ui \
+    usbredirdialog.ui
 
 CONFIG += no_keywords
 
